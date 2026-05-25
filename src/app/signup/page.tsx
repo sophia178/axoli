@@ -15,6 +15,10 @@ export default async function SignupPage({
   const errorMessage =
     error === 'invalid_credentials'
       ? 'Enter a valid email and a password (8+ characters).'
+      : error === 'missing_supabase_url'
+        ? 'Missing NEXT_PUBLIC_SUPABASE_URL environment variable.'
+        : error === 'missing_supabase_anon_key'
+          ? 'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable.'
       : error === 'server_misconfigured'
         ? 'Signup is temporarily unavailable. Please try again later.'
         : error === 'profile_create_failed'

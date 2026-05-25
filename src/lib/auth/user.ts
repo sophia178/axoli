@@ -1,12 +1,19 @@
 import { redirect } from 'next/navigation'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@supabase/supabase-js'
 import { getAuthCookies, setAuthCookies } from '@/lib/auth/cookies'
+
+function getSupabaseAuthClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !anon) return null
+  return createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } })
+}
 
 export async function getCurrentUser() {
   const { accessToken, refreshToken } = getAuthCookies()
 
   if (!accessToken) return null
-  const supabase = getSupabaseAdmin()
+  const supabase = getSupabaseAuthClient()
   if (!supabase) return null
 
   const { data, error } = await supabase.auth.getUser(accessToken)
