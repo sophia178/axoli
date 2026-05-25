@@ -24,6 +24,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const today = todayISO()
 
   await supabase
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const today = todayISO()
   const { data, error } = await supabase
     .from('planner_tasks')
@@ -68,4 +70,3 @@ export async function POST(req: Request) {
   if (error || !data) return NextResponse.json({ error: 'insert_failed' }, { status: 500 })
   return NextResponse.json({ ok: true, task: data })
 }
-

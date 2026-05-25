@@ -40,6 +40,7 @@ export async function POST(req: Request) {
   if (!anthropicKey) return NextResponse.json({ error: 'missing_anthropic_key' }, { status: 500 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: planRow } = await supabase
     .from('profiles')
     .select('plan')

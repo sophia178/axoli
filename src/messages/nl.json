@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "Studeer met je huisdier",
     "tipTitle": "Tip",
     "tipBody": "Kleine sessies tellen. Doe nu 10 minuten en houd je axolotl blij.",
@@ -95,7 +95,7 @@
       "focusBoosts": "Focus-boosts"
     },
     "socialProof": {
-      "join": "Sluit je aan bij studenten die Bloom al gebruiken",
+      "join": "Sluit je aan bij studenten die Axoli al gebruiken",
       "loved": "Geliefd bij studenten wereldwijd"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "Stap 1 Plak je notities of YouTube-URL",
       "step1Body": "Voeg elk onderwerp toe: college-notities, samenvattingen of een YouTube-link.",
       "step2Title": "Stap 2 Krijg flashcards, samenvatting en quiz",
-      "step2Body": "Bloom maakt studiemateriaal dat je direct kunt gebruiken.",
+      "step2Body": "Axoli maakt studiemateriaal dat je direct kunt gebruiken.",
       "step3Title": "Stap 3 Studeer met je huisdier en volg je voortgang",
       "step3Body": "Verdien munten, behoud je streak en zie je axolotl groeien."
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "Prijzen",
-    "subtitle": "Bloom is gratis om te starten. Upgrade voor hogere AI-limieten en premium pet-items.",
+    "subtitle": "Axoli is gratis om te starten. Upgrade voor hogere AI-limieten en premium pet-items.",
     "free": {
       "title": "Gratis",
       "period": "voor altijd",

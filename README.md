@@ -1,6 +1,6 @@
-# Bloom
+# Axoli
 
-Bloom is a Next.js study app that turns notes, PDFs, and videos into flashcards, summaries, and quizzes — with a study pet, coins, and groups to keep you consistent.
+Axoli is a Next.js study app that turns notes, PDFs, and videos into flashcards, summaries, and quizzes — with a study pet, coins, and groups to keep you consistent.
 
 ## Setup
 
@@ -65,4 +65,3 @@ npm run typecheck
 4. Set `NEXT_PUBLIC_APP_URL` to your production URL (for example `https://your-app.vercel.app`).
 5. In Stripe, set your webhook endpoint to:
    - `https://your-domain.com/api/stripe/webhook`
-

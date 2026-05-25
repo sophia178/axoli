@@ -13,6 +13,7 @@ export type ShopItemRow = {
 
 export async function ensureShopCatalog() {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return
   const payload = shopCatalog.map((i) => ({
     id: i.id,
     name: i.name,
@@ -27,6 +28,7 @@ export async function ensureShopCatalog() {
 
 export async function getShopItems(): Promise<ShopItemRow[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('shop_items')
     .select('id,name,type,cost,image_url,is_premium,is_seasonal')
@@ -40,10 +42,10 @@ export async function getShopItems(): Promise<ShopItemRow[]> {
 
 export async function getOwnedItemIds(userId: string): Promise<Set<string>> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return new Set()
   const { data } = await supabase
     .from('user_items')
     .select('item_id')
     .eq('user_id', userId)
   return new Set((data ?? []).map((r: any) => r.item_id as string))
 }
-

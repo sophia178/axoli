@@ -8,6 +8,9 @@ function monthKey(d = new Date()) {
 
 export async function consumeGeneration(userId: string, plan: string) {
   const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    return { ok: false as const, remaining: 0, limit: 0, used: 0 }
+  }
   const key = monthKey()
   const limit = plan === 'free' ? 5 : 500
 
@@ -55,4 +58,3 @@ export async function consumeGeneration(userId: string, plan: string) {
     coinsAwarded
   }
 }
-

@@ -15,6 +15,7 @@ export async function updateUsernameAction(formData: FormData) {
   if (!parsed.success) redirect('/dashboard/settings?error=invalid_username')
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) redirect('/dashboard/settings?error=server_misconfigured')
   await supabase
     .from('profiles')
     .update({ username: parsed.data.username })
@@ -22,4 +23,3 @@ export async function updateUsernameAction(formData: FormData) {
 
   redirect('/dashboard/settings?saved=1')
 }
-

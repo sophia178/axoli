@@ -30,6 +30,7 @@ export async function POST(req: Request) {
   const joinParsed = createParsed.success ? null : joinSchema.safeParse(json)
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
 
   if (createParsed.success) {
     const data = createParsed.data

@@ -15,55 +15,70 @@ function daysBetween(fromISO: string, toISO: string) {
 }
 
 export async function applyPetDailyDecay(userId: string) {
-  const supabase = getSupabaseAdmin()
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('pet_happiness,pet_last_updated')
-    .eq('user_id', userId)
-    .maybeSingle()
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return null
 
-  if (error) return null
-  const today = toISODate(new Date())
-  const last = (data as any)?.pet_last_updated as string | null
-  const base = (data as any)?.pet_happiness as number | null
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('pet_happiness,pet_last_updated')
+      .eq('user_id', userId)
+      .maybeSingle()
 
-  const lastISO = last ?? today
-  const current = base ?? 100
-  const days = daysBetween(lastISO, today)
-  if (days <= 0) return { happiness: Math.max(0, Math.min(100, current)), updated: false }
+    if (error) return null
+    const today = toISODate(new Date())
+    const last = (data as any)?.pet_last_updated as string | null
+    const base = (data as any)?.pet_happiness as number | null
 
-  const decayed = Math.max(0, Math.min(100, current - days * 10))
-  await supabase
-    .from('profiles')
-    .update({ pet_happiness: decayed, pet_last_updated: today })
-    .eq('user_id', userId)
+    const lastISO = last ?? today
+    const current = base ?? 100
+    const days = daysBetween(lastISO, today)
+    if (days <= 0) return { happiness: Math.max(0, Math.min(100, current)), updated: false }
 
-  return { happiness: decayed, updated: true }
+    const decayed = Math.max(0, Math.min(100, current - days * 10))
+    await supabase
+      .from('profiles')
+      .update({ pet_happiness: decayed, pet_last_updated: today })
+      .eq('user_id', userId)
+
+    return { happiness: decayed, updated: true }
+  } catch {
+    return null
+  }
 }
 
 export async function changePetHappiness(userId: string, delta: number) {
-  const supabase = getSupabaseAdmin()
-  const applied = await applyPetDailyDecay(userId)
-  const current = applied?.happiness ?? 100
-  const next = Math.max(0, Math.min(100, current + delta))
-  const today = toISODate(new Date())
-  await supabase
-    .from('profiles')
-    .update({ pet_happiness: next, pet_last_updated: today })
-    .eq('user_id', userId)
-  return next
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return 100
+    const applied = await applyPetDailyDecay(userId)
+    const current = applied?.happiness ?? 100
+    const next = Math.max(0, Math.min(100, current + delta))
+    const today = toISODate(new Date())
+    await supabase
+      .from('profiles')
+      .update({ pet_happiness: next, pet_last_updated: today })
+      .eq('user_id', userId)
+    return next
+  } catch {
+    return 100
+  }
 }
 
 export async function ensurePetFields(userId: string) {
-  const supabase = getSupabaseAdmin()
-  const today = toISODate(new Date())
-  await supabase
-    .from('profiles')
-    .update({
-      pet_happiness: 100,
-      pet_last_updated: today
-    })
-    .eq('user_id', userId)
-    .is('pet_last_updated', null)
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return
+    const today = toISODate(new Date())
+    await supabase
+      .from('profiles')
+      .update({
+        pet_happiness: 100,
+        pet_last_updated: today
+      })
+      .eq('user_id', userId)
+      .is('pet_last_updated', null)
+  } catch {
+    return
+  }
 }
-

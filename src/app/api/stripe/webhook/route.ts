@@ -44,6 +44,7 @@ export async function POST(req: Request) {
   }
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session

@@ -18,6 +18,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: deck } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,title,subject,is_public')
@@ -55,4 +56,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, deckId: inserted.id })
 }
-

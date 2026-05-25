@@ -29,6 +29,7 @@ export type Profile = {
 export async function getProfile(userId: string): Promise<Profile | null> {
   await applyPetDailyDecay(userId)
   const supabase = getSupabaseAdmin()
+  if (!supabase) return null
   const { data, error } = await supabase
     .from('profiles')
     .select(

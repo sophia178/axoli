@@ -11,7 +11,7 @@ export default async function PricingPage() {
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="font-heading text-4xl text-text">Pricing</h1>
           <p className="mt-3 text-subtext">
-            Bloom is free to start. Upgrade for bigger AI limits and premium pet items.
+            Axoli is free to start. Upgrade for bigger AI limits and premium pet items.
           </p>
         </div>
 

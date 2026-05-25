@@ -14,6 +14,13 @@ export default async function PlannerPage() {
   const user = await requireUser()
   const exams = await getUpcomingExams(user.id)
   const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Server is missing Supabase configuration.
+      </div>
+    )
+  }
 
   const today = new Date()
   const end = new Date()

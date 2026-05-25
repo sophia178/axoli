@@ -2,6 +2,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function getUserPlan(userId: string): Promise<string> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return 'free'
   const { data: profile } = await supabase
     .from('profiles')
     .select('plan')

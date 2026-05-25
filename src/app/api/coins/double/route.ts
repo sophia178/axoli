@@ -19,6 +19,10 @@ function todayISO() {
 
 async function getAndMaybeReset(userId: string) {
   const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    const today = todayISO()
+    return { watchedToday: 0, today }
+  }
   const { data } = await supabase
     .from('profiles')
     .select('ads_watched_today,ads_reset_date')
@@ -73,10 +77,12 @@ export async function POST(req: Request) {
   const coins = await awardCoins(user.id, bonusCoins, `double_${parsed.data.reason}`)
 
   const supabase = getSupabaseAdmin()
-  await supabase
-    .from('profiles')
-    .update({ ads_watched_today: watchedToday + 1, ads_reset_date: today })
-    .eq('user_id', user.id)
+  if (supabase) {
+    await supabase
+      .from('profiles')
+      .update({ ads_watched_today: watchedToday + 1, ads_reset_date: today })
+      .eq('user_id', user.id)
+  }
 
   return NextResponse.json({
     ok: true,
@@ -87,4 +93,3 @@ export async function POST(req: Request) {
     limit: LIMIT_PER_DAY
   })
 }
-

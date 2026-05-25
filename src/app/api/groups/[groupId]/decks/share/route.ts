@@ -17,6 +17,7 @@ export async function POST(
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: member } = await supabase
     .from('group_members')
     .select('id')
@@ -51,4 +52,3 @@ export async function POST(
   if (error) return NextResponse.json({ error: 'share_failed' }, { status: 500 })
   return NextResponse.json({ ok: true })
 }
-

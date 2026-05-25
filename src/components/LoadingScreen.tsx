@@ -136,7 +136,7 @@ export function LoadingScreen({ visible = true }: { visible?: boolean }) {
   return (
     <div className="fixed inset-0 z-[9999] flex min-h-screen items-center justify-center bg-bg">
       <div className="absolute left-1/2 top-10 -translate-x-1/2">
-        <div className="font-heading text-2xl text-pink">Bloom</div>
+        <div className="font-heading text-2xl text-pink">Axoli</div>
       </div>
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-6">
         <div className="mb-8 w-full">{bubble}</div>

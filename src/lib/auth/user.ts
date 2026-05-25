@@ -7,6 +7,7 @@ export async function getCurrentUser() {
 
   if (!accessToken) return null
   const supabase = getSupabaseAdmin()
+  if (!supabase) return null
 
   const { data, error } = await supabase.auth.getUser(accessToken)
   if (!error && data.user) return data.user

@@ -53,7 +53,7 @@ export default async function DashboardHomePage() {
           <CardContent>
             {exams.length === 0 ? (
               <div className="rounded-2xl border border-border bg-bg/20 px-4 py-3 text-sm text-subtext">
-                Add an exam and Bloom will keep the countdown here.
+                Add an exam and Axoli will keep the countdown here.
               </div>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
@@ -102,4 +102,3 @@ export default async function DashboardHomePage() {
     </div>
   )
 }
-

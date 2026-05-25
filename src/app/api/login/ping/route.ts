@@ -17,6 +17,7 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data } = await supabase
     .from('profiles')
     .select('last_login_date')
@@ -33,4 +34,3 @@ export async function POST() {
 
   return NextResponse.json({ ok: true, coinsAwarded: 2 })
 }
-

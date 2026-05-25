@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "Study with your pet",
     "tipTitle": "Tip",
     "tipBody": "Tiny sessions count. Do 10 minutes now and keep your axolotl happy.",
@@ -95,7 +95,7 @@
       "focusBoosts": "Focus boosts"
     },
     "socialProof": {
-      "join": "Join students already using Bloom",
+      "join": "Join students already using Axoli",
       "loved": "Loved by students worldwide"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "Step 1 Paste your notes or YouTube URL",
       "step1Body": "Drop in any topic: lecture notes, revision guides, or a YouTube link.",
       "step2Title": "Step 2 Get flashcards, summary and quiz",
-      "step2Body": "Bloom generates study-ready materials you can review right away.",
+      "step2Body": "Axoli generates study-ready materials you can review right away.",
       "step3Title": "Step 3 Study with your pet and track progress",
       "step3Body": "Earn coins, keep your streak, and watch your axolotl grow."
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "Pricing",
-    "subtitle": "Bloom is free to start. Upgrade for bigger AI limits and premium pet items.",
+    "subtitle": "Axoli is free to start. Upgrade for bigger AI limits and premium pet items.",
     "free": {
       "title": "Free",
       "period": "forever",

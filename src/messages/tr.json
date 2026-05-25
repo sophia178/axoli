@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "Evcilinle birlikte çalış",
     "tipTitle": "İpucu",
     "tipBody": "Kısa seanslar da sayılır. Şimdi 10 dakika yap ve aksolotlunu mutlu tut.",
@@ -95,7 +95,7 @@
       "focusBoosts": "Odak güçleri"
     },
     "socialProof": {
-      "join": "Bloom’u kullanan öğrenciler arasına katıl",
+      "join": "Axoli’yi kullanan öğrenciler arasına katıl",
       "loved": "Dünya çapında öğrenciler tarafından seviliyor"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "Adım 1 Notlarını veya YouTube URL’sini yapıştır",
       "step1Body": "Her konu olur: ders notları, tekrar rehberleri ya da bir YouTube bağlantısı.",
       "step2Title": "Adım 2 Flash kart, özet ve quiz al",
-      "step2Body": "Bloom, hemen çalışabileceğin materyalleri üretir.",
+      "step2Body": "Axoli, hemen çalışabileceğin materyalleri üretir.",
       "step3Title": "Adım 3 Evcillinle çalış ve ilerlemeyi takip et",
       "step3Body": "Jeton kazan, serini koru ve aksolotlunun büyüdüğünü izle."
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "Fiyatlandırma",
-    "subtitle": "Bloom’a ücretsiz başlayın. Daha yüksek yapay zekâ limitleri ve premium evcil eşyaları için yükseltin.",
+    "subtitle": "Axoli’ye ücretsiz başlayın. Daha yüksek yapay zekâ limitleri ve premium evcil eşyaları için yükseltin.",
     "free": {
       "title": "Ücretsiz",
       "period": "sonsuz",

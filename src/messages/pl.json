@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "Ucz się ze swoim zwierzakiem",
     "tipTitle": "Wskazówka",
     "tipBody": "Małe sesje też się liczą. Zrób teraz 10 minut i utrzymaj swojego aksolotla szczęśliwym.",
@@ -95,7 +95,7 @@
       "focusBoosts": "Dodatki skupienia"
     },
     "socialProof": {
-      "join": "Dołącz do uczniów, którzy już używają Bloom",
+      "join": "Dołącz do uczniów, którzy już używają Axoli",
       "loved": "Uwielbiane przez uczniów na całym świecie"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "Krok 1 Wklej notatki lub URL YouTube",
       "step1Body": "Dodaj dowolny temat: notatki z zajęć, materiały do powtórek lub link do YouTube.",
       "step2Title": "Krok 2 Otrzymaj fiszki, podsumowanie i quiz",
-      "step2Body": "Bloom generuje materiały gotowe do nauki, od razu do przerobienia.",
+      "step2Body": "Axoli generuje materiały gotowe do nauki, od razu do przerobienia.",
       "step3Title": "Krok 3 Ucz się ze zwierzakiem i śledź postępy",
       "step3Body": "Zdobywaj monety, utrzymuj serię i obserwuj jak rośnie Twój aksolotl."
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "Cennik",
-    "subtitle": "Bloom jest darmowy na start. Ulepsz, by zwiększyć limity AI i odblokować premium przedmioty dla zwierzaka.",
+    "subtitle": "Axoli jest darmowy na start. Ulepsz, by zwiększyć limity AI i odblokować premium przedmioty dla zwierzaka.",
     "free": {
       "title": "Darmowy",
       "period": "na zawsze",

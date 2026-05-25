@@ -33,6 +33,7 @@ export type DeckSummary = {
 
 export async function getDecks(userId: string): Promise<FlashcardDeck[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,title,subject,is_public,last_studied_at,created_at')
@@ -44,6 +45,7 @@ export async function getDecks(userId: string): Promise<FlashcardDeck[]> {
 
 export async function getDeckCards(deckId: string, userId: string): Promise<Flashcard[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,flashcards(id,deck_id,front,back,difficulty,next_review)')
@@ -57,6 +59,7 @@ export async function getDeckCards(deckId: string, userId: string): Promise<Flas
 
 export async function getDeckForQuiz(deckId: string, userId: string) {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return null
   const { data } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,title,flashcards(id,front,back)')
@@ -74,6 +77,7 @@ export async function getDeckForQuiz(deckId: string, userId: string) {
 
 export async function getMyDeckSummaries(userId: string): Promise<DeckSummary[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data: decks } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,title,subject,is_public,last_studied_at,created_at')
@@ -128,6 +132,7 @@ export async function getPublicDeckSummaries(input: {
   limit?: number
 }): Promise<DeckSummary[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   let q = supabase
     .from('flashcard_decks')
     .select('id,user_id,title,subject,is_public,created_at')
@@ -182,6 +187,7 @@ export async function getPublicDeckSummaries(input: {
 
 export async function getSharedDeckSummaries(userId: string): Promise<DeckSummary[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data: memberRows } = await supabase
     .from('group_members')
     .select('group_id')
@@ -244,6 +250,7 @@ export async function getSharedDeckSummaries(userId: string): Promise<DeckSummar
 
 export async function getDeckAccess(userId: string, deckId: string) {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return { ok: false as const }
   const { data: deck } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,is_public,title,subject')
@@ -277,6 +284,7 @@ export async function getDeckWithCardsForStudy(userId: string, deckId: string) {
   const access = await getDeckAccess(userId, deckId)
   if (!access.ok) return null
   const supabase = getSupabaseAdmin()
+  if (!supabase) return null
   const { data } = await supabase
     .from('flashcard_decks')
     .select('id,user_id,title,subject,flashcards(id,deck_id,front,back)')

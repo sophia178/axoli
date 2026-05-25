@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "ペットと一緒に勉強",
     "tipTitle": "ヒント",
     "tipBody": "短いセッションでも効果あり。今10分やって、ウーパールーパーをご機嫌に。",
@@ -95,7 +95,7 @@
       "focusBoosts": "集中ブースト"
     },
     "socialProof": {
-      "join": "すでにBloomを使っている学生に参加しよう",
+      "join": "すでにAxoliを使っている学生に参加しよう",
       "loved": "世界中の学生に愛されています"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "ステップ1 ノートまたはYouTube URLを貼り付け",
       "step1Body": "講義ノート、復習資料、YouTubeリンクなど何でもOK。",
       "step2Title": "ステップ2 カード・要約・クイズを取得",
-      "step2Body": "Bloomがすぐに使える学習素材を生成します。",
+      "step2Body": "Axoliがすぐに使える学習素材を生成します。",
       "step3Title": "ステップ3 ペットと勉強して進捗を確認",
       "step3Body": "コインを獲得して連続記録を維持。ペットの成長を見守ろう。"
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "料金",
-    "subtitle": "Bloomは無料で始められます。AIの上限拡張やプレミアムアイテムのためにアップグレード。",
+    "subtitle": "Axoliは無料で始められます。AIの上限拡張やプレミアムアイテムのためにアップグレード。",
     "free": {
       "title": "無料",
       "period": "ずっと",

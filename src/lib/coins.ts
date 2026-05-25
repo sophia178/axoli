@@ -1,33 +1,39 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function awardCoins(userId: string, amount: number, reason: string) {
-  const supabase = getSupabaseAdmin()
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('coins')
-    .eq('user_id', userId)
-    .maybeSingle()
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return 0
 
-  if (error) throw new Error('Could not load profile')
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('coins')
+      .eq('user_id', userId)
+      .maybeSingle()
 
-  const current = profile?.coins ?? 0
-  const next = Math.max(0, current + amount)
+    if (error) return 0
 
-  await supabase.from('coins_ledger').insert({
-    user_id: userId,
-    amount,
-    reason
-  })
+    const current = profile?.coins ?? 0
+    const next = Math.max(0, current + amount)
 
-  const updated = await supabase
-    .from('profiles')
-    .update({ coins: next })
-    .eq('user_id', userId)
-    .select('coins')
-    .single()
+    await supabase.from('coins_ledger').insert({
+      user_id: userId,
+      amount,
+      reason
+    })
 
-  if (updated.error) throw new Error('Could not update coins')
-  return updated.data.coins as number
+    const updated = await supabase
+      .from('profiles')
+      .update({ coins: next })
+      .eq('user_id', userId)
+      .select('coins')
+      .single()
+
+    if (updated.error) return current
+    return (updated.data.coins as number) ?? current
+  } catch {
+    return 0
+  }
 }
 
 export async function spendCoins(userId: string, amount: number, reason: string) {

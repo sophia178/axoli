@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: task } = await supabase
     .from('planner_tasks')
     .select('id,completed_at')
@@ -41,4 +42,3 @@ export async function POST(req: Request) {
   const coins = await awardCoins(user.id, 2, 'task_complete')
   return NextResponse.json({ ok: true, coinsAwarded: 2, coins })
 }
-

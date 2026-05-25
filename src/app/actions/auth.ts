@@ -18,6 +18,7 @@ export async function loginAction(formData: FormData) {
   if (!parsed.success) redirect('/login?error=invalid_credentials')
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) redirect('/login?error=server_misconfigured')
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data)
   if (error || !data.session) redirect('/login?error=auth_failed')
 
@@ -37,6 +38,7 @@ export async function signupAction(formData: FormData) {
   if (!parsed.success) redirect('/signup?error=invalid_credentials')
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) redirect('/signup?error=server_misconfigured')
   const { data, error } = await supabase.auth.signUp(parsed.data)
   if (error) redirect('/signup?error=signup_failed')
 
@@ -55,4 +57,3 @@ export async function logoutAction() {
   clearAuthCookies()
   redirect('/login')
 }
-

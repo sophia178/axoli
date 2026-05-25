@@ -12,7 +12,7 @@ export function AxolotlHero({ className }: { className?: string }) {
       <svg
         viewBox="0 0 420 360"
         role="img"
-        aria-label="Bloom axolotl"
+        aria-label="Axoli axolotl"
         className="h-auto w-full drop-shadow-[0_18px_35px_rgba(255,143,171,0.22)]"
       >
         <defs>
@@ -126,4 +126,3 @@ export function AxolotlHero({ className }: { className?: string }) {
     </motion.div>
   )
 }
-

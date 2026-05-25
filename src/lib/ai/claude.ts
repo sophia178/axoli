@@ -25,7 +25,7 @@ export async function generateWithClaude(input: {
   const anthropicKey = process.env.ANTHROPIC_API_KEY
   if (!anthropicKey) throw new Error('Missing ANTHROPIC_API_KEY')
 
-  const prompt = `You are Bloom, a friendly study assistant. Produce STRICT JSON (no markdown, no code fences).
+  const prompt = `You are Axoli, a friendly study assistant. Produce STRICT JSON (no markdown, no code fences).
 
 Return an object with:
 - subject: short string (use the subjectHint if provided, otherwise infer)
@@ -68,4 +68,3 @@ ${input.content}`
   const parsed = extractJsonObject(text)
   return { raw: text, parsed: parsed as GenerateOutput | null }
 }
-

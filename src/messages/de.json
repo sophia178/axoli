@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "Lerne mit deinem Haustier",
     "tipTitle": "Tipp",
     "tipBody": "Kleine Sessions zählen. Mach jetzt 10 Minuten und halte deinen Axolotl glücklich.",
@@ -95,7 +95,7 @@
       "focusBoosts": "Fokus-Boosts"
     },
     "socialProof": {
-      "join": "Schließe dich Studierenden an, die Bloom bereits nutzen",
+      "join": "Schließe dich Studierenden an, die Axoli bereits nutzen",
       "loved": "Von Studierenden weltweit geliebt"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "Schritt 1 Notizen oder YouTube-URL einfügen",
       "step1Body": "Beliebiges Thema: Vorlesungsnotizen, Lernskripte oder ein YouTube-Link.",
       "step2Title": "Schritt 2 Karteikarten, Zusammenfassung und Quiz bekommen",
-      "step2Body": "Bloom erstellt lernfertiges Material, das du sofort wiederholen kannst.",
+      "step2Body": "Axoli erstellt lernfertiges Material, das du sofort wiederholen kannst.",
       "step3Title": "Schritt 3 Mit deinem Haustier lernen und Fortschritt tracken",
       "step3Body": "Münzen verdienen, Serie halten und deinen Axolotl wachsen sehen."
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "Preise",
-    "subtitle": "Bloom ist kostenlos zum Starten. Upgrade für höhere KI-Limits und Premium-Items fürs Haustier.",
+    "subtitle": "Axoli ist kostenlos zum Starten. Upgrade für höhere KI-Limits und Premium-Items fürs Haustier.",
     "free": {
       "title": "Gratis",
       "period": "für immer",

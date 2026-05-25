@@ -16,7 +16,7 @@ const nunito = Nunito({
 })
 
 export const metadata: Metadata = {
-  title: 'Bloom',
+  title: 'Axoli',
   description: 'Study smarter with your new best friend'
 }
 

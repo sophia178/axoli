@@ -24,6 +24,7 @@ export async function POST(req: Request) {
   if (!item || item.type !== 'accessory') return NextResponse.json({ error: 'not_found' }, { status: 404 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: owned } = await supabase
     .from('user_items')
     .select('id')
@@ -47,4 +48,3 @@ export async function POST(req: Request) {
   await supabase.from('profiles').update({ pet_accessories: next }).eq('user_id', user.id)
   return NextResponse.json({ ok: true, pet_accessories: next })
 }
-

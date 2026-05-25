@@ -19,7 +19,7 @@ export function ExamManager() {
     <div className="rounded-3xl border border-border bg-bg/20 p-4">
       <div className="font-semibold text-text">Add an exam</div>
       <div className="mt-1 text-sm text-subtext">
-        Bloom will keep a countdown on your dashboard.
+        Axoli will keep a countdown on your dashboard.
       </div>
       <div className="mt-4 grid gap-2 md:grid-cols-3">
         <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Exam name" />

@@ -88,7 +88,7 @@ export default async function HomePage() {
           <div className="flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-card/60 px-6 py-5 sm:flex-row sm:items-center">
             <div className="text-sm text-subtext">
               <span className="font-semibold text-text">
-                Join students already using Bloom
+                Join students already using Axoli
               </span>
             </div>
             <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ export default async function HomePage() {
                 <CardTitle>Step 2 Get flashcards, summary and quiz</CardTitle>
               </CardHeader>
               <CardContent className="text-sm leading-relaxed text-subtext">
-                Bloom generates study-ready materials you can review right away.
+                Axoli generates study-ready materials you can review right away.
               </CardContent>
             </Card>
             <Card>
@@ -274,7 +274,7 @@ export default async function HomePage() {
       </main>
       <footer className="border-t border-border/60 py-10">
         <div className="mx-auto max-w-6xl px-4 text-sm text-subtext">
-          Bloom © {new Date().getFullYear()}
+          Axoli © {new Date().getFullYear()}
         </div>
       </footer>
     </div>

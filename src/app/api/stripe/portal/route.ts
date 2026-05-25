@@ -16,6 +16,7 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: profile } = await supabase
     .from('profiles')
     .select('stripe_customer_id')
@@ -37,4 +38,3 @@ export async function POST() {
 
   return NextResponse.json({ url: session.url })
 }
-

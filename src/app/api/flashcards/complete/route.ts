@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
 
   const inserted = await supabase.from('deck_completions').insert({
     user_id: user.id,
@@ -41,4 +42,3 @@ export async function POST(req: Request) {
   const coins = await awardCoins(user.id, 5, 'deck_review_complete')
   return NextResponse.json({ ok: true, coinsAwarded: 5, coins })
 }
-

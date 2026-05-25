@@ -12,6 +12,7 @@ export type StudyGroup = {
 
 export async function getMyGroups(userId: string): Promise<StudyGroup[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('group_members')
     .select('study_groups(id,name,subject,join_code,created_at)')
@@ -31,6 +32,7 @@ export type MyGroupCard = StudyGroup & {
 
 export async function getMyGroupsWithMeta(userId: string): Promise<MyGroupCard[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data: rows } = await supabase
     .from('group_members')
     .select('group_id,role,study_groups(id,name,subject,join_code,is_private,created_by,created_at)')
@@ -73,6 +75,7 @@ export type GroupMemberCard = {
 
 export async function getGroupDetail(userId: string, groupId: string) {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return null
   const { data: membership } = await supabase
     .from('group_members')
     .select('role')
@@ -121,4 +124,3 @@ export async function getGroupDetail(userId: string, groupId: string) {
     members
   }
 }
-

@@ -11,6 +11,7 @@ export type StudySession = {
 
 export async function getRecentSessions(userId: string): Promise<StudySession[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('study_sessions')
     .select('id,user_id,duration,subject,coins_earned,created_at')
@@ -20,4 +21,3 @@ export async function getRecentSessions(userId: string): Promise<StudySession[]>
 
   return (data ?? []) as StudySession[]
 }
-

@@ -21,6 +21,13 @@ function clamp(n: number, min: number, max: number) {
 export default async function ProgressPage() {
   const user = await requireUser()
   const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Server is missing Supabase configuration.
+      </div>
+    )
+  }
   const profile = await getProfile(user.id)
 
   const sessionsCountRes = await supabase

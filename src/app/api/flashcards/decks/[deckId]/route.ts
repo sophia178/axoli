@@ -28,6 +28,7 @@ export async function PATCH(
   if (typeof parsed.data.isPublic === 'boolean') updates.is_public = parsed.data.isPublic
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { error } = await supabase
     .from('flashcard_decks')
     .update(updates)
@@ -46,6 +47,7 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { error } = await supabase
     .from('flashcard_decks')
     .delete()
@@ -55,4 +57,3 @@ export async function DELETE(
   if (error) return NextResponse.json({ error: 'delete_failed' }, { status: 500 })
   return NextResponse.json({ ok: true })
 }
-

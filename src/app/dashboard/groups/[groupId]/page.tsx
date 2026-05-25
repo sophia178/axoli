@@ -25,6 +25,13 @@ export default async function GroupPage({ params }: { params: { groupId: string 
   }
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Server is missing Supabase configuration.
+      </div>
+    )
+  }
   const myDecks = await getDecks(user.id)
 
   const { data: sharedRows } = await supabase

@@ -16,6 +16,7 @@ export async function GET(
   if (!access.ok) return NextResponse.json({ error: 'not_found' }, { status: 404 })
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: deck } = await supabase
     .from('flashcard_decks')
     .select('id,title,subject,user_id')
@@ -34,4 +35,3 @@ export async function GET(
     cards: cards ?? []
   })
 }
-

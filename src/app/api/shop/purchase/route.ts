@@ -34,6 +34,7 @@ export async function POST(req: Request) {
   }
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: profile } = await supabase
     .from('profiles')
     .select('coins,pet_happiness,pet_colour')
@@ -68,4 +69,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, itemId: item.id })
 }
-

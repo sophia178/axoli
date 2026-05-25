@@ -50,6 +50,7 @@ export async function POST(req: Request) {
   const stripe = stripeClient()
 
   const supabase = getSupabaseAdmin()
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: profile } = await supabase
     .from('profiles')
     .select('stripe_customer_id')

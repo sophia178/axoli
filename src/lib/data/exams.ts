@@ -11,6 +11,7 @@ export type Exam = {
 
 export async function getUpcomingExams(userId: string): Promise<Exam[]> {
   const supabase = getSupabaseAdmin()
+  if (!supabase) return []
   const { data } = await supabase
     .from('exams')
     .select('id,user_id,name,subject,exam_date,created_at')
@@ -20,4 +21,3 @@ export async function getUpcomingExams(userId: string): Promise<Exam[]> {
 
   return (data ?? []) as Exam[]
 }
-

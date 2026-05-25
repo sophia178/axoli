@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Bloom",
+    "appName": "Axoli",
     "tagline": "和你的学习宠物一起学习",
     "tipTitle": "小贴士",
     "tipBody": "短时间也算数。现在学10分钟，让你的美西螈保持开心。",
@@ -95,7 +95,7 @@
       "focusBoosts": "专注加成"
     },
     "socialProof": {
-      "join": "加入正在使用 Bloom 的同学们",
+      "join": "加入正在使用 Axoli 的同学们",
       "loved": "深受全球学生喜爱"
     },
     "features": {
@@ -112,7 +112,7 @@
       "step1Title": "第1步 粘贴笔记或 YouTube 链接",
       "step1Body": "任何主题都行：课堂笔记、复习资料或 YouTube 链接。",
       "step2Title": "第2步 获得闪卡、总结和测验",
-      "step2Body": "Bloom 会生成可直接学习的资料。",
+      "step2Body": "Axoli 会生成可直接学习的资料。",
       "step3Title": "第3步 和宠物一起学习并追踪进度",
       "step3Body": "赚取金币、保持连胜，并看着你的美西螈成长。"
     },
@@ -138,7 +138,7 @@
   },
   "pricingPage": {
     "title": "价格",
-    "subtitle": "Bloom 可免费开始。升级可获得更高的 AI 限额和宠物高级道具。",
+    "subtitle": "Axoli 可免费开始。升级可获得更高的 AI 限额和宠物高级道具。",
     "free": {
       "title": "免费",
       "period": "永久",
