@@ -1,13 +1,10 @@
-import createMiddleware from 'next-intl/middleware'
-import { defaultLocale, locales } from '@/i18n'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export default createMiddleware({
-  locales: [...locales],
-  defaultLocale,
-  localePrefix: 'never',
-  localeDetection: true
-})
+export function middleware(_request: NextRequest) {
+  return NextResponse.next()
+}
 
 export const config = {
-  matcher: '/((?!api|trpc|_next|_vercel|.*\\..*).*)'
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
 }
