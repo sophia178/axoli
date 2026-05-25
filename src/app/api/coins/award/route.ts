@@ -18,7 +18,10 @@ export async function POST(req: Request) {
   const parsed = bodySchema.safeParse(json)
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
-  const coins = await awardCoins(user.id, parsed.data.amount, parsed.data.reason)
-  return NextResponse.json({ ok: true, coins, coinsAwarded: parsed.data.amount })
+  try {
+    const coins = await awardCoins(user.id, parsed.data.amount, parsed.data.reason)
+    return NextResponse.json({ ok: true, coins, coinsAwarded: parsed.data.amount })
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 }
-

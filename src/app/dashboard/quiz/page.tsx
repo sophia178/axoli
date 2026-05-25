@@ -1,6 +1,8 @@
+import Link from 'next/link'
 import { requireUser } from '@/lib/auth/user'
 import { getDecks } from '@/lib/data/flashcards'
 import { QuizFlow } from '@/components/quiz/QuizFlow'
+import { Button } from '@/components/ui/Button'
 
 export default async function QuizPage({
   searchParams
@@ -9,7 +11,32 @@ export default async function QuizPage({
 }) {
   const user = await requireUser()
   const deckId = typeof searchParams?.deck === 'string' ? searchParams.deck : null
-  const decks = await getDecks(user.id)
+  let decks: Awaited<ReturnType<typeof getDecks>> = []
+  try {
+    decks = await getDecks(user.id)
+  } catch {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Could not load your decks. Please try again.
+      </div>
+    )
+  }
+
+  if (decks.length === 0) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6">
+        <div className="font-heading text-2xl text-text">No decks yet</div>
+        <div className="mt-2 text-sm text-subtext">
+          Create a flashcard deck first, then come back to quiz yourself.
+        </div>
+        <div className="mt-4">
+          <Link href="/dashboard/flashcards/create">
+            <Button>Create a deck</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <QuizFlow

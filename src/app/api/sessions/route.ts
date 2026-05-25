@@ -57,8 +57,14 @@ export async function POST(req: Request) {
   const newStreak =
     last === todayISO ? profile?.streak ?? 0 : last === yesterdayISO ? (profile?.streak ?? 0) + 1 : 1
 
-  const newCoins =
-    coinsEarned > 0 ? await awardCoins(user.id, coinsEarned, 'study_minutes') : profile?.coins ?? 0
+  let newCoins = profile?.coins ?? 0
+  if (coinsEarned > 0) {
+    try {
+      newCoins = await awardCoins(user.id, coinsEarned, 'study_minutes')
+    } catch {
+      return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+    }
+  }
 
   const lastUpdated = (profile as any)?.pet_last_updated as string | null
   const baseHappiness = profile?.pet_happiness ?? 100
@@ -66,14 +72,17 @@ export async function POST(req: Request) {
   const decayed = Math.max(0, Math.min(100, baseHappiness - days * 10))
   const newHappiness = Math.max(0, Math.min(100, decayed + 20))
 
-  await supabase.from('study_sessions').insert({
+  const inserted = await supabase.from('study_sessions').insert({
     user_id: user.id,
     duration: parsed.data.durationSeconds,
     subject: parsed.data.subject ?? null,
     coins_earned: coinsEarned
   })
+  if (inserted.error) {
+    return NextResponse.json({ error: 'session_save_failed' }, { status: 500 })
+  }
 
-  await supabase
+  const updated = await supabase
     .from('profiles')
     .update({
       streak: newStreak,
@@ -82,6 +91,9 @@ export async function POST(req: Request) {
       pet_last_updated: todayISO
     })
     .eq('user_id', user.id)
+  if (updated.error) {
+    return NextResponse.json({ error: 'profile_update_failed' }, { status: 500 })
+  }
 
   return NextResponse.json({
     ok: true,

@@ -39,6 +39,10 @@ export async function POST(req: Request) {
     .update({ last_studied_at: new Date().toISOString() })
     .eq('id', parsed.data.deckId)
 
-  const coins = await awardCoins(user.id, 5, 'deck_review_complete')
-  return NextResponse.json({ ok: true, coinsAwarded: 5, coins })
+  try {
+    const coins = await awardCoins(user.id, 5, 'deck_review_complete')
+    return NextResponse.json({ ok: true, coinsAwarded: 5, coins })
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 }

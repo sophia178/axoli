@@ -14,6 +14,16 @@ export default async function LoginPage({
   const error = typeof searchParams?.error === 'string' ? searchParams.error : null
   const notice =
     typeof searchParams?.notice === 'string' ? searchParams.notice : null
+  const errorMessage =
+    error === 'invalid_credentials'
+      ? 'Enter a valid email and password (8+ characters).'
+      : error === 'server_misconfigured'
+        ? 'Login is temporarily unavailable. Please try again later.'
+        : error === 'auth_failed'
+          ? 'Login failed. Check your email and password and try again.'
+          : error
+            ? 'Login failed. Try again.'
+            : null
 
   return (
     <div>
@@ -33,9 +43,9 @@ export default async function LoginPage({
                   Check your email to confirm your account, then log in.
                 </div>
               ) : null}
-              {error ? (
+              {errorMessage ? (
                 <div className="mb-4 rounded-2xl border border-pink/30 bg-pink/10 px-4 py-3 text-sm text-text">
-                  Login failed. Try again.
+                  {errorMessage}
                 </div>
               ) : null}
 

@@ -15,6 +15,7 @@ export function CreateDeckForm() {
   const [cards, setCards] = useState<DraftCard[]>([{ front: '', back: '' }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const { withLoading } = useLoading()
 
   const canSave = useMemo(() => {
@@ -89,34 +90,48 @@ export function CreateDeckForm() {
               {error}
             </div>
           ) : null}
+          {success ? (
+            <div className="rounded-2xl border border-success/25 bg-success/10 px-4 py-2 text-sm text-text">
+              {success}
+            </div>
+          ) : null}
           <Button
             type="button"
             disabled={!canSave || saving}
             onClick={async () => {
               setSaving(true)
               setError(null)
-              const payload = {
-                title: title.trim(),
-                subject: subject.trim(),
-                cards: cards
-                  .filter((c) => c.front.trim() && c.back.trim())
-                  .map((c) => ({ front: c.front.trim(), back: c.back.trim() }))
-              }
-              const res = await withLoading(
-                fetch('/api/flashcards/decks', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(payload)
-                })
-              )
-              const json = (await res.json().catch(() => null)) as any
-              if (!res.ok) {
+              setSuccess(null)
+              try {
+                const payload = {
+                  title: title.trim(),
+                  subject: subject.trim(),
+                  cards: cards
+                    .filter((c) => c.front.trim() && c.back.trim())
+                    .map((c) => ({ front: c.front.trim(), back: c.back.trim() }))
+                }
+                const res = await withLoading(
+                  fetch('/api/flashcards/decks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                  })
+                )
+                const json = (await res.json().catch(() => null)) as any
+                if (!res.ok || !json?.deckId) {
+                  setError('Could not save deck. Try again.')
+                  return
+                }
+                setSuccess('Deck saved!')
+                window.setTimeout(() => {
+                  router.push('/dashboard/flashcards')
+                  router.refresh()
+                }, 650)
+              } catch {
                 setError('Could not save deck. Try again.')
+              } finally {
                 setSaving(false)
-                return
               }
-              router.push(`/dashboard/quiz?deck=${json.deckId}`)
-              router.refresh()
             }}
           >
             {saving ? 'Saving…' : 'Save deck'}

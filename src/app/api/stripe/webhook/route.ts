@@ -83,7 +83,9 @@ export async function POST(req: Request) {
         const coinsKey = key
         const coins = coinsFromKey(coinsKey)
         if (coins > 0) {
-          await awardCoins(userId, coins, coinsKey)
+          try {
+            await awardCoins(userId, coins, coinsKey)
+          } catch {}
         }
       }
     }

@@ -30,7 +30,10 @@ export async function POST() {
   if (last === today) return NextResponse.json({ ok: true, coinsAwarded: 0 })
 
   await supabase.from('profiles').update({ last_login_date: today }).eq('user_id', user.id)
-  await awardCoins(user.id, 2, 'daily_login')
-
-  return NextResponse.json({ ok: true, coinsAwarded: 2 })
+  try {
+    await awardCoins(user.id, 2, 'daily_login')
+    return NextResponse.json({ ok: true, coinsAwarded: 2 })
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 }

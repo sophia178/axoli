@@ -28,147 +28,161 @@ export default async function ProgressPage() {
       </div>
     )
   }
-  const profile = await getProfile(user.id)
+  try {
+    const profile = await getProfile(user.id)
 
-  const sessionsCountRes = await supabase
-    .from('study_sessions')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-  const sessionsCount = sessionsCountRes.count ?? 0
+    const sessionsCountRes = await supabase
+      .from('study_sessions')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+    const sessionsCount = sessionsCountRes.count ?? 0
 
-  const decksCountRes = await supabase
-    .from('flashcard_decks')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-  const decksCount = decksCountRes.count ?? 0
+    const decksCountRes = await supabase
+      .from('flashcard_decks')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+    const decksCount = decksCountRes.count ?? 0
 
-  const groupsCountRes = await supabase
-    .from('group_members')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-  const groupsCount = groupsCountRes.count ?? 0
+    const groupsCountRes = await supabase
+      .from('group_members')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+    const groupsCount = groupsCountRes.count ?? 0
 
-  const quizzesCountRes = await supabase
-    .from('quiz_attempts')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-  const quizzesCompleted = quizzesCountRes.count ?? 0
+    const quizzesCountRes = await supabase
+      .from('quiz_attempts')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+    const quizzesCompleted = quizzesCountRes.count ?? 0
 
-  const masteredRes = await supabase
-    .from('flashcard_mastery')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .eq('mastered', true)
-  const flashcardsMastered = masteredRes.count ?? 0
+    const masteredRes = await supabase
+      .from('flashcard_mastery')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('mastered', true)
+    const flashcardsMastered = masteredRes.count ?? 0
 
-  const perfectRes = await supabase
-    .from('quiz_attempts')
-    .select('id,question_count,correct_count')
-    .eq('user_id', user.id)
-    .limit(2000)
-  const perfectQuiz = (perfectRes.data ?? []).some(
-    (a: any) => a.question_count === a.correct_count
-  )
+    const perfectRes = await supabase
+      .from('quiz_attempts')
+      .select('id,question_count,correct_count')
+      .eq('user_id', user.id)
+      .limit(2000)
+    const perfectQuiz = (perfectRes.data ?? []).some(
+      (a: any) => a.question_count === a.correct_count
+    )
 
-  const now = new Date()
-  const sevenDaysAgo = startOfDay(new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000))
-  const thirtyDaysAgo = startOfDay(new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000))
+    const now = new Date()
+    const sevenDaysAgo = startOfDay(
+      new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000)
+    )
+    const thirtyDaysAgo = startOfDay(
+      new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000)
+    )
 
-  const { data: recentSessions } = await supabase
-    .from('study_sessions')
-    .select('duration,subject,created_at')
-    .eq('user_id', user.id)
-    .gte('created_at', thirtyDaysAgo.toISOString())
-    .order('created_at', { ascending: true })
-    .limit(5000)
+    const { data: recentSessions } = await supabase
+      .from('study_sessions')
+      .select('duration,subject,created_at')
+      .eq('user_id', user.id)
+      .gte('created_at', thirtyDaysAgo.toISOString())
+      .order('created_at', { ascending: true })
+      .limit(5000)
 
-  const allSessionsForTotals = await supabase
-    .from('study_sessions')
-    .select('duration,subject,created_at')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(5000)
+    const allSessionsForTotals = await supabase
+      .from('study_sessions')
+      .select('duration,subject,created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5000)
 
-  const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
-    (acc: number, s: any) => acc + (s.duration as number),
-    0
-  )
-  const totalStudyHours = Math.round((totalStudySeconds / 3600) * 10) / 10
+    const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
+      (acc: number, s: any) => acc + (s.duration as number),
+      0
+    )
+    const totalStudyHours = Math.round((totalStudySeconds / 3600) * 10) / 10
 
-  const { data: ledger } = await supabase
-    .from('coins_ledger')
-    .select('amount')
-    .eq('user_id', user.id)
-    .limit(5000)
+    const { data: ledger } = await supabase
+      .from('coins_ledger')
+      .select('amount')
+      .eq('user_id', user.id)
+      .limit(5000)
 
-  const totalCoinsEarnedAllTime = (ledger ?? [])
-    .map((l: any) => l.amount as number)
-    .filter((a) => a > 0)
-    .reduce((acc, a) => acc + a, 0)
+    const totalCoinsEarnedAllTime = (ledger ?? [])
+      .map((l: any) => l.amount as number)
+      .filter((a) => a > 0)
+      .reduce((acc, a) => acc + a, 0)
 
-  const hoursByDay7 = new Map<string, number>()
-  for (let i = 0; i < 7; i += 1) {
-    const d = new Date(sevenDaysAgo)
-    d.setDate(d.getDate() + i)
-    hoursByDay7.set(isoDate(d), 0)
-  }
+    const hoursByDay7 = new Map<string, number>()
+    for (let i = 0; i < 7; i += 1) {
+      const d = new Date(sevenDaysAgo)
+      d.setDate(d.getDate() + i)
+      hoursByDay7.set(isoDate(d), 0)
+    }
 
-  const hoursByDay30 = new Map<string, number>()
-  for (let i = 0; i < 30; i += 1) {
-    const d = new Date(thirtyDaysAgo)
-    d.setDate(d.getDate() + i)
-    hoursByDay30.set(isoDate(d), 0)
-  }
+    const hoursByDay30 = new Map<string, number>()
+    for (let i = 0; i < 30; i += 1) {
+      const d = new Date(thirtyDaysAgo)
+      d.setDate(d.getDate() + i)
+      hoursByDay30.set(isoDate(d), 0)
+    }
 
-  const subjectSeconds = new Map<string, number>()
-  const subjectSet = new Set<string>()
+    const subjectSeconds = new Map<string, number>()
+    const subjectSet = new Set<string>()
 
-  for (const s of (recentSessions ?? []) as any[]) {
-    const date = isoDate(new Date(s.created_at as string))
-    const seconds = s.duration as number
-    if (hoursByDay7.has(date)) hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
-    if (hoursByDay30.has(date)) hoursByDay30.set(date, (hoursByDay30.get(date) ?? 0) + seconds / 3600)
-    const subj = (s.subject as string | null) ?? 'Unspecified'
-    subjectSet.add(subj)
-    subjectSeconds.set(subj, (subjectSeconds.get(subj) ?? 0) + seconds)
-  }
+    for (const s of (recentSessions ?? []) as any[]) {
+      const date = isoDate(new Date(s.created_at as string))
+      const seconds = s.duration as number
+      if (hoursByDay7.has(date))
+        hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
+      if (hoursByDay30.has(date))
+        hoursByDay30.set(date, (hoursByDay30.get(date) ?? 0) + seconds / 3600)
+      const subj = (s.subject as string | null) ?? 'Unspecified'
+      subjectSet.add(subj)
+      subjectSeconds.set(subj, (subjectSeconds.get(subj) ?? 0) + seconds)
+    }
 
-  const distinctSubjectsCount = Array.from(subjectSet).filter((s) => s !== 'Unspecified').length
+    const distinctSubjectsCount = Array.from(subjectSet).filter(
+      (s) => s !== 'Unspecified'
+    ).length
 
-  const barDays = Array.from(hoursByDay7.entries()).map(([date, hours]) => ({ date, hours }))
-  const maxBar = Math.max(1, ...barDays.map((d) => d.hours))
+    const barDays = Array.from(hoursByDay7.entries()).map(([date, hours]) => ({
+      date,
+      hours
+    }))
+    const maxBar = Math.max(1, ...barDays.map((d) => d.hours))
+    const studyHoursThisWeek =
+      Math.round(barDays.reduce((acc, d) => acc + d.hours, 0) * 10) / 10
 
-  const subjectParts = Array.from(subjectSeconds.entries())
-    .map(([subject, seconds]) => ({ subject, hours: seconds / 3600 }))
-    .sort((a, b) => b.hours - a.hours)
-    .filter((p) => p.hours > 0)
+    const subjectParts = Array.from(subjectSeconds.entries())
+      .map(([subject, seconds]) => ({ subject, hours: seconds / 3600 }))
+      .sort((a, b) => b.hours - a.hours)
+      .filter((p) => p.hours > 0)
 
-  const topSubjects = subjectParts.slice(0, 6)
-  const subjectTotal = topSubjects.reduce((acc, p) => acc + p.hours, 0) || 1
+    const topSubjects = subjectParts.slice(0, 6)
+    const subjectTotal = topSubjects.reduce((acc, p) => acc + p.hours, 0) || 1
 
-  const achievements = [
-    { name: 'First study session', unlocked: sessionsCount > 0 },
-    { name: '7 day streak', unlocked: (profile?.streak ?? 0) >= 7 },
-    { name: 'Study 10 hours total', unlocked: totalStudyHours >= 10 },
-    { name: 'Create first flashcard deck', unlocked: decksCount > 0 },
-    { name: 'Join first study group', unlocked: groupsCount > 0 },
-    { name: 'Score 100% on a quiz', unlocked: perfectQuiz },
-    { name: 'Study 5 subjects', unlocked: distinctSubjectsCount >= 5 },
-    { name: 'Earn 500 coins', unlocked: totalCoinsEarnedAllTime >= 500 }
-  ]
+    const achievements = [
+      { name: 'First study session', unlocked: sessionsCount > 0 },
+      { name: '7 day streak', unlocked: (profile?.streak ?? 0) >= 7 },
+      { name: 'Study 10 hours total', unlocked: totalStudyHours >= 10 },
+      { name: 'Create first flashcard deck', unlocked: decksCount > 0 },
+      { name: 'Join first study group', unlocked: groupsCount > 0 },
+      { name: 'Score 100% on a quiz', unlocked: perfectQuiz },
+      { name: 'Study 5 subjects', unlocked: distinctSubjectsCount >= 5 },
+      { name: 'Earn 500 coins', unlocked: totalCoinsEarnedAllTime >= 500 }
+    ]
 
-  return (
-    <div className="space-y-5">
-      <div className="grid gap-5 md:grid-cols-5">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total hours</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="font-heading text-3xl text-text">{totalStudyHours}</div>
-            <div className="mt-2 text-sm text-subtext">All time</div>
-          </CardContent>
-        </Card>
+    return (
+      <div className="space-y-5">
+        <div className="grid gap-5 md:grid-cols-5">
+          <Card>
+            <CardHeader>
+              <CardTitle>Study hours</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="font-heading text-3xl text-text">{studyHoursThisWeek}</div>
+              <div className="mt-2 text-sm text-subtext">This week</div>
+            </CardContent>
+          </Card>
         <Card>
           <CardHeader>
             <CardTitle>Current streak</CardTitle>
@@ -180,11 +194,11 @@ export default async function ProgressPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Coins earned</CardTitle>
+            <CardTitle>Total coins</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{totalCoinsEarnedAllTime}</div>
-            <div className="mt-2 text-sm text-subtext">All time</div>
+            <div className="font-heading text-3xl text-text">{profile?.coins ?? 0}</div>
+            <div className="mt-2 text-sm text-subtext">Current balance</div>
           </CardContent>
         </Card>
         <Card>
@@ -205,44 +219,44 @@ export default async function ProgressPage() {
             <div className="mt-2 text-sm text-subtext">Completed</div>
           </CardContent>
         </Card>
-      </div>
+        </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Study hours (last 7 days)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <svg viewBox="0 0 420 200" className="h-auto w-full">
-              <rect x="0" y="0" width="420" height="200" fill="transparent" />
-              {barDays.map((d, i) => {
-                const h = d.hours
-                const barH = (h / maxBar) * 140
-                const x = 20 + i * 55
-                const y = 170 - barH
-                return (
-                  <g key={d.date}>
-                    <rect
-                      x={x}
-                      y={y}
-                      width="34"
-                      height={barH}
-                      rx="10"
-                      fill="#FF8FAB"
-                      opacity={0.85}
-                    />
-                    <text x={x + 17} y="190" textAnchor="middle" fontSize="10" fill="#8888AA">
-                      {d.date.slice(5)}
-                    </text>
-                    <text x={x + 17} y={y - 6} textAnchor="middle" fontSize="10" fill="#FFFFFF">
-                      {Math.round(h * 10) / 10}
-                    </text>
-                  </g>
-                )
-              })}
-            </svg>
-          </CardContent>
-        </Card>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Study hours (last 7 days)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <svg viewBox="0 0 420 200" className="h-auto w-full">
+                <rect x="0" y="0" width="420" height="200" fill="transparent" />
+                {barDays.map((d, i) => {
+                  const h = d.hours
+                  const barH = (h / maxBar) * 140
+                  const x = 20 + i * 55
+                  const y = 170 - barH
+                  return (
+                    <g key={d.date}>
+                      <rect
+                        x={x}
+                        y={y}
+                        width="34"
+                        height={barH}
+                        rx="10"
+                        fill="#FF8FAB"
+                        opacity={0.85}
+                      />
+                      <text x={x + 17} y="190" textAnchor="middle" fontSize="10" fill="#8888AA">
+                        {d.date.slice(5)}
+                      </text>
+                      <text x={x + 17} y={y - 6} textAnchor="middle" fontSize="10" fill="#FFFFFF">
+                        {Math.round(h * 10) / 10}
+                      </text>
+                    </g>
+                  )
+                })}
+              </svg>
+            </CardContent>
+          </Card>
 
         <Card>
           <CardHeader>
@@ -355,7 +369,14 @@ export default async function ProgressPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
-  )
+    )
+  } catch {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Loading your progress…
+      </div>
+    )
+  }
 }

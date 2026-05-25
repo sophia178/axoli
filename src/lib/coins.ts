@@ -1,41 +1,50 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function awardCoins(userId: string, amount: number, reason: string) {
-  try {
-    const supabase = getSupabaseAdmin()
-    if (!supabase) return 0
+  const supabase = getSupabaseAdmin()
+  if (!supabase) throw new Error('missing_supabase_admin')
 
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('coins')
-      .eq('user_id', userId)
-      .maybeSingle()
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('coins')
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (error) throw new Error('profile_load_failed')
 
-    if (error) return 0
+  const current = profile?.coins ?? 0
+  const next = Math.max(0, current + amount)
 
-    const current = profile?.coins ?? 0
-    const next = Math.max(0, current + amount)
+  const ledger = await supabase.from('coins_ledger').insert({
+    user_id: userId,
+    amount,
+    reason
+  })
+  if (ledger.error) throw new Error('coins_ledger_insert_failed')
 
-    await supabase.from('coins_ledger').insert({
-      user_id: userId,
-      amount,
-      reason
-    })
+  const updated = await supabase
+    .from('profiles')
+    .update({ coins: next })
+    .eq('user_id', userId)
+    .select('coins')
+    .single()
 
-    const updated = await supabase
-      .from('profiles')
-      .update({ coins: next })
-      .eq('user_id', userId)
-      .select('coins')
-      .single()
-
-    if (updated.error) return current
-    return (updated.data.coins as number) ?? current
-  } catch {
-    return 0
-  }
+  if (updated.error) throw new Error('coins_update_failed')
+  return (updated.data.coins as number) ?? next
 }
 
 export async function spendCoins(userId: string, amount: number, reason: string) {
-  return awardCoins(userId, -Math.abs(amount), reason)
+  const spendAmount = Math.abs(amount)
+  const supabase = getSupabaseAdmin()
+  if (!supabase) throw new Error('missing_supabase_admin')
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('coins')
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (error) throw new Error('profile_load_failed')
+
+  const current = profile?.coins ?? 0
+  if (current < spendAmount) throw new Error('not_enough_coins')
+  return awardCoins(userId, -spendAmount, reason)
 }

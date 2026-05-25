@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Locale } from '@/i18n'
+import { isLocale, type Locale } from '@/i18n'
 import { cn } from '@/lib/cn'
 
 type Option = { locale: Locale; label: string; flag: string }
@@ -23,19 +23,19 @@ const options: Option[] = [
   { locale: 'zh', label: '简体中文', flag: '🇨🇳' }
 ]
 
-function getCookie(name: string) {
-  if (typeof document === 'undefined') return null
-  const parts = document.cookie.split(';').map((p) => p.trim())
-  for (const part of parts) {
-    if (!part.startsWith(`${name}=`)) continue
-    return decodeURIComponent(part.slice(name.length + 1))
+function getStoredLocale(): Locale | null {
+  try {
+    const v = window.localStorage.getItem('axoli-language')
+    return isLocale(v) ? v : null
+  } catch {
+    return null
   }
-  return null
 }
 
-function setLocaleCookie(locale: Locale) {
-  if (typeof document === 'undefined') return
-  document.cookie = `NEXT_LOCALE=${encodeURIComponent(locale)}; path=/; max-age=31536000; samesite=lax`
+function setStoredLocale(locale: Locale) {
+  try {
+    window.localStorage.setItem('axoli-language', locale)
+  } catch {}
 }
 
 export function LanguageMenu({
@@ -49,7 +49,8 @@ export function LanguageMenu({
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [open, setOpen] = useState(false)
-  const current = (getCookie('NEXT_LOCALE') as Locale | null) ?? 'en'
+  const [toast, setToast] = useState<string | null>(null)
+  const current = getStoredLocale() ?? 'en'
 
   const currentOption = useMemo(() => {
     return options.find((o) => o.locale === current) ?? options[0]
@@ -84,10 +85,11 @@ export function LanguageMenu({
               key={opt.locale}
               type="button"
               onClick={async () => {
-                setLocaleCookie(opt.locale)
+                setStoredLocale(opt.locale)
                 setOpen(false)
                 if (onSelected) await onSelected(opt.locale)
-                window.location.reload()
+                setToast('Language preference saved')
+                window.setTimeout(() => setToast(null), 1400)
               }}
               className={cn(
                 'flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm transition',
@@ -133,6 +135,13 @@ export function LanguageMenu({
         <span className="text-base">🌐</span>
       </button>
       {open ? menu : null}
+      {toast ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[9999] flex justify-center px-4">
+          <div className="rounded-3xl border border-border bg-card/80 px-4 py-3 text-sm font-semibold text-text shadow-[0_18px_55px_rgba(0,0,0,0.55)]">
+            {toast}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

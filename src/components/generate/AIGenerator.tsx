@@ -261,6 +261,7 @@ export function AIGenerator() {
   const [output, setOutput] = useState<GenerateOutput | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [upgrade, setUpgrade] = useState(false)
+  const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -268,6 +269,21 @@ export function AIGenerator() {
   const canGenerateNotes = useMemo(() => notesText.trim().length >= 100, [notesText])
   const canGenerateYoutube = useMemo(() => isValidYoutubeUrl(youtubeUrl.trim()), [youtubeUrl])
   const canGeneratePdf = useMemo(() => Boolean(pdfFile), [pdfFile])
+
+  async function runGenerate(work: () => Promise<void>) {
+    if (generating) return
+    setGenerating(true)
+    setMessage(null)
+    setUpgrade(false)
+    setOutput(null)
+    try {
+      await work()
+    } catch {
+      setMessage((prev) => prev ?? 'Generation failed. Try again.')
+    } finally {
+      setGenerating(false)
+    }
+  }
 
   return (
     <div className="space-y-5">
@@ -313,43 +329,47 @@ export function AIGenerator() {
               <div className="flex items-end justify-end">
                 <Button
                   variant="secondary"
-                  disabled={!canGenerateNotes}
+                  disabled={!canGenerateNotes || generating}
                   onClick={async () => {
-                    setMessage(null)
-                    setUpgrade(false)
-                    setOutput(null)
-                    const res = await withLoading(
-                      fetch('/api/generate/notes', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          text: notesText.trim(),
-                          subject: notesSubject
+                    await runGenerate(async () => {
+                      const res = await withLoading(
+                        fetch('/api/generate/notes', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            text: notesText.trim(),
+                            subject: notesSubject
+                          })
                         })
-                      })
-                    )
-                    const json = (await res.json().catch(() => null)) as any
-                    if (!res.ok) {
-                      setUpgrade(json?.error === 'ai_limit')
-                      setMessage(
-                        json?.error === 'ai_limit'
-                          ? 'Free limit reached (5/month). Upgrade to keep generating.'
-                          : 'Generation failed. Try again.'
                       )
-                      return
-                    }
-                    const out = json?.output as GenerateOutput
-                    setOutput(out)
-                    const coinsAwarded = Number(json?.coinsAwarded ?? 0)
-                    if (coinsAwarded > 0) showCoins(coinsAwarded)
-                    setMessage(
-                      typeof json?.remaining === 'number'
-                        ? `Generated! ${json.remaining} left this month`
-                        : 'Generated!'
-                    )
+                      const json = (await res.json().catch(() => null)) as any
+                      if (!res.ok) {
+                        setUpgrade(json?.error === 'ai_limit')
+                        setMessage(
+                          json?.error === 'ai_limit'
+                            ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : 'Generation failed. Try again.'
+                        )
+                        return
+                      }
+                      const out = json?.output as GenerateOutput
+                      setOutput(out)
+                      const coinsAwarded = Number(json?.coinsAwarded ?? 0)
+                      if (coinsAwarded > 0) showCoins(coinsAwarded)
+                      setMessage(
+                        typeof json?.remaining === 'number'
+                          ? `Generated! ${json.remaining} left this month`
+                          : 'Generated!'
+                      )
+                    })
                   }}
                 >
-                  Generate
+                  <span className="flex items-center gap-2">
+                    {generating ? (
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-border border-t-pink" />
+                    ) : null}
+                    {generating ? 'Generating…' : 'Generate'}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -391,42 +411,46 @@ export function AIGenerator() {
               <div className="flex items-end justify-end">
                 <Button
                   variant="secondary"
-                  disabled={!canGenerateYoutube}
+                  disabled={!canGenerateYoutube || generating}
                   onClick={async () => {
-                    setMessage(null)
-                    setUpgrade(false)
-                    setOutput(null)
-                    const res = await withLoading(
-                      fetch('/api/generate/youtube', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: youtubeUrl.trim() })
-                      })
-                    )
-                    const json = (await res.json().catch(() => null)) as any
-                    if (!res.ok) {
-                      setUpgrade(json?.error === 'ai_limit')
-                      setMessage(
-                        json?.error === 'ai_limit'
-                          ? 'Free limit reached (5/month). Upgrade to keep generating.'
-                          : json?.error === 'no_transcript'
-                            ? 'No transcript found for this video.'
-                            : 'Generation failed. Try again.'
+                    await runGenerate(async () => {
+                      const res = await withLoading(
+                        fetch('/api/generate/youtube', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ url: youtubeUrl.trim() })
+                        })
                       )
-                      return
-                    }
-                    const out = json?.output as GenerateOutput
-                    setOutput(out)
-                    const coinsAwarded = Number(json?.coinsAwarded ?? 0)
-                    if (coinsAwarded > 0) showCoins(coinsAwarded)
-                    setMessage(
-                      typeof json?.remaining === 'number'
-                        ? `Generated! ${json.remaining} left this month`
-                        : 'Generated!'
-                    )
+                      const json = (await res.json().catch(() => null)) as any
+                      if (!res.ok) {
+                        setUpgrade(json?.error === 'ai_limit')
+                        setMessage(
+                          json?.error === 'ai_limit'
+                            ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : json?.error === 'no_transcript'
+                              ? 'No transcript found for this video.'
+                              : 'Generation failed. Try again.'
+                        )
+                        return
+                      }
+                      const out = json?.output as GenerateOutput
+                      setOutput(out)
+                      const coinsAwarded = Number(json?.coinsAwarded ?? 0)
+                      if (coinsAwarded > 0) showCoins(coinsAwarded)
+                      setMessage(
+                        typeof json?.remaining === 'number'
+                          ? `Generated! ${json.remaining} left this month`
+                          : 'Generated!'
+                      )
+                    })
                   }}
                 >
-                  Generate
+                  <span className="flex items-center gap-2">
+                    {generating ? (
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-border border-t-pink" />
+                    ) : null}
+                    {generating ? 'Generating…' : 'Generate'}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -461,48 +485,52 @@ export function AIGenerator() {
               <div className="flex items-end justify-end">
                 <Button
                   variant="secondary"
-                  disabled={!canGeneratePdf}
+                  disabled={!canGeneratePdf || generating}
                   onClick={async () => {
                     if (!pdfFile) return
-                    setMessage(null)
-                    setUpgrade(false)
-                    setOutput(null)
-                    const base64 = await readFileBase64(pdfFile)
-                    const res = await withLoading(
-                      fetch('/api/generate/pdf', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          base64,
-                          filename: pdfFile.name,
-                          subject: pdfSubject
+                    await runGenerate(async () => {
+                      const base64 = await readFileBase64(pdfFile)
+                      const res = await withLoading(
+                        fetch('/api/generate/pdf', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            base64,
+                            filename: pdfFile.name,
+                            subject: pdfSubject
+                          })
                         })
-                      })
-                    )
-                    const json = (await res.json().catch(() => null)) as any
-                    if (!res.ok) {
-                      setUpgrade(json?.error === 'ai_limit')
-                      setMessage(
-                        json?.error === 'ai_limit'
-                          ? 'Free limit reached (5/month). Upgrade to keep generating.'
-                          : json?.error === 'no_text'
-                            ? 'Could not extract text from this PDF.'
-                            : 'Generation failed. Try again.'
                       )
-                      return
-                    }
-                    const out = json?.output as GenerateOutput
-                    setOutput(out)
-                    const coinsAwarded = Number(json?.coinsAwarded ?? 0)
-                    if (coinsAwarded > 0) showCoins(coinsAwarded)
-                    setMessage(
-                      typeof json?.remaining === 'number'
-                        ? `Generated! ${json.remaining} left this month`
-                        : 'Generated!'
-                    )
+                      const json = (await res.json().catch(() => null)) as any
+                      if (!res.ok) {
+                        setUpgrade(json?.error === 'ai_limit')
+                        setMessage(
+                          json?.error === 'ai_limit'
+                            ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : json?.error === 'no_text'
+                              ? 'Could not extract text from this PDF.'
+                              : 'Generation failed. Try again.'
+                        )
+                        return
+                      }
+                      const out = json?.output as GenerateOutput
+                      setOutput(out)
+                      const coinsAwarded = Number(json?.coinsAwarded ?? 0)
+                      if (coinsAwarded > 0) showCoins(coinsAwarded)
+                      setMessage(
+                        typeof json?.remaining === 'number'
+                          ? `Generated! ${json.remaining} left this month`
+                          : 'Generated!'
+                      )
+                    })
                   }}
                 >
-                  Generate
+                  <span className="flex items-center gap-2">
+                    {generating ? (
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-border border-t-pink" />
+                    ) : null}
+                    {generating ? 'Generating…' : 'Generate'}
+                  </span>
                 </Button>
               </div>
             </div>
@@ -593,25 +621,30 @@ export function AIGenerator() {
                 onSave={async () => {
                   if (!output) return
                   setSaving(true)
-                  const deckTitle = `Generated - ${output.subject}`
-                  const res = await withLoading(
-                    fetch('/api/flashcards/decks', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        title: deckTitle,
-                        subject: output.subject,
-                        cards: output.flashcards
+                  try {
+                    const deckTitle = `Generated - ${output.subject}`
+                    const res = await withLoading(
+                      fetch('/api/flashcards/decks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          title: deckTitle,
+                          subject: output.subject,
+                          cards: output.flashcards
+                        })
                       })
-                    })
-                  )
-                  const json = (await res.json().catch(() => null)) as any
-                  if (res.ok && json?.deckId) {
-                    window.location.href = `/dashboard/quiz?deck=${json.deckId}`
-                  } else {
+                    )
+                    const json = (await res.json().catch(() => null)) as any
+                    if (res.ok && json?.deckId) {
+                      window.location.href = `/dashboard/quiz?deck=${json.deckId}`
+                    } else {
+                      setMessage('Could not save deck.')
+                    }
+                  } catch {
                     setMessage('Could not save deck.')
+                  } finally {
+                    setSaving(false)
                   }
-                  setSaving(false)
                 }}
               />
               {saving ? (

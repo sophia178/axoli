@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
   const supabase = getSupabaseAdmin()
   if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
-  await supabase.from('quiz_attempts').insert({
+  const inserted = await supabase.from('quiz_attempts').insert({
     user_id: user.id,
     deck_id: parsed.data.deckId,
     mode: parsed.data.mode,
@@ -32,10 +32,16 @@ export async function POST(req: Request) {
     correct_count: parsed.data.correctCount,
     duration_seconds: parsed.data.durationSeconds
   })
+  if (inserted.error) return NextResponse.json({ error: 'quiz_save_failed' }, { status: 500 })
 
   const perfect = parsed.data.correctCount === parsed.data.questionCount
   const coinsAwarded = perfect ? 25 : 10
-  const coins = await awardCoins(user.id, coinsAwarded, perfect ? 'quiz_perfect' : 'quiz_finish')
+  let coins = 0
+  try {
+    coins = await awardCoins(user.id, coinsAwarded, perfect ? 'quiz_perfect' : 'quiz_finish')
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 
   return NextResponse.json({ ok: true, coinsAwarded, coins })
 }

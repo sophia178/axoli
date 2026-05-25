@@ -74,7 +74,12 @@ export async function POST(req: Request) {
   }
 
   const bonusCoins = parsed.data.amount
-  const coins = await awardCoins(user.id, bonusCoins, `double_${parsed.data.reason}`)
+  let coins = 0
+  try {
+    coins = await awardCoins(user.id, bonusCoins, `double_${parsed.data.reason}`)
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 
   const supabase = getSupabaseAdmin()
   if (supabase) {

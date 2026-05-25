@@ -12,6 +12,18 @@ export default async function SignupPage({
   searchParams?: Record<string, string | string[] | undefined>
 }) {
   const error = typeof searchParams?.error === 'string' ? searchParams.error : null
+  const errorMessage =
+    error === 'invalid_credentials'
+      ? 'Enter a valid email and a password (8+ characters).'
+      : error === 'server_misconfigured'
+        ? 'Signup is temporarily unavailable. Please try again later.'
+        : error === 'profile_create_failed'
+          ? 'Account created, but profile setup failed. Please log in and try again.'
+          : error === 'signup_failed'
+            ? 'Signup failed. Try again.'
+            : error
+              ? 'Signup failed. Try again.'
+              : null
 
   return (
     <div>
@@ -26,9 +38,9 @@ export default async function SignupPage({
               </p>
             </CardHeader>
             <CardContent>
-              {error ? (
+              {errorMessage ? (
                 <div className="mb-4 rounded-2xl border border-pink/30 bg-pink/10 px-4 py-3 text-sm text-text">
-                  Signup failed. Try again.
+                  {errorMessage}
                 </div>
               ) : null}
               <form action={signupAction} className="space-y-3">

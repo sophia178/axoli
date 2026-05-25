@@ -39,6 +39,10 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error: 'update_failed' }, { status: 500 })
 
-  const coins = await awardCoins(user.id, 2, 'task_complete')
-  return NextResponse.json({ ok: true, coinsAwarded: 2, coins })
+  try {
+    const coins = await awardCoins(user.id, 2, 'task_complete')
+    return NextResponse.json({ ok: true, coinsAwarded: 2, coins })
+  } catch {
+    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+  }
 }

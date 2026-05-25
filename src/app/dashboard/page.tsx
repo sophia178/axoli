@@ -17,7 +17,22 @@ function daysUntil(dateStr: string) {
 
 export default async function DashboardHomePage() {
   const user = await requireUser()
-  const [profile, exams] = await Promise.all([getProfile(user.id), getUpcomingExams(user.id)])
+  let profile: Awaited<ReturnType<typeof getProfile>> = null
+  let exams: Awaited<ReturnType<typeof getUpcomingExams>> = []
+
+  try {
+    ;[profile, exams] = await Promise.all([
+      getProfile(user.id),
+      getUpcomingExams(user.id)
+    ])
+  } catch {
+    return (
+      <div className="rounded-3xl border border-border bg-card/70 p-6 text-sm text-subtext">
+        Loading your dashboard…
+      </div>
+    )
+  }
+
   const streak = profile?.streak ?? 0
   const coins = profile?.coins ?? 0
 

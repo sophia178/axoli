@@ -53,28 +53,35 @@ export function StudyTimer() {
     void (async () => {
       setSaving(true)
       setResult(null)
-      const res = await withLoading(
-        fetch('/api/sessions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            durationSeconds: durationSeconds,
-            subject: subject.trim() ? subject.trim() : undefined
+      try {
+        const res = await withLoading(
+          fetch('/api/sessions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              durationSeconds: durationSeconds,
+              subject: subject.trim() ? subject.trim() : undefined
+            })
           })
-        })
-      )
-      const json = (await res.json().catch(() => null)) as any
-      if (!res.ok) {
-        setResult('Could not save session. Try again.')
-      } else {
+        )
+        const json = (await res.json().catch(() => null)) as any
+        if (!res.ok) {
+          setResult('Could not save session. Try again.')
+          return
+        }
         const earned = Number(json?.coinsEarned ?? 0)
         if (earned > 0) {
           showCoins(earned)
-          await promptDouble({ coinsEarned: earned, reason: 'study_session' })
+          try {
+            await promptDouble({ coinsEarned: earned, reason: 'study_session' })
+          } catch {}
         }
-        setResult(`Nice! +${earned} coins`)
+        setResult(`Session saved! +${earned} coins`)
+      } catch {
+        setResult('Could not save session. Try again.')
+      } finally {
+        setSaving(false)
       }
-      setSaving(false)
     })()
   }, [remaining, running, durationSeconds, subject, withLoading, showCoins, promptDouble])
 

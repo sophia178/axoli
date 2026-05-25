@@ -42,9 +42,24 @@ export async function POST(req: Request) {
     .maybeSingle()
 
   const coins = profile?.coins ?? 0
-  if (coins < item.cost) return NextResponse.json({ error: 'not_enough_coins' }, { status: 409 })
+  if (coins < item.cost) {
+    return NextResponse.json(
+      { error: 'not_enough_coins', coins, cost: item.cost },
+      { status: 409 }
+    )
+  }
 
-  await spendCoins(user.id, item.cost, `purchase:${item.name}`)
+  try {
+    await spendCoins(user.id, item.cost, `purchase:${item.name}`)
+  } catch (e) {
+    if (e instanceof Error && e.message === 'not_enough_coins') {
+      return NextResponse.json(
+        { error: 'not_enough_coins', coins, cost: item.cost },
+        { status: 409 }
+      )
+    }
+    return NextResponse.json({ error: 'purchase_failed' }, { status: 500 })
+  }
 
   if (item.type === 'food') {
     const happiness = Number((item.meta as any)?.happiness ?? 0)
