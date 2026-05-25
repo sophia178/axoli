@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Studia con il tuo pet",
+    "tipTitle": "Consiglio",
+    "tipBody": "Anche le mini sessioni contano. Fai 10 minuti adesso e tieni felice il tuo axolotl.",
+    "language": "Lingua",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Inizia gratis",
+      "seeHowItWorks": "Guarda come funziona",
+      "getStarted": "Inizia",
+      "getStartedFree": "Inizia gratis",
+      "upgrade": "Passa a Premium",
+      "saveChanges": "Salva modifiche",
+      "savePreferences": "Salva preferenze",
+      "manageSubscription": "Gestisci abbonamento",
+      "logout": "Esci",
+      "deleteAccount": "Elimina account",
+      "changePassword": "Cambia password"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Prezzi",
+    "login": "Accedi",
+    "signup": "Registrati",
+    "openLanguageMenu": "Apri il menu lingue"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "studyTimer": "Timer di studio",
+    "flashcards": "Flashcard",
+    "aiGenerator": "Generatore IA",
+    "quizMode": "Modalità quiz",
+    "studyGroups": "Gruppi di studio",
+    "examCountdown": "Conto alla rovescia esami",
+    "studyPlanner": "Pianificatore",
+    "progress": "Progressi",
+    "shop": "Negozio",
+    "petRoom": "Stanza del pet",
+    "settings": "Impostazioni"
+  },
+  "auth": {
+    "login": {
+      "title": "Bentornato",
+      "subtitle": "Accedi per vedere il tuo pet, la streak e i progressi di studio.",
+      "noticeCheckEmail": "Controlla l’email per confermare l’account, poi accedi.",
+      "error": "Accesso non riuscito. Riprova.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password (min 8 caratteri)",
+      "button": "Accedi",
+      "newHere": "Nuovo qui?",
+      "createAccount": "Crea un account"
+    },
+    "signup": {
+      "title": "Conosci il tuo axolotl",
+      "subtitle": "Crea un account per iniziare a guadagnare monete e costruire la tua streak.",
+      "error": "Registrazione non riuscita. Riprova.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password (min 8 caratteri)",
+      "button": "Crea account",
+      "alreadyHave": "Hai già un account?",
+      "loginLink": "Accedi"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolotl",
+    "level": "Lv {level}",
+    "coins": "Monete",
+    "streak": "Serie",
+    "quickTimer": "Timer rapido"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Hai guadagnato {coins} monete!",
+    "adTitle": "Annuncio in riproduzione...",
+    "successTitle": "Grande!",
+    "adPlaying": "Annuncio... {seconds} secondi",
+    "adNoSkip": "Attendi — non puoi saltarlo.",
+    "dailyLimit": "Limite giornaliero raggiunto ({watched}/{limit})",
+    "watchButton": "Guarda un annuncio breve per raddoppiare!",
+    "watchSub": "2x = {total} monete",
+    "keepButton": "Tieni le mie {coins} monete",
+    "doubledMessage": "Hai raddoppiato le monete! +{total}",
+    "close": "Chiudi",
+    "limitError": "Limite giornaliero raggiunto. Tieni le monete e torna domani.",
+    "genericError": "Impossibile raddoppiare le monete. Riprova."
+  },
+  "landing": {
+    "badgeNew": "Novità: flashcard IA + pet di studio in un’unica app",
+    "headline": "Studia meglio con il tuo nuovo migliore amico",
+    "subheadline": "Trasforma qualsiasi video, PDF o appunti in flashcard in pochi secondi. Fai crescere il tuo pet. Spacca agli esami.",
+    "tags": {
+      "freeToStart": "Gratis per iniziare",
+      "cuteRewards": "Ricompense carine",
+      "focusBoosts": "Boost di concentrazione"
+    },
+    "socialProof": {
+      "join": "Unisciti agli studenti che già usano Bloom",
+      "loved": "Amato dagli studenti in tutto il mondo"
+    },
+    "features": {
+      "aiTitle": "Flashcard IA",
+      "aiBody": "Incolla appunti, carica un PDF o incolla un URL YouTube — ottieni flashcard, riassunti e quiz all’istante.",
+      "petTitle": "Pet di studio",
+      "petBody": "Il tuo axolotl cresce mentre studi. Tienilo felice e sblocca ricompense.",
+      "groupsTitle": "Studia insieme",
+      "groupsBody": "Crea gruppi, condividi mazzi e competi nelle classifiche."
+    },
+    "how": {
+      "title": "Come funziona",
+      "subtitle": "Dagli appunti alle flashcard in minuti — poi il tuo pet ti aiuta a restare costante.",
+      "step1Title": "Passo 1 Incolla appunti o URL YouTube",
+      "step1Body": "Aggiungi qualsiasi argomento: appunti, schemi di ripasso o un link YouTube.",
+      "step2Title": "Passo 2 Ottieni flashcard, riassunto e quiz",
+      "step2Body": "Bloom genera materiali pronti da studiare, subito.",
+      "step3Title": "Passo 3 Studia con il pet e traccia i progressi",
+      "step3Body": "Guadagna monete, mantieni la streak e guarda crescere il tuo axolotl."
+    },
+    "pricing": {
+      "title": "Prezzi",
+      "subtitle": "Inizia gratis. Passa a Premium quando vuoi più slancio.",
+      "fullDetails": "Dettagli",
+      "freeTitle": "Gratis",
+      "freePrice": "£0",
+      "freePeriod": "per sempre",
+      "freeBullets": ["Flashcard + quiz + timer", "Progressione del pet", "Generazioni IA mensili limitate"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ mese",
+      "annualNote": "Oppure £29.99/anno — Risparmia 37%",
+      "premiumBullets": ["Più generazioni IA", "Oggetti premium nello shop", "Classifiche dei gruppi"],
+      "mostPopular": "Più popolare"
+    },
+    "finalCta": {
+      "title": "Pronto a spaccare agli esami?",
+      "subtitle": "Conosci il tuo axolotl oggi — è gratis"
+    }
+  },
+  "pricingPage": {
+    "title": "Prezzi",
+    "subtitle": "Bloom è gratis per iniziare. Passa a Premium per limiti IA più alti e oggetti premium per il pet.",
+    "free": {
+      "title": "Gratis",
+      "period": "per sempre",
+      "bullets": ["Flashcard, timer, esami", "Pet base + monete", "Generazione IA limitata"]
+    },
+    "monthly": {
+      "title": "Premium mensile",
+      "period": "/ mese",
+      "bullets": ["Più generazioni IA", "Oggetti premium nello shop", "Classifiche"],
+      "cta": "Diventa premium"
+    },
+    "yearly": {
+      "title": "Premium annuale",
+      "period": "/ anno",
+      "bullets": ["Miglior valore", "Più generazioni IA", "Oggetti premium nello shop"],
+      "cta": "Risparmia annuale"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Lo sapevi…",
+    "loadingAxolotlAria": "Axolotl in caricamento",
+    "facts": {
+      "1": "Il miele non va mai a male; archeologi hanno assaggiato miele di 3.000 anni.",
+      "2": "I polpi hanno tre cuori e sangue blu.",
+      "3": "Un giorno su Venere è più lungo di un anno su Venere.",
+      "4": "Le banane sono bacche, ma le fragole no.",
+      "5": "La Torre Eiffel può crescere di circa 15 cm con il caldo estivo.",
+      "6": "Gli squali esistono da più tempo degli alberi.",
+      "7": "Il cervello usa circa il 20% dell’energia del corpo.",
+      "8": "Un fulmine è più caldo della superficie del Sole.",
+      "9": "Alcune tartarughe possono respirare dal sedere durante l’inverno.",
+      "10": "La guerra più breve della storia è durata circa 38 minuti.",
+      "11": "Cleopatra visse più vicino allo sbarco sulla Luna che alle piramidi.",
+      "12": "Ci sono più partite di scacchi possibili che atomi nell’universo osservabile.",
+      "13": "Le feci del wombat sono a cubo per non rotolare via.",
+      "14": "Un gruppo di fenicotteri si chiama “flamboyance”.",
+      "15": "Lo stomaco umano rinnova il rivestimento ogni pochi giorni.",
+      "16": "L’impatto di un asteroide contribuì all’estinzione dei dinosauri 66 milioni di anni fa.",
+      "17": "La Grande Muraglia Cinese non è visibile dallo spazio a occhio nudo.",
+      "18": "Le formiche possono trasportare oggetti molte volte il loro peso.",
+      "19": "Alcune rane si congelano in inverno e tornano in vita in primavera.",
+      "20": "Il primo bug informatico era una vera falena trovata nel 1947.",
+      "21": "Un cucchiaino di materia di una stella di neutroni peserebbe miliardi di tonnellate sulla Terra.",
+      "22": "La Luna si allontana dalla Terra di circa 3,8 cm all’anno.",
+      "23": "I delfini hanno fischi “firma” che funzionano come nomi.",
+      "24": "L’odore della pioggia è dovuto in parte a una molecola chiamata geosmina.",
+      "25": "I ragni non volano, ma molti “volano” su fili di seta per spostarsi.",
+      "26": "Gli esseri umani condividono circa il 60% del DNA con le banane.",
+      "27": "In alcune specie, i pinguini fanno la proposta con dei sassolini.",
+      "28": "La parola inglese più lunga senza una vocale è “rhythms”.",
+      "29": "Il luogo più freddo dell’universo potrebbe essere la Nebulosa Boomerang.",
+      "30": "Una singola nuvola può pesare più di un milione di libbre.",
+      "31": "Il “centro della paura” nel cervello è l’amigdala.",
+      "32": "I tuoi occhi non vedono il mondo in “alta definizione”; il cervello colma i vuoti.",
+      "33": "I primi Giochi Olimpici si tennero a Olimpia nel 776 a.C.",
+      "34": "La prima consegna di pizza è registrata a Napoli nel 1889.",
+      "35": "I gatti possono fare oltre 100 suoni vocali; i cani circa 10.",
+      "36": "Alcuni funghi possono brillare al buio (bioluminescenza).",
+      "37": "Una lumaca può dormire fino a tre anni in condizioni difficili.",
+      "38": "Il cuore di una balenottera azzurra è grande circa come una piccola auto.",
+      "39": "Le mucche hanno migliori amiche e si stressano quando vengono separate.",
+      "40": "La foresta amazzonica produce una quota significativa dell’ossigeno terrestre.",
+      "41": "La parola “robot” deriva da una parola ceca che significa lavoro forzato.",
+      "42": "Il primo libro stampato è stato prodotto in Cina, non in Europa.",
+      "43": "Un coccodrillo non può tirare fuori la lingua.",
+      "44": "Il peperoncino più piccante può sembrare una bruciatura per via della capsaicina.",
+      "45": "Il corpo umano ha più cellule batteriche che cellule umane (per numero).",
+      "46": "Il suono di un violino deriva soprattutto dalla cassa di legno, non solo dalle corde.",
+      "47": "Saturno potrebbe galleggiare nell’acqua perché è meno denso dell’acqua.",
+      "48": "Le farfalle assaggiano con i piedi.",
+      "49": "Spesso si dice che il muscolo più forte per peso sia il muscolo della mascella.",
+      "50": "Il Deserto del Sahara ha avuto tempeste di neve, anche se è estremamente secco."
+    }
+  }
+}

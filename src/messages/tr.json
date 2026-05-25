@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Evcilinle birlikte çalış",
+    "tipTitle": "İpucu",
+    "tipBody": "Kısa seanslar da sayılır. Şimdi 10 dakika yap ve aksolotlunu mutlu tut.",
+    "language": "Dil",
+    "menu": "Menü",
+    "buttons": {
+      "startForFree": "Ücretsiz başla",
+      "seeHowItWorks": "Nasıl çalışır",
+      "getStarted": "Başla",
+      "getStartedFree": "Ücretsiz başla",
+      "upgrade": "Yükselt",
+      "saveChanges": "Değişiklikleri kaydet",
+      "savePreferences": "Tercihleri kaydet",
+      "manageSubscription": "Aboneliği yönet",
+      "logout": "Çıkış yap",
+      "deleteAccount": "Hesabı sil",
+      "changePassword": "Şifre değiştir"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Fiyatlandırma",
+    "login": "Giriş",
+    "signup": "Kayıt ol",
+    "openLanguageMenu": "Dil menüsünü aç"
+  },
+  "nav": {
+    "dashboard": "Kontrol paneli",
+    "studyTimer": "Çalışma zamanlayıcı",
+    "flashcards": "Flash kartlar",
+    "aiGenerator": "Yapay zekâ üretici",
+    "quizMode": "Quiz modu",
+    "studyGroups": "Çalışma grupları",
+    "examCountdown": "Sınav geri sayımı",
+    "studyPlanner": "Çalışma planı",
+    "progress": "İlerleme",
+    "shop": "Mağaza",
+    "petRoom": "Evcil odası",
+    "settings": "Ayarlar"
+  },
+  "auth": {
+    "login": {
+      "title": "Tekrar hoş geldin",
+      "subtitle": "Evciliğini, serini ve çalışma ilerlemeni görmek için giriş yap.",
+      "noticeCheckEmail": "Hesabını doğrulamak için e-postanı kontrol et, sonra giriş yap.",
+      "error": "Giriş başarısız. Tekrar dene.",
+      "emailPlaceholder": "E-posta",
+      "passwordPlaceholder": "Şifre (en az 8 karakter)",
+      "button": "Giriş yap",
+      "newHere": "Yeni misin?",
+      "createAccount": "Hesap oluştur"
+    },
+    "signup": {
+      "title": "Aksolotlunla tanış",
+      "subtitle": "Jeton kazanmaya ve serini oluşturmaya başlamak için hesap oluştur.",
+      "error": "Kayıt başarısız. Tekrar dene.",
+      "emailPlaceholder": "E-posta",
+      "passwordPlaceholder": "Şifre (en az 8 karakter)",
+      "button": "Hesap oluştur",
+      "alreadyHave": "Zaten hesabın var mı?",
+      "loginLink": "Giriş yap"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Aksolotl",
+    "level": "Seviye {level}",
+    "coins": "Jetonlar",
+    "streak": "Seri",
+    "quickTimer": "Hızlı zamanlayıcı"
+  },
+  "doubleCoins": {
+    "earnedTitle": "{coins} jeton kazandın!",
+    "adTitle": "Reklam oynatılıyor...",
+    "successTitle": "Harika!",
+    "adPlaying": "Reklam... {seconds} saniye",
+    "adNoSkip": "Lütfen bekle — atlanamaz.",
+    "dailyLimit": "Günlük limit doldu ({watched}/{limit})",
+    "watchButton": "Kısa bir reklam izleyip ikiye katla!",
+    "watchSub": "2x = {total} jeton",
+    "keepButton": "{coins} jetonumu koru",
+    "doubledMessage": "Jetonlarını ikiye katladın! +{total}",
+    "close": "Kapat",
+    "limitError": "Günlük reklam limiti doldu. Jetonlarını al ve yarın tekrar gel.",
+    "genericError": "Jetonlar ikiye katlanamadı. Tekrar dene."
+  },
+  "landing": {
+    "badgeNew": "Yeni: Yapay zekâ flash kartları + çalışma evcili tek yerde",
+    "headline": "Yeni en iyi arkadaşınla daha akıllı çalış",
+    "subheadline": "Herhangi bir video, PDF ya da notu saniyeler içinde flash karta çevir. Evciliğini büyüt. Sınavlarını geç.",
+    "tags": {
+      "freeToStart": "Ücretsiz başla",
+      "cuteRewards": "Sevimli ödüller",
+      "focusBoosts": "Odak güçleri"
+    },
+    "socialProof": {
+      "join": "Bloom’u kullanan öğrenciler arasına katıl",
+      "loved": "Dünya çapında öğrenciler tarafından seviliyor"
+    },
+    "features": {
+      "aiTitle": "Yapay zekâ flash kartları",
+      "aiBody": "Not yapıştır, PDF yükle ya da YouTube URL’si ekle — anında flash kart, özet ve quiz al.",
+      "petTitle": "Çalışma evcili",
+      "petBody": "Aksolotlun çalıştıkça büyür. Mutlu tut ve ödülleri aç.",
+      "groupsTitle": "Birlikte çalış",
+      "groupsBody": "Çalışma grupları kur, desteleri paylaş, liderlik tablolarında yarış."
+    },
+    "how": {
+      "title": "Nasıl çalışır",
+      "subtitle": "Notlardan dakikalar içinde flash kartlara — sonra evcilin seni düzenli tutar.",
+      "step1Title": "Adım 1 Notlarını veya YouTube URL’sini yapıştır",
+      "step1Body": "Her konu olur: ders notları, tekrar rehberleri ya da bir YouTube bağlantısı.",
+      "step2Title": "Adım 2 Flash kart, özet ve quiz al",
+      "step2Body": "Bloom, hemen çalışabileceğin materyalleri üretir.",
+      "step3Title": "Adım 3 Evcillinle çalış ve ilerlemeyi takip et",
+      "step3Body": "Jeton kazan, serini koru ve aksolotlunun büyüdüğünü izle."
+    },
+    "pricing": {
+      "title": "Fiyatlandırma",
+      "subtitle": "Ücretsiz başla. Daha fazla ivme istediğinde yükselt.",
+      "fullDetails": "Detaylar",
+      "freeTitle": "Ücretsiz",
+      "freePrice": "£0",
+      "freePeriod": "sonsuz",
+      "freeBullets": ["Flash kart + quiz + zamanlayıcı", "Evciliğin ilerlemesi", "Aylık sınırlı yapay zekâ üretimi"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ ay",
+      "annualNote": "Ya da £29.99/yıl — %37 tasarruf",
+      "premiumBullets": ["Daha fazla yapay zekâ üretimi", "Premium mağaza ürünleri", "Grup liderlik tabloları"],
+      "mostPopular": "En popüler"
+    },
+    "finalCta": {
+      "title": "Sınavlarını geçmeye hazır mısın?",
+      "subtitle": "Aksolotlunla bugün tanış — ücretsiz"
+    }
+  },
+  "pricingPage": {
+    "title": "Fiyatlandırma",
+    "subtitle": "Bloom’a ücretsiz başlayın. Daha yüksek yapay zekâ limitleri ve premium evcil eşyaları için yükseltin.",
+    "free": {
+      "title": "Ücretsiz",
+      "period": "sonsuz",
+      "bullets": ["Flash kartlar, zamanlayıcı, sınavlar", "Temel evcil + jetonlar", "Sınırlı AI üretimi"]
+    },
+    "monthly": {
+      "title": "Premium aylık",
+      "period": "/ ay",
+      "bullets": ["Daha fazla AI üretimi", "Premium mağaza ürünleri", "Liderlik tabloları"],
+      "cta": "Premium’a geç"
+    },
+    "yearly": {
+      "title": "Premium yıllık",
+      "period": "/ yıl",
+      "bullets": ["En iyi değer", "Daha fazla AI üretimi", "Premium mağaza ürünleri"],
+      "cta": "Yıllık tasarruf"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Biliyor muydun…",
+    "loadingAxolotlAria": "Yüklenen aksolotl",
+    "facts": {
+      "1": "Bal asla bozulmaz; arkeologlar 3.000 yıllık balın tadına baktı.",
+      "2": "Ahtapotların üç kalbi ve mavi kanı vardır.",
+      "3": "Venüs’te bir gün, Venüs’te bir yıldan daha uzundur.",
+      "4": "Muzlar birer meyve tanesi (berry) sayılır; çilek ise sayılmaz.",
+      "5": "Eyfel Kulesi yaz sıcağında yaklaşık 15 cm uzayabilir.",
+      "6": "Köpekbalıkları ağaçlardan daha eskidir.",
+      "7": "Beyniniz vücut enerjinizin yaklaşık %20’sini kullanır.",
+      "8": "Bir yıldırım, Güneş’in yüzeyinden daha sıcaktır.",
+      "9": "Bazı kaplumbağalar kışın popolarından nefes alabilir.",
+      "10": "Tarihteki en kısa savaş yaklaşık 38 dakika sürdü.",
+      "11": "Kleopatra, piramitlerden çok Ay’a inişe daha yakındı.",
+      "12": "Olası satranç oyunları sayısı, gözlemlenebilir evrendeki atomlardan fazladır.",
+      "13": "Wombat dışkısı yuvarlanmasın diye küp şeklindedir.",
+      "14": "Bir flamingo grubuna “flamboyance” denir.",
+      "15": "İnsan midesi birkaç günde bir yeni bir iç yüzey oluşturur.",
+      "16": "Bir asteroid çarpması, 66 milyon yıl önce dinozorların yok olmasına yardım etti.",
+      "17": "Çin Seddi, çıplak gözle uzaydan görülemez.",
+      "18": "Karıncalar kendi ağırlıklarının kat kat fazlasını taşıyabilir.",
+      "19": "Bazı kurbağalar kışın tamamen donar ve ilkbaharda yeniden çözülüp yaşar.",
+      "20": "İlk bilgisayar hatası (bug), 1947’de bulunan gerçek bir güvedir.",
+      "21": "Bir çay kaşığı nötron yıldızı maddesi Dünya’da milyarlarca ton gelir.",
+      "22": "Ay, her yıl Dünya’dan yaklaşık 3,8 cm uzaklaşır.",
+      "23": "Yunusların isim gibi işleyen imza ıslıkları vardır.",
+      "24": "Yağmur kokusu kısmen geosmin adlı bir molekülden kaynaklanır.",
+      "25": "Örümcekler uçamaz ama birçoğu ipek ipliklerle “balon gibi” süzülerek yolculuk eder.",
+      "26": "İnsanlar DNA’larının yaklaşık %60’ını muzlarla paylaşır.",
+      "27": "Bazı türlerde penguenler çakıl taşlarıyla evlenme teklifi eder.",
+      "28": "İngilizcede ünlü harfsiz en uzun kelime “rhythms”tır.",
+      "29": "Evrendeki en soğuk yer, Boomerang Bulutsusu olabilir.",
+      "30": "Tek bir bulut bir milyon pounddan ağır olabilir.",
+      "31": "Beyindeki “korku merkezi” amigdala olarak bilinir.",
+      "32": "Gözlerin dünyayı “HD” görmez; beynin boşlukları doldurur.",
+      "33": "İlk Olimpiyat Oyunları MÖ 776’da Olympia’da yapıldı.",
+      "34": "İlk pizza teslimatı 1889’da Napoli’de kaydedildi.",
+      "35": "Kediler 100’den fazla ses çıkarabilir; köpekler yaklaşık 10.",
+      "36": "Bazı mantarlar karanlıkta parlayabilir (biyolüminesans).",
+      "37": "Bir salyangoz zorlu koşullarda üç yıla kadar uyuyabilir.",
+      "38": "Mavi balinanın kalbi küçük bir araba büyüklüğündedir.",
+      "39": "İneklerin en iyi arkadaşları vardır ve ayrılınca stres olurlar.",
+      "40": "Amazon yağmur ormanı, Dünya oksijeninin önemli bir kısmını üretir.",
+      "41": "“Robot” kelimesi, zorla çalıştırma anlamına gelen Çekçe bir kelimeden gelir.",
+      "42": "İlk basılı kitap Avrupa’da değil, Çin’de üretildi.",
+      "43": "Bir timsah dilini dışarı çıkaramaz.",
+      "44": "En acı biber, kapsaisin yüzünden yanıyormuş gibi hissettirebilir.",
+      "45": "İnsan vücudunda (sayım olarak) insan hücresinden daha fazla bakteri hücresi vardır.",
+      "46": "Kemanın sesi çoğunlukla ahşap gövdeden gelir, sadece tellerden değil.",
+      "47": "Satürn, sudan daha az yoğun olduğu için suda yüzebilir.",
+      "48": "Kelebekler ayaklarıyla tat alır.",
+      "49": "Ağırlığa göre en güçlü kasın çene kası olduğu sıkça söylenir.",
+      "50": "Sahra Çölü’nde, aşırı kuru olmasına rağmen kar fırtınaları yaşanmıştır."
+    }
+  }
+}

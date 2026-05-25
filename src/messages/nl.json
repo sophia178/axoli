@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Studeer met je huisdier",
+    "tipTitle": "Tip",
+    "tipBody": "Kleine sessies tellen. Doe nu 10 minuten en houd je axolotl blij.",
+    "language": "Taal",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Gratis starten",
+      "seeHowItWorks": "Zo werkt het",
+      "getStarted": "Aan de slag",
+      "getStartedFree": "Gratis beginnen",
+      "upgrade": "Upgraden",
+      "saveChanges": "Wijzigingen opslaan",
+      "savePreferences": "Voorkeuren opslaan",
+      "manageSubscription": "Abonnement beheren",
+      "logout": "Uitloggen",
+      "deleteAccount": "Account verwijderen",
+      "changePassword": "Wachtwoord wijzigen"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Prijzen",
+    "login": "Inloggen",
+    "signup": "Registreren",
+    "openLanguageMenu": "Taalmenu openen"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "studyTimer": "Studietimer",
+    "flashcards": "Flashcards",
+    "aiGenerator": "AI-generator",
+    "quizMode": "Quizmodus",
+    "studyGroups": "Studiegroepen",
+    "examCountdown": "Examen countdown",
+    "studyPlanner": "Studieplanner",
+    "progress": "Voortgang",
+    "shop": "Shop",
+    "petRoom": "Huisdierkamer",
+    "settings": "Instellingen"
+  },
+  "auth": {
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in om je huisdier, streak en studievoortgang te zien.",
+      "noticeCheckEmail": "Check je e-mail om je account te bevestigen en log daarna in.",
+      "error": "Inloggen mislukt. Probeer het opnieuw.",
+      "emailPlaceholder": "E-mail",
+      "passwordPlaceholder": "Wachtwoord (min. 8 tekens)",
+      "button": "Inloggen",
+      "newHere": "Nieuw hier?",
+      "createAccount": "Account aanmaken"
+    },
+    "signup": {
+      "title": "Ontmoet je axolotl",
+      "subtitle": "Maak een account aan om munten te verdienen en je streak op te bouwen.",
+      "error": "Registreren mislukt. Probeer het opnieuw.",
+      "emailPlaceholder": "E-mail",
+      "passwordPlaceholder": "Wachtwoord (min. 8 tekens)",
+      "button": "Account aanmaken",
+      "alreadyHave": "Heb je al een account?",
+      "loginLink": "Inloggen"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolotl",
+    "level": "Lv {level}",
+    "coins": "Munten",
+    "streak": "Reeks",
+    "quickTimer": "Snelle timer"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Je hebt {coins} munten verdiend!",
+    "adTitle": "Advertentie speelt...",
+    "successTitle": "Nice!",
+    "adPlaying": "Advertentie... {seconds} seconden",
+    "adNoSkip": "Even wachten — je kunt dit niet overslaan.",
+    "dailyLimit": "Daglimiet bereikt ({watched}/{limit})",
+    "watchButton": "Kijk een korte advertentie om te verdubbelen!",
+    "watchSub": "2x = {total} munten",
+    "keepButton": "Houd mijn {coins} munten",
+    "doubledMessage": "Je hebt je munten verdubbeld! +{total}",
+    "close": "Sluiten",
+    "limitError": "Daglimiet bereikt. Houd je munten en kom morgen terug.",
+    "genericError": "Munten verdubbelen mislukt. Probeer opnieuw."
+  },
+  "landing": {
+    "badgeNew": "Nieuw: AI-flashcards + studiehuisdier op één plek",
+    "headline": "Studeer slimmer met je nieuwe beste vriend",
+    "subheadline": "Maak van elke video, PDF of notities in seconden flashcards. Laat je huisdier groeien. Haal je examens.",
+    "tags": {
+      "freeToStart": "Gratis starten",
+      "cuteRewards": "Schattige beloningen",
+      "focusBoosts": "Focus-boosts"
+    },
+    "socialProof": {
+      "join": "Sluit je aan bij studenten die Bloom al gebruiken",
+      "loved": "Geliefd bij studenten wereldwijd"
+    },
+    "features": {
+      "aiTitle": "AI-flashcards",
+      "aiBody": "Plak notities, upload een PDF of plak een YouTube-URL — krijg meteen flashcards, samenvattingen en quizzen.",
+      "petTitle": "Studiehuisdier",
+      "petBody": "Je axolotl groeit terwijl je studeert. Houd ’m blij en ontgrendel beloningen.",
+      "groupsTitle": "Samen studeren",
+      "groupsBody": "Maak studiegroepen, deel decks en strijd op ranglijsten."
+    },
+    "how": {
+      "title": "Hoe het werkt",
+      "subtitle": "Van notities naar flashcards in minuten — en je huisdier houdt je consistent.",
+      "step1Title": "Stap 1 Plak je notities of YouTube-URL",
+      "step1Body": "Voeg elk onderwerp toe: college-notities, samenvattingen of een YouTube-link.",
+      "step2Title": "Stap 2 Krijg flashcards, samenvatting en quiz",
+      "step2Body": "Bloom maakt studiemateriaal dat je direct kunt gebruiken.",
+      "step3Title": "Stap 3 Studeer met je huisdier en volg je voortgang",
+      "step3Body": "Verdien munten, behoud je streak en zie je axolotl groeien."
+    },
+    "pricing": {
+      "title": "Prijzen",
+      "subtitle": "Begin gratis. Upgrade wanneer je meer momentum wilt.",
+      "fullDetails": "Details",
+      "freeTitle": "Gratis",
+      "freePrice": "£0",
+      "freePeriod": "voor altijd",
+      "freeBullets": ["Flashcards + quizzen + timer", "Huisdierprogressie", "Beperkte AI-generaties per maand"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ maand",
+      "annualNote": "Of £29.99/jaar — Bespaar 37%",
+      "premiumBullets": ["Meer AI-generaties", "Premium shop-items", "Groepsranglijsten"],
+      "mostPopular": "Meest gekozen"
+    },
+    "finalCta": {
+      "title": "Klaar om je examens te halen?",
+      "subtitle": "Ontmoet je axolotl vandaag — gratis"
+    }
+  },
+  "pricingPage": {
+    "title": "Prijzen",
+    "subtitle": "Bloom is gratis om te starten. Upgrade voor hogere AI-limieten en premium pet-items.",
+    "free": {
+      "title": "Gratis",
+      "period": "voor altijd",
+      "bullets": ["Flashcards, timer, examens", "Basispet + munten", "Beperkte AI-generatie"]
+    },
+    "monthly": {
+      "title": "Premium maandelijks",
+      "period": "/ maand",
+      "bullets": ["Meer AI-generaties", "Premium shop-items", "Ranglijsten"],
+      "cta": "Ga premium"
+    },
+    "yearly": {
+      "title": "Premium jaarlijks",
+      "period": "/ jaar",
+      "bullets": ["Beste deal", "Meer AI-generaties", "Premium shop-items"],
+      "cta": "Bespaar per jaar"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Wist je dat…",
+    "loadingAxolotlAria": "Ladende axolotl",
+    "facts": {
+      "1": "Honing bederft nooit; archeologen hebben 3.000 jaar oude honing geproefd.",
+      "2": "Octopussen hebben drie harten en blauw bloed.",
+      "3": "Een dag op Venus is langer dan een jaar op Venus.",
+      "4": "Bananen zijn bessen, maar aardbeien niet.",
+      "5": "De Eiffeltoren kan in de zomerhitte ongeveer 15 cm groeien.",
+      "6": "Haaien bestaan al langer dan bomen.",
+      "7": "Je brein gebruikt ongeveer 20% van je lichaamsenergie.",
+      "8": "Een bliksemschicht is heter dan het oppervlak van de zon.",
+      "9": "Sommige schildpadden kunnen in de winter via hun achterwerk ademen.",
+      "10": "De kortste oorlog ooit duurde ongeveer 38 minuten.",
+      "11": "Cleopatra leefde dichter bij de maanlanding dan bij de piramides.",
+      "12": "Er zijn meer mogelijke schaakpartijen dan atomen in het waarneembare universum.",
+      "13": "Wombat-poep is kubusvormig zodat het niet wegrolt.",
+      "14": "Een groep flamingo’s heet een “flamboyance”.",
+      "15": "De menselijke maag krijgt elke paar dagen een nieuwe binnenwand.",
+      "16": "Een asteroïde-inslag hielp de dinosauriërs 66 miljoen jaar geleden uit te roeien.",
+      "17": "De Chinese Muur is niet met het blote oog vanuit de ruimte te zien.",
+      "18": "Mieren kunnen voorwerpen dragen die vele malen hun eigen gewicht zijn.",
+      "19": "Sommige kikkers vriezen in de winter en ontdooien in de lente weer tot leven.",
+      "20": "De eerste computerbug was een echte mot die in 1947 werd gevonden.",
+      "21": "Een theelepel neutronenster-materiaal zou op aarde miljarden ton wegen.",
+      "22": "De maan beweegt elk jaar ongeveer 3,8 cm van de aarde weg.",
+      "23": "Dolfijnen hebben kenmerkende fluittonen die als namen werken.",
+      "24": "De geur van regen komt deels door een molecuul genaamd geosmine.",
+      "25": "Spinnen kunnen niet vliegen, maar veel ‘balloonen’ aan zijdedraden om te reizen.",
+      "26": "Mensen delen ongeveer 60% van hun DNA met bananen.",
+      "27": "Pinguïns doen in sommige soorten een aanzoek met steentjes.",
+      "28": "Het langste Engelse woord zonder klinker is “rhythms”.",
+      "29": "De koudste plek in het universum kan de Boomerangnevel zijn.",
+      "30": "Eén wolk kan meer dan een miljoen pond wegen.",
+      "31": "Het ‘angstcentrum’ in je brein is de amygdala.",
+      "32": "Je ogen zien de wereld niet in ‘high definition’; je brein vult gaten op.",
+      "33": "De eerste Olympische Spelen werden gehouden in Olympia in 776 v.Chr.",
+      "34": "De eerste pizzabezorging is geregistreerd in Napels in 1889.",
+      "35": "Katten kunnen meer dan 100 geluiden maken; honden ongeveer 10.",
+      "36": "Sommige paddenstoelen kunnen in het donker gloeien (bioluminescentie).",
+      "37": "Een slak kan in zware omstandigheden tot drie jaar slapen.",
+      "38": "Het hart van een blauwe vinvis is ongeveer zo groot als een kleine auto.",
+      "39": "Koeien hebben beste vrienden en raken gestrest als ze gescheiden worden.",
+      "40": "Het Amazonewoud produceert een aanzienlijk deel van de zuurstof op aarde.",
+      "41": "Het woord “robot” komt van een Tsjechisch woord dat dwangarbeid betekent.",
+      "42": "Het eerste gedrukte boek werd in China gemaakt, niet in Europa.",
+      "43": "Een krokodil kan zijn tong niet uitsteken.",
+      "44": "De heetste chilipeper kan aanvoelen als verbranden door capsaïcine.",
+      "45": "Het menselijk lichaam heeft meer bacteriële cellen dan menselijke cellen (qua aantal).",
+      "46": "Het geluid van een viool komt vooral van de houten klankkast, niet alleen van de snaren.",
+      "47": "Saturnus zou kunnen drijven omdat hij minder dicht is dan water.",
+      "48": "Vlinders proeven met hun voeten.",
+      "49": "De sterkste spier per gewicht zou volgens sommigen de kaakspier zijn.",
+      "50": "De Sahara heeft sneeuwstormen gehad, ook al is het er extreem droog."
+    }
+  }
+}

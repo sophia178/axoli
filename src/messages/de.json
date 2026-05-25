@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Lerne mit deinem Haustier",
+    "tipTitle": "Tipp",
+    "tipBody": "Kleine Sessions zählen. Mach jetzt 10 Minuten und halte deinen Axolotl glücklich.",
+    "language": "Sprache",
+    "menu": "Menü",
+    "buttons": {
+      "startForFree": "Kostenlos starten",
+      "seeHowItWorks": "So funktioniert’s",
+      "getStarted": "Loslegen",
+      "getStartedFree": "Kostenlos loslegen",
+      "upgrade": "Upgrade",
+      "saveChanges": "Änderungen speichern",
+      "savePreferences": "Einstellungen speichern",
+      "manageSubscription": "Abo verwalten",
+      "logout": "Abmelden",
+      "deleteAccount": "Konto löschen",
+      "changePassword": "Passwort ändern"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Preise",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "openLanguageMenu": "Sprachmenü öffnen"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "studyTimer": "Lerntimer",
+    "flashcards": "Karteikarten",
+    "aiGenerator": "KI-Generator",
+    "quizMode": "Quiz-Modus",
+    "studyGroups": "Lerngruppen",
+    "examCountdown": "Prüfungs-Countdown",
+    "studyPlanner": "Lernplaner",
+    "progress": "Fortschritt",
+    "shop": "Shop",
+    "petRoom": "Haustierzimmer",
+    "settings": "Einstellungen"
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melde dich an, um dein Haustier, deine Serie und deinen Lernfortschritt zu sehen.",
+      "noticeCheckEmail": "Bestätige dein Konto per E‑Mail und melde dich dann an.",
+      "error": "Login fehlgeschlagen. Versuch es erneut.",
+      "emailPlaceholder": "E‑Mail",
+      "passwordPlaceholder": "Passwort (mind. 8 Zeichen)",
+      "button": "Anmelden",
+      "newHere": "Neu hier?",
+      "createAccount": "Konto erstellen"
+    },
+    "signup": {
+      "title": "Triff deinen Axolotl",
+      "subtitle": "Erstelle ein Konto, um Münzen zu verdienen und deine Serie aufzubauen.",
+      "error": "Registrierung fehlgeschlagen. Versuch es erneut.",
+      "emailPlaceholder": "E‑Mail",
+      "passwordPlaceholder": "Passwort (mind. 8 Zeichen)",
+      "button": "Konto erstellen",
+      "alreadyHave": "Schon ein Konto?",
+      "loginLink": "Anmelden"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolotl",
+    "level": "Lv {level}",
+    "coins": "Münzen",
+    "streak": "Serie",
+    "quickTimer": "Schnell-Timer"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Du hast {coins} Münzen verdient!",
+    "adTitle": "Werbung läuft...",
+    "successTitle": "Nice!",
+    "adPlaying": "Werbung... {seconds} Sekunden",
+    "adNoSkip": "Bitte warten — überspringen ist nicht möglich.",
+    "dailyLimit": "Tageslimit erreicht ({watched}/{limit})",
+    "watchButton": "Kurze Werbung ansehen und verdoppeln!",
+    "watchSub": "2x = {total} Münzen",
+    "keepButton": "Meine {coins} Münzen behalten",
+    "doubledMessage": "Du hast deine Münzen verdoppelt! +{total}",
+    "close": "Schließen",
+    "limitError": "Tageslimit erreicht. Behalte deine Münzen und komm morgen wieder.",
+    "genericError": "Münzen konnten nicht verdoppelt werden. Bitte erneut versuchen."
+  },
+  "landing": {
+    "badgeNew": "Neu: KI-Karteikarten + Lernhaustier an einem Ort",
+    "headline": "Lerne smarter mit deinem neuen besten Freund",
+    "subheadline": "Mach aus jedem Video, PDF oder Notizen in Sekunden Karteikarten. Lass dein Haustier wachsen. Bestehe deine Prüfungen.",
+    "tags": {
+      "freeToStart": "Kostenlos starten",
+      "cuteRewards": "Süße Belohnungen",
+      "focusBoosts": "Fokus-Boosts"
+    },
+    "socialProof": {
+      "join": "Schließe dich Studierenden an, die Bloom bereits nutzen",
+      "loved": "Von Studierenden weltweit geliebt"
+    },
+    "features": {
+      "aiTitle": "KI-Karteikarten",
+      "aiBody": "Notizen einfügen, PDF hochladen oder YouTube-URL einfügen — sofort Karteikarten, Zusammenfassungen und Quizze bekommen.",
+      "petTitle": "Lernhaustier",
+      "petBody": "Dein Axolotl wächst, während du lernst. Halte ihn glücklich und schalte Belohnungen frei.",
+      "groupsTitle": "Gemeinsam lernen",
+      "groupsBody": "Lerngruppen erstellen, Decks teilen, in Ranglisten messen."
+    },
+    "how": {
+      "title": "So funktioniert’s",
+      "subtitle": "Von Notizen zu Karteikarten in Minuten — und dein Haustier hält dich dran.",
+      "step1Title": "Schritt 1 Notizen oder YouTube-URL einfügen",
+      "step1Body": "Beliebiges Thema: Vorlesungsnotizen, Lernskripte oder ein YouTube-Link.",
+      "step2Title": "Schritt 2 Karteikarten, Zusammenfassung und Quiz bekommen",
+      "step2Body": "Bloom erstellt lernfertiges Material, das du sofort wiederholen kannst.",
+      "step3Title": "Schritt 3 Mit deinem Haustier lernen und Fortschritt tracken",
+      "step3Body": "Münzen verdienen, Serie halten und deinen Axolotl wachsen sehen."
+    },
+    "pricing": {
+      "title": "Preise",
+      "subtitle": "Kostenlos starten. Upgrade, wenn du mehr Momentum willst.",
+      "fullDetails": "Details",
+      "freeTitle": "Gratis",
+      "freePrice": "£0",
+      "freePeriod": "für immer",
+      "freeBullets": ["Karteikarten + Quizze + Timer", "Haustier-Fortschritt", "Begrenzte KI-Generationen pro Monat"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ Monat",
+      "annualNote": "Oder £29.99/Jahr — 37% sparen",
+      "premiumBullets": ["Mehr KI-Generationen", "Premium-Shop-Items", "Gruppen-Ranglisten"],
+      "mostPopular": "Beliebt"
+    },
+    "finalCta": {
+      "title": "Bereit, deine Prüfungen zu rocken?",
+      "subtitle": "Triff deinen Axolotl heute — kostenlos"
+    }
+  },
+  "pricingPage": {
+    "title": "Preise",
+    "subtitle": "Bloom ist kostenlos zum Starten. Upgrade für höhere KI-Limits und Premium-Items fürs Haustier.",
+    "free": {
+      "title": "Gratis",
+      "period": "für immer",
+      "bullets": ["Karteikarten, Timer, Prüfungen", "Basis-Haustier + Münzen", "Begrenzte KI-Generierung"]
+    },
+    "monthly": {
+      "title": "Premium monatlich",
+      "period": "/ Monat",
+      "bullets": ["Mehr KI-Generationen", "Premium-Shop-Items", "Ranglisten"],
+      "cta": "Premium holen"
+    },
+    "yearly": {
+      "title": "Premium jährlich",
+      "period": "/ Jahr",
+      "bullets": ["Bester Deal", "Mehr KI-Generationen", "Premium-Shop-Items"],
+      "cta": "Jährlich sparen"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Wusstest du schon…",
+    "loadingAxolotlAria": "Lade-Axolotl",
+    "facts": {
+      "1": "Honig verdirbt nie; Archäologen haben 3.000 Jahre alten Honig probiert.",
+      "2": "Oktopusse haben drei Herzen und blaues Blut.",
+      "3": "Ein Tag auf der Venus ist länger als ein Jahr auf der Venus.",
+      "4": "Bananen sind Beeren, Erdbeeren aber nicht.",
+      "5": "Der Eiffelturm kann in der Sommerhitze etwa 15 cm wachsen.",
+      "6": "Haie gibt es länger als Bäume.",
+      "7": "Dein Gehirn verbraucht ungefähr 20% deiner Körperenergie.",
+      "8": "Ein Blitz ist heißer als die Oberfläche der Sonne.",
+      "9": "Manche Schildkröten können im Winter durch den Po atmen.",
+      "10": "Der kürzeste Krieg der Geschichte dauerte etwa 38 Minuten.",
+      "11": "Kleopatra lebte näher an der Mondlandung als an den Pyramiden.",
+      "12": "Es gibt mehr mögliche Schachpartien als Atome im beobachtbaren Universum.",
+      "13": "Wombat-Kot ist würfelförmig, damit er nicht wegrollt.",
+      "14": "Eine Gruppe Flamingos heißt „Flamboyance“.",
+      "15": "Die menschliche Magenschleimhaut erneuert sich alle paar Tage.",
+      "16": "Ein Asteroideneinschlag trug vor 66 Millionen Jahren zum Aussterben der Dinosaurier bei.",
+      "17": "Die Chinesische Mauer ist mit bloßem Auge nicht aus dem All sichtbar.",
+      "18": "Ameisen können Gegenstände tragen, die ein Vielfaches ihres Gewichts haben.",
+      "19": "Manche Frösche frieren im Winter ein und tauen im Frühling wieder auf.",
+      "20": "Der erste Computer-Bug war eine echte Motte aus dem Jahr 1947.",
+      "21": "Ein Teelöffel Neutronenstern-Material würde auf der Erde Milliarden Tonnen wiegen.",
+      "22": "Der Mond entfernt sich jedes Jahr etwa 3,8 cm von der Erde.",
+      "23": "Delfine haben charakteristische Pfiffe, die wie Namen funktionieren.",
+      "24": "Der Geruch von Regen entsteht teilweise durch ein Molekül namens Geosmin.",
+      "25": "Spinnen können nicht fliegen, aber viele „balloonen“ an Seidenfäden, um zu reisen.",
+      "26": "Menschen teilen etwa 60% ihrer DNA mit Bananen.",
+      "27": "Pinguine machen in manchen Arten mit Kieselsteinen einen Antrag.",
+      "28": "Das längste englische Wort ohne Vokal ist „rhythms“.",
+      "29": "Der kälteste Ort im Universum könnte der Boomerangnebel sein.",
+      "30": "Eine einzelne Wolke kann mehr als eine Million Pfund wiegen.",
+      "31": "Das „Angstzentrum“ im Gehirn ist die Amygdala.",
+      "32": "Deine Augen sehen die Welt nicht in „HD“; dein Gehirn füllt Lücken.",
+      "33": "Die ersten Olympischen Spiele fanden 776 v. Chr. in Olympia statt.",
+      "34": "Die erste Pizza-Lieferung ist 1889 in Neapel dokumentiert.",
+      "35": "Katzen können über 100 Laute machen; Hunde etwa 10.",
+      "36": "Manche Pilze können im Dunkeln leuchten (Biolumineszenz).",
+      "37": "Eine Schnecke kann unter harten Bedingungen bis zu drei Jahre schlafen.",
+      "38": "Das Herz eines Blauwals ist ungefähr so groß wie ein Kleinwagen.",
+      "39": "Kühe haben beste Freunde und sind gestresst, wenn sie getrennt werden.",
+      "40": "Der Amazonas-Regenwald produziert einen bedeutenden Anteil des Sauerstoffs der Erde.",
+      "41": "Das Wort „Roboter“ stammt aus dem Tschechischen und bedeutet Zwangsarbeit.",
+      "42": "Das erste gedruckte Buch wurde in China hergestellt, nicht in Europa.",
+      "43": "Ein Krokodil kann seine Zunge nicht herausstrecken.",
+      "44": "Die schärfste Chili kann sich wegen Capsaicin wie Verbrennung anfühlen.",
+      "45": "Der menschliche Körper hat (nach Anzahl) mehr Bakterienzellen als menschliche Zellen.",
+      "46": "Der Klang einer Geige kommt vor allem vom Holzkörper, nicht nur von den Saiten.",
+      "47": "Saturn könnte im Wasser schwimmen, weil er weniger dicht ist als Wasser.",
+      "48": "Schmetterlinge schmecken mit ihren Füßen.",
+      "49": "Als stärkster Muskel nach Gewicht gilt oft der Kiefermuskel.",
+      "50": "In der Sahara gab es schon Schneestürme, obwohl sie extrem trocken ist."
+    }
+  }
+}

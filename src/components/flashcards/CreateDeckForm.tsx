@@ -1,0 +1,128 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+import { useMemo, useState } from 'react'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { useLoading } from '@/components/loading/LoadingProvider'
+
+type DraftCard = { front: string; back: string }
+
+export function CreateDeckForm() {
+  const router = useRouter()
+  const [title, setTitle] = useState('')
+  const [subject, setSubject] = useState('')
+  const [cards, setCards] = useState<DraftCard[]>([{ front: '', back: '' }])
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { withLoading } = useLoading()
+
+  const canSave = useMemo(() => {
+    if (!title.trim() || !subject.trim()) return false
+    const validCards = cards.filter((c) => c.front.trim() && c.back.trim())
+    return validCards.length > 0
+  }, [title, subject, cards])
+
+  return (
+    <div className="space-y-5">
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <div className="text-sm text-subtext">Deck title</div>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Photosynthesis" />
+        </div>
+        <div>
+          <div className="text-sm text-subtext">Subject</div>
+          <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="e.g. Biology" />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {cards.map((card, idx) => (
+          <div key={idx} className="grid gap-3 rounded-3xl border border-border bg-bg/20 p-4 md:grid-cols-2">
+            <div>
+              <div className="text-sm text-subtext">Front</div>
+              <Input
+                value={card.front}
+                onChange={(e) =>
+                  setCards((prev) => prev.map((c, i) => (i === idx ? { ...c, front: e.target.value } : c)))
+                }
+                placeholder="Question / prompt"
+              />
+            </div>
+            <div>
+              <div className="text-sm text-subtext">Back</div>
+              <Input
+                value={card.back}
+                onChange={(e) =>
+                  setCards((prev) => prev.map((c, i) => (i === idx ? { ...c, back: e.target.value } : c)))
+                }
+                placeholder="Answer"
+              />
+            </div>
+            <div className="md:col-span-2 flex items-center justify-between">
+              <div className="text-xs text-subtext">Card {idx + 1}</div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setCards((prev) => prev.filter((_, i) => i !== idx))}
+                disabled={cards.length <= 1}
+              >
+                Remove
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setCards((prev) => [...prev, { front: '', back: '' }])}
+        >
+          Add card
+        </Button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {error ? (
+            <div className="rounded-2xl border border-pink/25 bg-pink/10 px-4 py-2 text-sm text-text">
+              {error}
+            </div>
+          ) : null}
+          <Button
+            type="button"
+            disabled={!canSave || saving}
+            onClick={async () => {
+              setSaving(true)
+              setError(null)
+              const payload = {
+                title: title.trim(),
+                subject: subject.trim(),
+                cards: cards
+                  .filter((c) => c.front.trim() && c.back.trim())
+                  .map((c) => ({ front: c.front.trim(), back: c.back.trim() }))
+              }
+              const res = await withLoading(
+                fetch('/api/flashcards/decks', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                })
+              )
+              const json = (await res.json().catch(() => null)) as any
+              if (!res.ok) {
+                setError('Could not save deck. Try again.')
+                setSaving(false)
+                return
+              }
+              router.push(`/dashboard/quiz?deck=${json.deckId}`)
+              router.refresh()
+            }}
+          >
+            {saving ? 'Saving…' : 'Save deck'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Estudia con tu mascota",
+    "tipTitle": "Consejo",
+    "tipBody": "Las sesiones pequeñas cuentan. Haz 10 minutos ahora y mantén feliz a tu ajolote.",
+    "language": "Idioma",
+    "menu": "Menú",
+    "buttons": {
+      "startForFree": "Empieza gratis",
+      "seeHowItWorks": "Ver cómo funciona",
+      "getStarted": "Empezar",
+      "getStartedFree": "Empieza gratis",
+      "upgrade": "Mejorar",
+      "saveChanges": "Guardar cambios",
+      "savePreferences": "Guardar preferencias",
+      "manageSubscription": "Gestionar suscripción",
+      "logout": "Cerrar sesión",
+      "deleteAccount": "Eliminar cuenta",
+      "changePassword": "Cambiar contraseña"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Precios",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "openLanguageMenu": "Abrir menú de idioma"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "studyTimer": "Temporizador de estudio",
+    "flashcards": "Tarjetas",
+    "aiGenerator": "Generador IA",
+    "quizMode": "Modo quiz",
+    "studyGroups": "Grupos de estudio",
+    "examCountdown": "Cuenta atrás de exámenes",
+    "studyPlanner": "Planificador de estudio",
+    "progress": "Progreso",
+    "shop": "Tienda",
+    "petRoom": "Sala de la mascota",
+    "settings": "Ajustes"
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de vuelta",
+      "subtitle": "Inicia sesión para ver tu mascota, racha y progreso de estudio.",
+      "noticeCheckEmail": "Revisa tu correo para confirmar tu cuenta y luego inicia sesión.",
+      "error": "El inicio de sesión falló. Inténtalo de nuevo.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Contraseña (mín. 8 caracteres)",
+      "button": "Iniciar sesión",
+      "newHere": "¿Nuevo por aquí?",
+      "createAccount": "Crear una cuenta"
+    },
+    "signup": {
+      "title": "Conoce a tu ajolote",
+      "subtitle": "Crea una cuenta para empezar a ganar monedas y construir tu racha.",
+      "error": "El registro falló. Inténtalo de nuevo.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Contraseña (mín. 8 caracteres)",
+      "button": "Crear cuenta",
+      "alreadyHave": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Ajolote",
+    "level": "Nv {level}",
+    "coins": "Monedas",
+    "streak": "Racha",
+    "quickTimer": "Temporizador rápido"
+  },
+  "doubleCoins": {
+    "earnedTitle": "¡Has ganado {coins} monedas!",
+    "adTitle": "Reproduciendo anuncio...",
+    "successTitle": "¡Genial!",
+    "adPlaying": "Anuncio... {seconds} segundos",
+    "adNoSkip": "Espera un momento — no se puede omitir.",
+    "dailyLimit": "Límite diario alcanzado ({watched}/{limit})",
+    "watchButton": "¡Mira un anuncio corto para duplicarlas!",
+    "watchSub": "2x = {total} monedas",
+    "keepButton": "Quedarme con mis {coins} monedas",
+    "doubledMessage": "¡Has duplicado tus monedas! +{total}",
+    "close": "Cerrar",
+    "limitError": "Has alcanzado el límite diario. Quédate con tus monedas y vuelve mañana.",
+    "genericError": "No se pudieron duplicar las monedas. Inténtalo de nuevo."
+  },
+  "landing": {
+    "badgeNew": "Nuevo: tarjetas con IA + mascota de estudio en un solo lugar",
+    "headline": "Estudia mejor con tu nuevo mejor amigo",
+    "subheadline": "Convierte cualquier vídeo, PDF o apuntes en tarjetas en segundos. Haz crecer a tu mascota. Saca sobresaliente en tus exámenes.",
+    "tags": {
+      "freeToStart": "Gratis para empezar",
+      "cuteRewards": "Recompensas adorables",
+      "focusBoosts": "Impulso de enfoque"
+    },
+    "socialProof": {
+      "join": "Únete a estudiantes que ya usan Bloom",
+      "loved": "Amado por estudiantes de todo el mundo"
+    },
+    "features": {
+      "aiTitle": "Tarjetas con IA",
+      "aiBody": "Pega apuntes, sube un PDF o pega una URL de YouTube: obtén tarjetas, resúmenes y quizzes al instante.",
+      "petTitle": "Mascota de estudio",
+      "petBody": "Tu ajolote crece mientras estudias. Manténlo feliz y desbloquea recompensas.",
+      "groupsTitle": "Estudiar juntos",
+      "groupsBody": "Crea grupos de estudio, comparte mazos y compite en tablas de clasificación."
+    },
+    "how": {
+      "title": "Cómo funciona",
+      "subtitle": "De apuntes a tarjetas en minutos — y tu mascota te mantiene constante.",
+      "step1Title": "Paso 1 Pega tus apuntes o la URL de YouTube",
+      "step1Body": "Añade cualquier tema: apuntes, guías de repaso o un enlace de YouTube.",
+      "step2Title": "Paso 2 Obtén tarjetas, resumen y quiz",
+      "step2Body": "Bloom genera material listo para estudiar que puedes repasar al instante.",
+      "step3Title": "Paso 3 Estudia con tu mascota y sigue tu progreso",
+      "step3Body": "Gana monedas, mantén tu racha y mira crecer a tu ajolote."
+    },
+    "pricing": {
+      "title": "Precios",
+      "subtitle": "Empieza gratis. Mejora cuando quieras más impulso.",
+      "fullDetails": "Detalles",
+      "freeTitle": "Gratis",
+      "freePrice": "£0",
+      "freePeriod": "para siempre",
+      "freeBullets": ["Tarjetas + quizzes + temporizador", "Progresión de mascota", "Generaciones de IA mensuales limitadas"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ mes",
+      "annualNote": "O £29.99/año — Ahorra 37%",
+      "premiumBullets": ["Más generaciones de IA", "Objetos premium en la tienda", "Tablas de clasificación en grupos"],
+      "mostPopular": "Más popular"
+    },
+    "finalCta": {
+      "title": "¿Listo para arrasar en tus exámenes?",
+      "subtitle": "Conoce a tu ajolote hoy — es gratis"
+    }
+  },
+  "pricingPage": {
+    "title": "Precios",
+    "subtitle": "Bloom es gratis para empezar. Mejora para límites de IA más altos y objetos premium para tu mascota.",
+    "free": {
+      "title": "Gratis",
+      "period": "para siempre",
+      "bullets": ["Tarjetas, temporizador, exámenes", "Mascota básica + monedas", "Generación de IA limitada"]
+    },
+    "monthly": {
+      "title": "Premium mensual",
+      "period": "/ mes",
+      "bullets": ["Más generaciones de IA", "Objetos premium en la tienda", "Tablas de clasificación"],
+      "cta": "Hazte premium"
+    },
+    "yearly": {
+      "title": "Premium anual",
+      "period": "/ año",
+      "bullets": ["Mejor precio", "Más generaciones de IA", "Objetos premium en la tienda"],
+      "cta": "Ahorra al año"
+    }
+  },
+  "loading": {
+    "didYouKnow": "¿Sabías que...?",
+    "loadingAxolotlAria": "Ajolote cargando",
+    "facts": {
+      "1": "La miel nunca se estropea; arqueólogos han probado miel de hace 3.000 años.",
+      "2": "Los pulpos tienen tres corazones y sangre azul.",
+      "3": "Un día en Venus es más largo que un año en Venus.",
+      "4": "Los plátanos son bayas, pero las fresas no.",
+      "5": "La Torre Eiffel puede crecer unos 15 cm con el calor del verano.",
+      "6": "Los tiburones existen desde antes que los árboles.",
+      "7": "Tu cerebro usa aproximadamente el 20% de la energía de tu cuerpo.",
+      "8": "Un rayo es más caliente que la superficie del Sol.",
+      "9": "Algunas tortugas pueden respirar por el trasero durante el invierno.",
+      "10": "La guerra más corta de la historia duró unos 38 minutos.",
+      "11": "Cleopatra vivió más cerca del alunizaje que de las pirámides.",
+      "12": "Hay más partidas posibles de ajedrez que átomos en el universo observable.",
+      "13": "Las heces de wombat son cúbicas para que no rueden.",
+      "14": "Un grupo de flamencos se llama una “flamboyance”.",
+      "15": "El estómago humano renueva su revestimiento cada pocos días.",
+      "16": "Un impacto de asteroide ayudó a extinguir a los dinosaurios hace 66 millones de años.",
+      "17": "La Gran Muralla China no es visible desde el espacio a simple vista.",
+      "18": "Las hormigas pueden cargar objetos muchas veces su propio peso.",
+      "19": "Algunas ranas se congelan en invierno y vuelven a la vida al descongelarse en primavera.",
+      "20": "El primer “bug” informático fue una polilla real encontrada en 1947.",
+      "21": "Una cucharadita de material de una estrella de neutrones pesaría miles de millones de toneladas en la Tierra.",
+      "22": "La Luna se aleja de la Tierra unos 3,8 cm cada año.",
+      "23": "Los delfines tienen silbidos característicos que actúan como nombres.",
+      "24": "El olor a lluvia se debe en parte a una molécula llamada geosmina.",
+      "25": "Las arañas no pueden volar, pero muchas “planean” en hilos de seda para viajar.",
+      "26": "Los humanos comparten alrededor del 60% de su ADN con los plátanos.",
+      "27": "En algunas especies, los pingüinos se comprometen con piedritas.",
+      "28": "La palabra inglesa más larga sin vocal es “rhythms”.",
+      "29": "El lugar más frío del universo podría ser la Nebulosa Boomerang.",
+      "30": "Una sola nube puede pesar más de un millón de libras.",
+      "31": "El “centro del miedo” del cerebro es la amígdala.",
+      "32": "Tus ojos no ven el mundo en “alta definición”; tu cerebro rellena los huecos.",
+      "33": "Los primeros Juegos Olímpicos se celebraron en Olimpia en el 776 a. C.",
+      "34": "La primera entrega de pizza está registrada en Nápoles en 1889.",
+      "35": "Los gatos pueden emitir más de 100 sonidos; los perros, alrededor de 10.",
+      "36": "Algunos hongos pueden brillar en la oscuridad (bioluminiscencia).",
+      "37": "Un caracol puede dormir hasta tres años en condiciones duras.",
+      "38": "El corazón de una ballena azul es del tamaño aproximado de un coche pequeño.",
+      "39": "Las vacas tienen mejores amigas y se estresan cuando se separan.",
+      "40": "La selva amazónica produce una parte importante del oxígeno de la Tierra.",
+      "41": "La palabra “robot” proviene de un término checo que significa trabajo forzado.",
+      "42": "El primer libro impreso se produjo en China, no en Europa.",
+      "43": "Un cocodrilo no puede sacar la lengua.",
+      "44": "El chile más picante puede sentirse como una quemadura por la capsaicina.",
+      "45": "El cuerpo humano tiene más células bacterianas que humanas (por cantidad).",
+      "46": "El sonido de un violín proviene en gran parte de su cuerpo de madera, no solo de las cuerdas.",
+      "47": "Saturno podría flotar en el agua porque es menos denso que el agua.",
+      "48": "Las mariposas saborean con los pies.",
+      "49": "A menudo se dice que el músculo más fuerte por peso es el músculo de la mandíbula.",
+      "50": "El desierto del Sahara ha tenido tormentas de nieve, aunque es extremadamente seco."
+    }
+  }
+}

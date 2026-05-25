@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Étudie avec ton animal",
+    "tipTitle": "Astuce",
+    "tipBody": "Les petites sessions comptent. Fais 10 minutes maintenant et garde ton axolotl heureux.",
+    "language": "Langue",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Commencer gratuitement",
+      "seeHowItWorks": "Voir comment ça marche",
+      "getStarted": "Commencer",
+      "getStartedFree": "Commencer gratuitement",
+      "upgrade": "Passer à Premium",
+      "saveChanges": "Enregistrer",
+      "savePreferences": "Enregistrer les préférences",
+      "manageSubscription": "Gérer l’abonnement",
+      "logout": "Se déconnecter",
+      "deleteAccount": "Supprimer le compte",
+      "changePassword": "Changer le mot de passe"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Tarifs",
+    "login": "Connexion",
+    "signup": "S’inscrire",
+    "openLanguageMenu": "Ouvrir le menu des langues"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "studyTimer": "Minuteur d’étude",
+    "flashcards": "Cartes mémoire",
+    "aiGenerator": "Générateur IA",
+    "quizMode": "Mode quiz",
+    "studyGroups": "Groupes d’étude",
+    "examCountdown": "Compte à rebours des examens",
+    "studyPlanner": "Planificateur",
+    "progress": "Progression",
+    "shop": "Boutique",
+    "petRoom": "Salle de l’animal",
+    "settings": "Paramètres"
+  },
+  "auth": {
+    "login": {
+      "title": "Ravi de te revoir",
+      "subtitle": "Connecte-toi pour voir ton animal, ta série et tes progrès.",
+      "noticeCheckEmail": "Vérifie ton email pour confirmer ton compte, puis connecte-toi.",
+      "error": "Échec de la connexion. Réessaie.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Mot de passe (min 8 caractères)",
+      "button": "Se connecter",
+      "newHere": "Nouveau ici ?",
+      "createAccount": "Créer un compte"
+    },
+    "signup": {
+      "title": "Rencontre ton axolotl",
+      "subtitle": "Crée un compte pour gagner des pièces et construire ta série.",
+      "error": "Échec de l’inscription. Réessaie.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Mot de passe (min 8 caractères)",
+      "button": "Créer un compte",
+      "alreadyHave": "Tu as déjà un compte ?",
+      "loginLink": "Se connecter"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolotl",
+    "level": "Niv {level}",
+    "coins": "Pièces",
+    "streak": "Série",
+    "quickTimer": "Minuteur rapide"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Tu as gagné {coins} pièces !",
+    "adTitle": "Annonce en cours...",
+    "successTitle": "Trop bien !",
+    "adPlaying": "Annonce... {seconds} secondes",
+    "adNoSkip": "Patiente — impossible de passer l’annonce.",
+    "dailyLimit": "Limite quotidienne atteinte ({watched}/{limit})",
+    "watchButton": "Regarde une petite pub pour doubler !",
+    "watchSub": "2x = {total} pièces",
+    "keepButton": "Garder mes {coins} pièces",
+    "doubledMessage": "Tu as doublé tes pièces ! +{total}",
+    "close": "Fermer",
+    "limitError": "Limite quotidienne atteinte. Garde tes pièces et reviens demain.",
+    "genericError": "Impossible de doubler les pièces. Réessaie."
+  },
+  "landing": {
+    "badgeNew": "Nouveau : cartes IA + animal d’étude au même endroit",
+    "headline": "Étudie plus malin avec ton nouveau meilleur ami",
+    "subheadline": "Transforme n’importe quelle vidéo, PDF ou notes en cartes mémoire en quelques secondes. Fais grandir ton animal. Réussis tes examens.",
+    "tags": {
+      "freeToStart": "Gratuit pour commencer",
+      "cuteRewards": "Récompenses adorables",
+      "focusBoosts": "Boost de focus"
+    },
+    "socialProof": {
+      "join": "Rejoins des étudiants qui utilisent déjà Bloom",
+      "loved": "Adoré par des étudiants du monde entier"
+    },
+    "features": {
+      "aiTitle": "Cartes IA",
+      "aiBody": "Colle des notes, téléverse un PDF ou colle une URL YouTube — obtiens cartes, résumés et quiz instantanément.",
+      "petTitle": "Animal d’étude",
+      "petBody": "Ton axolotl grandit quand tu étudies. Garde-le heureux et débloque des récompenses.",
+      "groupsTitle": "Étudier ensemble",
+      "groupsBody": "Crée des groupes, partage des decks et rivalise sur les classements."
+    },
+    "how": {
+      "title": "Comment ça marche",
+      "subtitle": "Des notes aux cartes en quelques minutes — puis ton animal te garde régulier.",
+      "step1Title": "Étape 1 Colle tes notes ou une URL YouTube",
+      "step1Body": "Ajoute n’importe quel sujet : cours, fiches de révision ou lien YouTube.",
+      "step2Title": "Étape 2 Obtiens cartes, résumé et quiz",
+      "step2Body": "Bloom génère du contenu prêt à étudier, à réviser tout de suite.",
+      "step3Title": "Étape 3 Étudie avec ton animal et suis tes progrès",
+      "step3Body": "Gagne des pièces, garde ta série et regarde ton axolotl grandir."
+    },
+    "pricing": {
+      "title": "Tarifs",
+      "subtitle": "Commence gratuitement. Passe à Premium quand tu veux plus d’élan.",
+      "fullDetails": "Détails",
+      "freeTitle": "Gratuit",
+      "freePrice": "£0",
+      "freePeriod": "à vie",
+      "freeBullets": ["Cartes + quiz + minuteur", "Progression de l’animal", "Générations IA mensuelles limitées"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ mois",
+      "annualNote": "Ou £29.99/an — Économise 37%",
+      "premiumBullets": ["Plus de générations IA", "Objets premium en boutique", "Classements de groupe"],
+      "mostPopular": "Le plus populaire"
+    },
+    "finalCta": {
+      "title": "Prêt à réussir tes examens ?",
+      "subtitle": "Rencontre ton axolotl aujourd’hui — c’est gratuit"
+    }
+  },
+  "pricingPage": {
+    "title": "Tarifs",
+    "subtitle": "Bloom est gratuit pour commencer. Passe à Premium pour plus d’IA et des objets premium pour ton animal.",
+    "free": {
+      "title": "Gratuit",
+      "period": "à vie",
+      "bullets": ["Cartes, minuteur, examens", "Animal de base + pièces", "Génération IA limitée"]
+    },
+    "monthly": {
+      "title": "Premium mensuel",
+      "period": "/ mois",
+      "bullets": ["Plus de générations IA", "Objets premium en boutique", "Classements"],
+      "cta": "Passer à Premium"
+    },
+    "yearly": {
+      "title": "Premium annuel",
+      "period": "/ an",
+      "bullets": ["Meilleure offre", "Plus de générations IA", "Objets premium en boutique"],
+      "cta": "Économiser à l’année"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Le savais-tu…",
+    "loadingAxolotlAria": "Axolotl de chargement",
+    "facts": {
+      "1": "Le miel ne se périme jamais ; des archéologues ont goûté du miel vieux de 3 000 ans.",
+      "2": "Les pieuvres ont trois cœurs et du sang bleu.",
+      "3": "Une journée sur Vénus est plus longue qu’une année sur Vénus.",
+      "4": "Les bananes sont des baies, mais les fraises ne le sont pas.",
+      "5": "La tour Eiffel peut grandir d’environ 15 cm avec la chaleur estivale.",
+      "6": "Les requins existent depuis plus longtemps que les arbres.",
+      "7": "Ton cerveau utilise environ 20 % de l’énergie de ton corps.",
+      "8": "Un éclair est plus chaud que la surface du Soleil.",
+      "9": "Certaines tortues peuvent respirer par l’arrière-train pendant l’hiver.",
+      "10": "La guerre la plus courte de l’histoire a duré environ 38 minutes.",
+      "11": "Cléopâtre a vécu plus près de l’alunissage que des pyramides.",
+      "12": "Il existe plus de parties d’échecs possibles que d’atomes dans l’univers observable.",
+      "13": "Les crottes de wombat sont cubiques pour éviter qu’elles roulent.",
+      "14": "Un groupe de flamants roses s’appelle une “flamboyance”.",
+      "15": "L’estomac humain renouvelle sa muqueuse tous les quelques jours.",
+      "16": "Un impact d’astéroïde a contribué à l’extinction des dinosaures il y a 66 millions d’années.",
+      "17": "La Grande Muraille de Chine n’est pas visible de l’espace à l’œil nu.",
+      "18": "Les fourmis peuvent porter des objets plusieurs fois leur poids.",
+      "19": "Certaines grenouilles gèlent en hiver et reprennent vie au printemps.",
+      "20": "Le premier bug informatique était un vrai papillon de nuit trouvé en 1947.",
+      "21": "Une cuillère à café de matière d’une étoile à neutrons pèserait des milliards de tonnes sur Terre.",
+      "22": "La Lune s’éloigne de la Terre d’environ 3,8 cm par an.",
+      "23": "Les dauphins ont des sifflements-signatures qui servent de noms.",
+      "24": "L’odeur de la pluie vient en partie d’une molécule appelée géosmine.",
+      "25": "Les araignées ne volent pas, mais beaucoup “ballonnent” sur des fils de soie pour voyager.",
+      "26": "Les humains partagent environ 60 % de leur ADN avec les bananes.",
+      "27": "Dans certaines espèces, les manchots offrent des cailloux pour faire leur demande.",
+      "28": "Le mot anglais le plus long sans voyelle est “rhythms”.",
+      "29": "L’endroit le plus froid de l’univers pourrait être la nébuleuse du Boomerang.",
+      "30": "Un seul nuage peut peser plus d’un million de livres.",
+      "31": "Le “centre de la peur” du cerveau est l’amygdale.",
+      "32": "Tes yeux ne voient pas le monde en “haute définition” ; ton cerveau comble les vides.",
+      "33": "Les premiers Jeux olympiques ont eu lieu à Olympie en 776 av. J.-C.",
+      "34": "La première livraison de pizza est recensée à Naples en 1889.",
+      "35": "Les chats peuvent émettre plus de 100 sons ; les chiens environ 10.",
+      "36": "Certains champignons peuvent briller dans le noir (bioluminescence).",
+      "37": "Un escargot peut dormir jusqu’à trois ans dans des conditions difficiles.",
+      "38": "Le cœur d’une baleine bleue a à peu près la taille d’une petite voiture.",
+      "39": "Les vaches ont des meilleures amies et stressent quand on les sépare.",
+      "40": "La forêt amazonienne produit une part importante de l’oxygène terrestre.",
+      "41": "Le mot “robot” vient d’un mot tchèque signifiant travail forcé.",
+      "42": "Le premier livre imprimé a été produit en Chine, pas en Europe.",
+      "43": "Un crocodile ne peut pas tirer la langue.",
+      "44": "Le piment le plus fort peut donner l’impression de brûler à cause de la capsaïcine.",
+      "45": "Le corps humain contient plus de cellules bactériennes que de cellules humaines (en nombre).",
+      "46": "Le son d’un violon vient en grande partie de sa caisse en bois, pas seulement des cordes.",
+      "47": "Saturne pourrait flotter sur l’eau car elle est moins dense que l’eau.",
+      "48": "Les papillons goûtent avec leurs pattes.",
+      "49": "On dit souvent que le muscle le plus puissant au poids est le muscle de la mâchoire.",
+      "50": "Le désert du Sahara a déjà connu des tempêtes de neige, bien qu’il soit extrêmement sec."
+    }
+  }
+}

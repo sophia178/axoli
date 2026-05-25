@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Ucz się ze swoim zwierzakiem",
+    "tipTitle": "Wskazówka",
+    "tipBody": "Małe sesje też się liczą. Zrób teraz 10 minut i utrzymaj swojego aksolotla szczęśliwym.",
+    "language": "Język",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Zacznij za darmo",
+      "seeHowItWorks": "Zobacz jak to działa",
+      "getStarted": "Zacznij",
+      "getStartedFree": "Zacznij za darmo",
+      "upgrade": "Ulepsz",
+      "saveChanges": "Zapisz zmiany",
+      "savePreferences": "Zapisz preferencje",
+      "manageSubscription": "Zarządzaj subskrypcją",
+      "logout": "Wyloguj",
+      "deleteAccount": "Usuń konto",
+      "changePassword": "Zmień hasło"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Cennik",
+    "login": "Zaloguj",
+    "signup": "Zarejestruj",
+    "openLanguageMenu": "Otwórz menu języków"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "studyTimer": "Timer nauki",
+    "flashcards": "Fiszki",
+    "aiGenerator": "Generator AI",
+    "quizMode": "Tryb quiz",
+    "studyGroups": "Grupy nauki",
+    "examCountdown": "Odliczanie do egzaminu",
+    "studyPlanner": "Plan nauki",
+    "progress": "Postępy",
+    "shop": "Sklep",
+    "petRoom": "Pokój zwierzaka",
+    "settings": "Ustawienia"
+  },
+  "auth": {
+    "login": {
+      "title": "Witaj z powrotem",
+      "subtitle": "Zaloguj się, aby zobaczyć zwierzaka, serię i postępy nauki.",
+      "noticeCheckEmail": "Sprawdź email, aby potwierdzić konto, a potem się zaloguj.",
+      "error": "Logowanie nie powiodło się. Spróbuj ponownie.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Hasło (min. 8 znaków)",
+      "button": "Zaloguj",
+      "newHere": "Pierwszy raz tutaj?",
+      "createAccount": "Utwórz konto"
+    },
+    "signup": {
+      "title": "Poznaj swojego aksolotla",
+      "subtitle": "Utwórz konto, aby zacząć zdobywać monety i budować serię.",
+      "error": "Rejestracja nie powiodła się. Spróbuj ponownie.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Hasło (min. 8 znaków)",
+      "button": "Utwórz konto",
+      "alreadyHave": "Masz już konto?",
+      "loginLink": "Zaloguj"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Aksolotl",
+    "level": "Poziom {level}",
+    "coins": "Monety",
+    "streak": "Seria",
+    "quickTimer": "Szybki timer"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Zdobywasz {coins} monet!",
+    "adTitle": "Reklama trwa...",
+    "successTitle": "Super!",
+    "adPlaying": "Reklama... {seconds} s",
+    "adNoSkip": "Poczekaj — nie można pominąć.",
+    "dailyLimit": "Dzienny limit osiągnięty ({watched}/{limit})",
+    "watchButton": "Obejrzyj krótką reklamę, aby podwoić!",
+    "watchSub": "2x = {total} monet",
+    "keepButton": "Zachowaj moje {coins} monet",
+    "doubledMessage": "Podwoiłeś/aś monety! +{total}",
+    "close": "Zamknij",
+    "limitError": "Dzienny limit reklam osiągnięty. Zachowaj monety i wróć jutro.",
+    "genericError": "Nie udało się podwoić monet. Spróbuj ponownie."
+  },
+  "landing": {
+    "badgeNew": "Nowość: fiszki AI + zwierzak do nauki w jednym miejscu",
+    "headline": "Ucz się mądrzej ze swoim nowym najlepszym przyjacielem",
+    "subheadline": "Zamień dowolne wideo, PDF lub notatki na fiszki w kilka sekund. Rozwijaj swojego zwierzaka. Zdaj egzaminy.",
+    "tags": {
+      "freeToStart": "Za darmo na start",
+      "cuteRewards": "Słodkie nagrody",
+      "focusBoosts": "Dodatki skupienia"
+    },
+    "socialProof": {
+      "join": "Dołącz do uczniów, którzy już używają Bloom",
+      "loved": "Uwielbiane przez uczniów na całym świecie"
+    },
+    "features": {
+      "aiTitle": "Fiszki AI",
+      "aiBody": "Wklej notatki, wgraj PDF lub wklej URL YouTube — dostaniesz fiszki, podsumowania i quizy od razu.",
+      "petTitle": "Zwierzak do nauki",
+      "petBody": "Twój aksolotl rośnie, gdy się uczysz. Dbaj o niego i odblokowuj nagrody.",
+      "groupsTitle": "Ucz się razem",
+      "groupsBody": "Twórz grupy, udostępniaj talie i rywalizuj w rankingach."
+    },
+    "how": {
+      "title": "Jak to działa",
+      "subtitle": "Od notatek do fiszek w kilka minut — a zwierzak pomoże Ci trzymać regularność.",
+      "step1Title": "Krok 1 Wklej notatki lub URL YouTube",
+      "step1Body": "Dodaj dowolny temat: notatki z zajęć, materiały do powtórek lub link do YouTube.",
+      "step2Title": "Krok 2 Otrzymaj fiszki, podsumowanie i quiz",
+      "step2Body": "Bloom generuje materiały gotowe do nauki, od razu do przerobienia.",
+      "step3Title": "Krok 3 Ucz się ze zwierzakiem i śledź postępy",
+      "step3Body": "Zdobywaj monety, utrzymuj serię i obserwuj jak rośnie Twój aksolotl."
+    },
+    "pricing": {
+      "title": "Cennik",
+      "subtitle": "Zacznij za darmo. Ulepsz, gdy chcesz więcej.",
+      "fullDetails": "Szczegóły",
+      "freeTitle": "Darmowy",
+      "freePrice": "£0",
+      "freePeriod": "na zawsze",
+      "freeBullets": ["Fiszki + quizy + timer", "Rozwój zwierzaka", "Limitowane generacje AI miesięcznie"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ miesiąc",
+      "annualNote": "Albo £29.99/rok — Oszczędź 37%",
+      "premiumBullets": ["Więcej generacji AI", "Przedmioty premium w sklepie", "Rankingi grup"],
+      "mostPopular": "Najpopularniejsze"
+    },
+    "finalCta": {
+      "title": "Gotowa/gotowy na zdanie egzaminów?",
+      "subtitle": "Poznaj swojego aksolotla już dziś — to nic nie kosztuje"
+    }
+  },
+  "pricingPage": {
+    "title": "Cennik",
+    "subtitle": "Bloom jest darmowy na start. Ulepsz, by zwiększyć limity AI i odblokować premium przedmioty dla zwierzaka.",
+    "free": {
+      "title": "Darmowy",
+      "period": "na zawsze",
+      "bullets": ["Fiszki, timer, egzaminy", "Podstawowy zwierzak + monety", "Ograniczona generacja AI"]
+    },
+    "monthly": {
+      "title": "Premium miesięcznie",
+      "period": "/ miesiąc",
+      "bullets": ["Więcej generacji AI", "Premium przedmioty w sklepie", "Rankingi"],
+      "cta": "Przejdź na Premium"
+    },
+    "yearly": {
+      "title": "Premium rocznie",
+      "period": "/ rok",
+      "bullets": ["Najlepsza cena", "Więcej generacji AI", "Premium przedmioty w sklepie"],
+      "cta": "Oszczędzaj rocznie"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Czy wiesz, że…",
+    "loadingAxolotlAria": "Ładowanie aksolotla",
+    "facts": {
+      "1": "Miód nigdy się nie psuje; archeolodzy próbowali miodu sprzed 3 000 lat.",
+      "2": "Ośmiornice mają trzy serca i niebieską krew.",
+      "3": "Doba na Wenus jest dłuższa niż rok na Wenus.",
+      "4": "Banany to jagody, ale truskawki nie.",
+      "5": "Wieża Eiffla może urosnąć o ok. 15 cm w letnim upale.",
+      "6": "Rekiny są na Ziemi dłużej niż drzewa.",
+      "7": "Twój mózg zużywa ok. 20% energii Twojego ciała.",
+      "8": "Piorun jest gorętszy niż powierzchnia Słońca.",
+      "9": "Niektóre żółwie potrafią oddychać przez odbyt zimą.",
+      "10": "Najkrótsza wojna w historii trwała około 38 minut.",
+      "11": "Kleopatra żyła bliżej lądowania na Księżycu niż budowy piramid.",
+      "12": "Możliwych partii szachów jest więcej niż atomów we obserwowalnym wszechświecie.",
+      "13": "Odchody wombata są sześcienne, żeby się nie toczyły.",
+      "14": "Grupa flamingów nazywa się „flamboyance”.",
+      "15": "Ludzki żołądek dostaje nową wyściółkę co kilka dni.",
+      "16": "Uderzenie asteroidy pomogło wyginąć dinozaurom 66 mln lat temu.",
+      "17": "Wielki Mur Chiński nie jest widoczny z kosmosu gołym okiem.",
+      "18": "Mrówki potrafią przenosić przedmioty wielokrotnie cięższe od siebie.",
+      "19": "Niektóre żaby zamarzają zimą i odmarzają do życia wiosną.",
+      "20": "Pierwszy „bug” komputerowy to prawdziwa ćma znaleziona w 1947 roku.",
+      "21": "Łyżeczka materii z gwiazdy neutronowej ważyłaby na Ziemi miliardy ton.",
+      "22": "Księżyc oddala się od Ziemi o około 3,8 cm rocznie.",
+      "23": "Delfiny mają charakterystyczne gwizdy działające jak imiona.",
+      "24": "Zapach deszczu jest częściowo spowodowany cząsteczką zwaną geosminą.",
+      "25": "Pająki nie latają, ale wiele z nich „balonuje” na nitkach jedwabiu, by podróżować.",
+      "26": "Ludzie dzielą około 60% DNA z bananami.",
+      "27": "W niektórych gatunkach pingwiny oświadczają się kamykami.",
+      "28": "Najdłuższe angielskie słowo bez samogłoski to „rhythms”.",
+      "29": "Najzimniejsze miejsce we wszechświecie może znajdować się w Mgławicy Bumerang.",
+      "30": "Jedna chmura może ważyć ponad milion funtów.",
+      "31": "„Centrum strachu” w mózgu to ciało migdałowate.",
+      "32": "Twoje oczy nie widzą świata w „HD”; mózg uzupełnia luki.",
+      "33": "Pierwsze igrzyska olimpijskie odbyły się w Olimpii w 776 r. p.n.e.",
+      "34": "Pierwsza dostawa pizzy jest odnotowana w Neapolu w 1889 roku.",
+      "35": "Koty potrafią wydawać ponad 100 dźwięków; psy około 10.",
+      "36": "Niektóre grzyby potrafią świecić w ciemności (bioluminescencja).",
+      "37": "Ślimak może spać nawet trzy lata w trudnych warunkach.",
+      "38": "Serce płetwala błękitnego ma rozmiar mniej więcej małego samochodu.",
+      "39": "Krowy mają najlepsze przyjaciółki i stresują się, gdy są rozdzielone.",
+      "40": "Amazonia produkuje znaczącą część tlenu Ziemi.",
+      "41": "Słowo „robot” pochodzi z czeskiego i oznacza pracę przymusową.",
+      "42": "Pierwsza drukowana książka powstała w Chinach, nie w Europie.",
+      "43": "Krokodyl nie potrafi wysunąć języka.",
+      "44": "Najostrzejsza papryczka może dawać uczucie oparzenia przez kapsaicynę.",
+      "45": "W ludzkim ciele jest więcej komórek bakteryjnych niż ludzkich (liczbowo).",
+      "46": "Dźwięk skrzypiec pochodzi głównie z drewnianego pudła, nie tylko ze strun.",
+      "47": "Saturn mógłby unosić się na wodzie, bo jest mniej gęsty niż woda.",
+      "48": "Motyle „smakują” stopami.",
+      "49": "Za najsilniejszy mięsień względem masy często uznaje się mięsień szczęki.",
+      "50": "Na Saharze zdarzały się burze śnieżne, mimo że jest ekstremalnie sucho."
+    }
+  }
+}

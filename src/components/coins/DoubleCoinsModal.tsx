@@ -1,0 +1,307 @@
+'use client'
+
+import { useEffect, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslations } from 'next-intl'
+import { Button } from '@/components/ui/Button'
+import { cn } from '@/lib/cn'
+
+type Phase = 'offer' | 'playing' | 'success'
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n))
+}
+
+function AxolotlFace({ mood }: { mood: 'excited' | 'bored' }) {
+  const brow = mood === 'bored' ? 'M165 170c12-8 26-8 38 0' : 'M165 170c12-10 26-10 38 0'
+  const brow2 = mood === 'bored' ? 'M217 170c12-8 26-8 38 0' : 'M217 170c12-10 26-10 38 0'
+  const mouth = mood === 'bored' ? 'M198 220c10 0 14 0 24 0' : 'M196 220c10 14 26 14 36 0'
+  const eyeY = mood === 'bored' ? 196 : 190
+  return (
+    <svg viewBox="0 0 420 360" role="img" className="h-auto w-full">
+      <defs>
+        <linearGradient id="dcBody" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#FF8FAB" />
+          <stop offset="1" stopColor="#FFB6C8" />
+        </linearGradient>
+        <linearGradient id="dcBelly" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#FFE2EA" />
+          <stop offset="1" stopColor="#FFC9D7" />
+        </linearGradient>
+      </defs>
+
+      <path
+        d="M140 132c-18 0-36 21-36 54 0 58 42 114 106 114s106-56 106-114c0-33-18-54-36-54-12 0-22 6-34 6-13 0-22-9-36-9s-23 9-36 9c-12 0-22-6-34-6z"
+        fill="url(#dcBody)"
+        stroke="#2A2A4A"
+        strokeWidth="6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M166 166c0 42 20 88 44 88s44-46 44-88c0-12-8-22-22-22h-44c-14 0-22 10-22 22z"
+        fill="url(#dcBelly)"
+        opacity="0.95"
+      />
+
+      <path
+        d="M142 148c-38-8-64-30-72-60 32 2 64 10 86 34"
+        fill="#FF8FAB"
+        opacity="0.9"
+        stroke="#2A2A4A"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M278 148c38-8 64-30 72-60-32 2-64 10-86 34"
+        fill="#FF8FAB"
+        opacity="0.9"
+        stroke="#2A2A4A"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      <path d={brow} stroke="#2A2A4A" strokeWidth="6" strokeLinecap="round" fill="none" />
+      <path d={brow2} stroke="#2A2A4A" strokeWidth="6" strokeLinecap="round" fill="none" />
+
+      <circle cx="178" cy={eyeY} r="18" fill="#FFFFFF" />
+      <circle cx="242" cy={eyeY} r="18" fill="#FFFFFF" />
+      <circle cx="180" cy={eyeY + 2} r="8" fill="#0A0A1A" />
+      <circle cx="244" cy={eyeY + 2} r="8" fill="#0A0A1A" />
+      <circle cx="176" cy={eyeY - 2} r="3" fill="#FFFFFF" />
+      <circle cx="240" cy={eyeY - 2} r="3" fill="#FFFFFF" />
+
+      <path d={mouth} stroke="#2A2A4A" strokeWidth="6" strokeLinecap="round" fill="none" />
+    </svg>
+  )
+}
+
+function CoinBadge({ amount }: { amount: number }) {
+  return (
+    <motion.div
+      animate={{ y: [0, -6, 0], rotate: [0, -2, 0, 2, 0] }}
+      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+      className="mx-auto flex w-fit items-center gap-3 rounded-3xl border border-gold/30 bg-gold/10 px-4 py-3"
+    >
+      <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/20 ring-1 ring-gold/30">
+        🪙
+      </div>
+      <div className="text-left">
+        <div className="text-xs text-subtext">+{amount}</div>
+        <div className="font-heading text-2xl text-gold">{amount}</div>
+      </div>
+    </motion.div>
+  )
+}
+
+function CoinRain({ visible }: { visible: boolean }) {
+  const coins = useMemo(() => {
+    const out: Array<{ id: string; left: number; delay: number; duration: number; size: number }> = []
+    for (let i = 0; i < 18; i += 1) {
+      out.push({
+        id: `${i}-${Math.random().toString(16).slice(2)}`,
+        left: Math.random() * 100,
+        delay: Math.random() * 0.35,
+        duration: 0.9 + Math.random() * 0.8,
+        size: 14 + Math.random() * 12
+      })
+    }
+    return out
+  }, [])
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {coins.map((c) => (
+            <motion.div
+              key={c.id}
+              initial={{ y: -40, opacity: 0 }}
+              animate={{ y: 420, opacity: [0, 1, 1, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: c.delay, duration: c.duration, ease: 'easeIn' }}
+              style={{ left: `${c.left}%` }}
+              className="absolute top-0"
+            >
+              <div style={{ fontSize: c.size }} className="drop-shadow-[0_10px_20px_rgba(0,0,0,0.35)]">
+                🪙
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      ) : null}
+    </AnimatePresence>
+  )
+}
+
+export function DoubleCoinsModal({
+  open,
+  phase,
+  coins,
+  secondsLeft,
+  canWatch,
+  adsWatchedToday,
+  limit,
+  error,
+  onKeep,
+  onWatch,
+  onClose
+}: {
+  open: boolean
+  phase: Phase
+  coins: number
+  secondsLeft: number
+  canWatch: boolean
+  adsWatchedToday: number
+  limit: number
+  error?: string | null
+  onKeep: () => void
+  onWatch: () => void
+  onClose: () => void
+}) {
+  const t = useTranslations('doubleCoins')
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (phase === 'playing') return
+      onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose, phase])
+
+  const progress = phase === 'playing' ? clamp(secondsLeft / 15, 0, 1) : 0
+
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-[9997] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-bg/80 backdrop-blur"
+        onClick={() => {
+          if (phase === 'playing') return
+          onClose()
+        }}
+      />
+      <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-border bg-card/90 shadow-[0_18px_70px_rgba(0,0,0,0.65)]">
+        <CoinRain visible={phase === 'success'} />
+        <div className="relative p-6">
+          {phase !== 'playing' ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-2xl text-subtext ring-1 ring-border hover:bg-bg/20 hover:text-text [[dir=rtl]_&]:left-4 [[dir=rtl]_&]:right-auto"
+              aria-label={t('close')}
+            >
+              ✕
+            </button>
+          ) : null}
+
+          <div className="mx-auto max-w-sm">
+            <div className="text-center">
+              <div className="font-heading text-3xl text-text">
+                {phase === 'offer' ? t('earnedTitle', { coins }) : phase === 'playing' ? t('adTitle') : t('successTitle')}
+              </div>
+              <div className="mt-2 text-sm text-subtext">
+                {phase === 'playing' ? t('adPlaying', { seconds: secondsLeft }) : null}
+                {phase === 'offer' && !canWatch ? t('dailyLimit', { watched: adsWatchedToday, limit }) : null}
+                {phase === 'success' ? t('doubledMessage', { total: coins * 2 }) : null}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <motion.div
+                animate={phase === 'offer' ? { y: [0, -6, 0] } : { y: [0, 0, 0] }}
+                transition={{ duration: 2.2, repeat: phase === 'offer' ? Infinity : 0, ease: 'easeInOut' }}
+                className="mx-auto w-[260px] max-w-full"
+              >
+                <div className="relative">
+                  {phase === 'offer' ? (
+                    <>
+                      <motion.div
+                        className="absolute -left-2 -top-6 text-gold"
+                        animate={{ y: [0, -10, 0], rotate: [0, 8, 0] }}
+                        transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        ✨
+                      </motion.div>
+                      <motion.div
+                        className="absolute -right-3 -top-3 text-pink"
+                        animate={{ y: [0, -12, 0], rotate: [0, -10, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        ✨
+                      </motion.div>
+                    </>
+                  ) : null}
+                  <AxolotlFace mood={phase === 'playing' ? 'bored' : 'excited'} />
+                </div>
+              </motion.div>
+            </div>
+
+            {phase === 'offer' ? (
+              <div className="mt-5 space-y-3">
+                <CoinBadge amount={coins} />
+                {error ? (
+                  <div className="rounded-2xl border border-pink/30 bg-pink/10 px-4 py-3 text-sm text-text">
+                    {error}
+                  </div>
+                ) : null}
+
+                <div className="space-y-2">
+                  {canWatch ? (
+                    <Button
+                      variant="secondary"
+                      className="w-full justify-between"
+                      onClick={onWatch}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-base">📺</span>
+                        <span>{t('watchButton')}</span>
+                      </span>
+                      <span className="text-bg/90">{t('watchSub', { total: coins * 2 })}</span>
+                    </Button>
+                  ) : (
+                    <Button variant="secondary" className="w-full" disabled>
+                      {t('dailyLimit', { watched: adsWatchedToday, limit })}
+                    </Button>
+                  )}
+
+                  <Button variant="outline" className="w-full" onClick={onKeep}>
+                    {t('keepButton', { coins })}
+                  </Button>
+                </div>
+              </div>
+            ) : null}
+
+            {phase === 'playing' ? (
+              <div className="mt-6 space-y-3">
+                <div className="h-3 w-full overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
+                  <motion.div
+                    className="h-full rounded-full bg-gold"
+                    animate={{ width: `${Math.round(progress * 100)}%` }}
+                    transition={{ duration: 0.25 }}
+                  />
+                </div>
+                <div className="text-xs text-subtext">{t('adNoSkip')}</div>
+              </div>
+            ) : null}
+
+            {phase === 'success' ? (
+              <div className="mt-6 space-y-3">
+                <CoinBadge amount={coins * 2} />
+                <Button variant="secondary" className="w-full" onClick={onClose}>
+                  {t('close')}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+

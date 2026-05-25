@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Study with your pet",
+    "tipTitle": "Tip",
+    "tipBody": "Tiny sessions count. Do 10 minutes now and keep your axolotl happy.",
+    "language": "Language",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Start for free",
+      "seeHowItWorks": "See how it works",
+      "getStarted": "Get started",
+      "getStartedFree": "Get started free",
+      "upgrade": "Upgrade",
+      "saveChanges": "Save changes",
+      "savePreferences": "Save preferences",
+      "manageSubscription": "Manage Subscription",
+      "logout": "Log out",
+      "deleteAccount": "Delete account",
+      "changePassword": "Change password"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Pricing",
+    "login": "Login",
+    "signup": "Sign up",
+    "openLanguageMenu": "Open language menu"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "studyTimer": "Study Timer",
+    "flashcards": "Flashcards",
+    "aiGenerator": "AI Generator",
+    "quizMode": "Quiz Mode",
+    "studyGroups": "Study Groups",
+    "examCountdown": "Exam Countdown",
+    "studyPlanner": "Study Planner",
+    "progress": "Progress",
+    "shop": "Shop",
+    "petRoom": "Pet Room",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Log in to see your pet, streak, and study progress.",
+      "noticeCheckEmail": "Check your email to confirm your account, then log in.",
+      "error": "Login failed. Try again.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password (min 8 chars)",
+      "button": "Log in",
+      "newHere": "New here?",
+      "createAccount": "Create an account"
+    },
+    "signup": {
+      "title": "Meet your axolotl",
+      "subtitle": "Create an account to start earning coins and building your streak.",
+      "error": "Signup failed. Try again.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password (min 8 chars)",
+      "button": "Create account",
+      "alreadyHave": "Already have an account?",
+      "loginLink": "Log in"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolotl",
+    "level": "Lv {level}",
+    "coins": "Coins",
+    "streak": "Streak",
+    "quickTimer": "Quick timer"
+  },
+  "doubleCoins": {
+    "earnedTitle": "You earned {coins} coins!",
+    "adTitle": "Ad playing...",
+    "successTitle": "Nice!",
+    "adPlaying": "Ad playing... {seconds} seconds",
+    "adNoSkip": "Please wait — you can’t skip this ad.",
+    "dailyLimit": "Daily limit reached ({watched}/{limit})",
+    "watchButton": "Watch a short ad to double it!",
+    "watchSub": "2x = {total} coins",
+    "keepButton": "Keep my {coins} coins",
+    "doubledMessage": "You doubled your coins! +{total}",
+    "close": "Close",
+    "limitError": "Daily ad limit reached. Keep your coins and come back tomorrow.",
+    "genericError": "Couldn’t double coins. Please try again."
+  },
+  "landing": {
+    "badgeNew": "New: AI flashcards + study pet in one place",
+    "headline": "Study smarter with your new best friend",
+    "subheadline": "Turn any video, PDF or notes into flashcards in seconds. Grow your pet. Ace your exams.",
+    "tags": {
+      "freeToStart": "Free to start",
+      "cuteRewards": "Cute rewards",
+      "focusBoosts": "Focus boosts"
+    },
+    "socialProof": {
+      "join": "Join students already using Bloom",
+      "loved": "Loved by students worldwide"
+    },
+    "features": {
+      "aiTitle": "AI Flashcards",
+      "aiBody": "Paste notes, upload PDF or paste YouTube URL — get flashcards, summaries and quizzes instantly.",
+      "petTitle": "Study Pet",
+      "petBody": "Your axolotl grows as you study. Keep it happy and unlock rewards.",
+      "groupsTitle": "Study Together",
+      "groupsBody": "Create study groups, share decks, compete on leaderboards."
+    },
+    "how": {
+      "title": "How it works",
+      "subtitle": "From notes to flashcards in minutes — then your pet keeps you consistent.",
+      "step1Title": "Step 1 Paste your notes or YouTube URL",
+      "step1Body": "Drop in any topic: lecture notes, revision guides, or a YouTube link.",
+      "step2Title": "Step 2 Get flashcards, summary and quiz",
+      "step2Body": "Bloom generates study-ready materials you can review right away.",
+      "step3Title": "Step 3 Study with your pet and track progress",
+      "step3Body": "Earn coins, keep your streak, and watch your axolotl grow."
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Start free. Upgrade when you want unlimited momentum.",
+      "fullDetails": "Full details",
+      "freeTitle": "Free",
+      "freePrice": "£0",
+      "freePeriod": "forever",
+      "freeBullets": ["Flashcards + quizzes + timer", "Study pet progression", "Limited monthly AI generations"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ month",
+      "annualNote": "Or £29.99/year — Save 37%",
+      "premiumBullets": ["More AI generations", "Premium shop items", "Group leaderboards"],
+      "mostPopular": "Most Popular"
+    },
+    "finalCta": {
+      "title": "Ready to ace your exams?",
+      "subtitle": "Meet your axolotl today — it's free"
+    }
+  },
+  "pricingPage": {
+    "title": "Pricing",
+    "subtitle": "Bloom is free to start. Upgrade for bigger AI limits and premium pet items.",
+    "free": {
+      "title": "Free",
+      "period": "forever",
+      "bullets": ["Flashcards, timer, exams", "Basic pet + coins", "Limited AI generation"]
+    },
+    "monthly": {
+      "title": "Premium Monthly",
+      "period": "/ month",
+      "bullets": ["More AI generations", "Premium shop items", "Leaderboards"],
+      "cta": "Go premium"
+    },
+    "yearly": {
+      "title": "Premium Yearly",
+      "period": "/ year",
+      "bullets": ["Best value", "More AI generations", "Premium shop items"],
+      "cta": "Save yearly"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Did you know...",
+    "loadingAxolotlAria": "Loading axolotl",
+    "facts": {
+      "1": "Honey never spoils; archaeologists have tasted 3,000-year-old honey.",
+      "2": "Octopuses have three hearts and blue blood.",
+      "3": "A day on Venus is longer than a year on Venus.",
+      "4": "Bananas are berries, but strawberries are not.",
+      "5": "The Eiffel Tower can grow about 15 cm taller in summer heat.",
+      "6": "Sharks have been around longer than trees.",
+      "7": "Your brain uses roughly 20% of your body’s energy.",
+      "8": "A bolt of lightning is hotter than the surface of the Sun.",
+      "9": "Some turtles can breathe through their butts during winter.",
+      "10": "The shortest war in history lasted about 38 minutes.",
+      "11": "Cleopatra lived closer to the Moon landing than to the pyramids.",
+      "12": "There are more possible chess games than atoms in the observable universe.",
+      "13": "Wombat poop is cube-shaped to stop it rolling away.",
+      "14": "A group of flamingos is called a flamboyance.",
+      "15": "The human stomach gets a new lining every few days.",
+      "16": "An asteroid impact helped wipe out the dinosaurs 66 million years ago.",
+      "17": "The Great Wall of China is not visible from space with the naked eye.",
+      "18": "Ants can carry objects many times their own weight.",
+      "19": "Some frogs freeze solid in winter and thaw back to life in spring.",
+      "20": "The first computer bug was an actual moth found in 1947.",
+      "21": "A teaspoon of neutron star material would weigh billions of tons on Earth.",
+      "22": "The Moon is moving away from Earth by about 3.8 cm each year.",
+      "23": "Dolphins have signature whistles that act like names.",
+      "24": "The smell of rain is caused partly by a molecule called geosmin.",
+      "25": "Spiders can’t fly, but many “balloon” on silk threads to travel.",
+      "26": "Humans share about 60% of their DNA with bananas.",
+      "27": "Penguins propose with pebbles in some species.",
+      "28": "The longest English word without a vowel is “rhythms”.",
+      "29": "The coldest place in the universe may be the Boomerang Nebula.",
+      "30": "A single cloud can weigh more than a million pounds.",
+      "31": "The “fear center” in your brain is the amygdala.",
+      "32": "Your eyes can’t see the world in “high definition”; your brain fills gaps.",
+      "33": "The first Olympic Games were held in Olympia in 776 BCE.",
+      "34": "The first pizza delivery is recorded in Naples in 1889.",
+      "35": "Cats can make over 100 vocal sounds; dogs make around 10.",
+      "36": "Some mushrooms can glow in the dark (bioluminescence).",
+      "37": "A snail can sleep for up to three years in harsh conditions.",
+      "38": "The heart of a blue whale is about the size of a small car.",
+      "39": "Cows have best friends and get stressed when separated.",
+      "40": "The Amazon rainforest produces a significant share of Earth’s oxygen.",
+      "41": "The word “robot” comes from a Czech word meaning forced labor.",
+      "42": "The first printed book was produced in China, not Europe.",
+      "43": "A crocodile can’t stick its tongue out.",
+      "44": "The hottest chili pepper can feel like being burned due to capsaicin.",
+      "45": "The human body has more bacterial cells than human cells (by count).",
+      "46": "A violin’s sound comes largely from its wooden body, not just strings.",
+      "47": "Saturn could float in water because it’s less dense than water.",
+      "48": "Butterflies taste with their feet.",
+      "49": "The strongest muscle by weight is often said to be the jaw muscle.",
+      "50": "The Sahara Desert has had snowstorms, even though it is extremely dry."
+    }
+  }
+}

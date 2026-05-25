@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Bloom",
+    "tagline": "Estuda com o teu pet",
+    "tipTitle": "Dica",
+    "tipBody": "Sessões pequenas contam. Faz 10 minutos agora e mantém o teu axolote feliz.",
+    "language": "Idioma",
+    "menu": "Menu",
+    "buttons": {
+      "startForFree": "Começar grátis",
+      "seeHowItWorks": "Ver como funciona",
+      "getStarted": "Começar",
+      "getStartedFree": "Começar grátis",
+      "upgrade": "Atualizar",
+      "saveChanges": "Guardar alterações",
+      "savePreferences": "Guardar preferências",
+      "manageSubscription": "Gerir subscrição",
+      "logout": "Terminar sessão",
+      "deleteAccount": "Eliminar conta",
+      "changePassword": "Alterar palavra-passe"
+    }
+  },
+  "marketingHeader": {
+    "pricing": "Preços",
+    "login": "Iniciar sessão",
+    "signup": "Registar",
+    "openLanguageMenu": "Abrir menu de idiomas"
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "studyTimer": "Cronómetro de estudo",
+    "flashcards": "Flashcards",
+    "aiGenerator": "Gerador IA",
+    "quizMode": "Modo quiz",
+    "studyGroups": "Grupos de estudo",
+    "examCountdown": "Contagem decrescente de exames",
+    "studyPlanner": "Planeador de estudo",
+    "progress": "Progresso",
+    "shop": "Loja",
+    "petRoom": "Sala do pet",
+    "settings": "Definições"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo de volta",
+      "subtitle": "Inicia sessão para ver o teu pet, a tua sequência e o progresso.",
+      "noticeCheckEmail": "Verifica o teu email para confirmares a conta e depois inicia sessão.",
+      "error": "Falha no login. Tenta novamente.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Palavra-passe (mín. 8 caracteres)",
+      "button": "Iniciar sessão",
+      "newHere": "Novo por aqui?",
+      "createAccount": "Criar conta"
+    },
+    "signup": {
+      "title": "Conhece o teu axolote",
+      "subtitle": "Cria uma conta para começares a ganhar moedas e a tua sequência.",
+      "error": "Falha no registo. Tenta novamente.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Palavra-passe (mín. 8 caracteres)",
+      "button": "Criar conta",
+      "alreadyHave": "Já tens conta?",
+      "loginLink": "Iniciar sessão"
+    }
+  },
+  "dashboardTopbar": {
+    "petName": "Axolote",
+    "level": "Nv {level}",
+    "coins": "Moedas",
+    "streak": "Sequência",
+    "quickTimer": "Cronómetro rápido"
+  },
+  "doubleCoins": {
+    "earnedTitle": "Ganhaste {coins} moedas!",
+    "adTitle": "Anúncio a reproduzir...",
+    "successTitle": "Boa!",
+    "adPlaying": "Anúncio... {seconds} segundos",
+    "adNoSkip": "Espera — não dá para saltar.",
+    "dailyLimit": "Limite diário atingido ({watched}/{limit})",
+    "watchButton": "Vê um anúncio curto para duplicar!",
+    "watchSub": "2x = {total} moedas",
+    "keepButton": "Ficar com as minhas {coins} moedas",
+    "doubledMessage": "Duplicaste as tuas moedas! +{total}",
+    "close": "Fechar",
+    "limitError": "Atingiste o limite diário. Fica com as moedas e volta amanhã.",
+    "genericError": "Não foi possível duplicar as moedas. Tenta novamente."
+  },
+  "landing": {
+    "badgeNew": "Novo: flashcards com IA + pet de estudo num só lugar",
+    "headline": "Estuda de forma mais inteligente com o teu novo melhor amigo",
+    "subheadline": "Transforma qualquer vídeo, PDF ou apontamentos em flashcards em segundos. Faz o teu pet crescer. Arrasa nos exames.",
+    "tags": {
+      "freeToStart": "Grátis para começar",
+      "cuteRewards": "Recompensas fofas",
+      "focusBoosts": "Boost de foco"
+    },
+    "socialProof": {
+      "join": "Junta-te a estudantes que já usam o Bloom",
+      "loved": "Adorado por estudantes em todo o mundo"
+    },
+    "features": {
+      "aiTitle": "Flashcards com IA",
+      "aiBody": "Cola apontamentos, envia um PDF ou cola uma URL do YouTube — obtém flashcards, resumos e quizzes instantaneamente.",
+      "petTitle": "Pet de estudo",
+      "petBody": "O teu axolote cresce enquanto estudas. Mantém-no feliz e desbloqueia recompensas.",
+      "groupsTitle": "Estudar em conjunto",
+      "groupsBody": "Cria grupos de estudo, partilha baralhos e compete em rankings."
+    },
+    "how": {
+      "title": "Como funciona",
+      "subtitle": "De apontamentos a flashcards em minutos — e o teu pet mantém-te consistente.",
+      "step1Title": "Passo 1 Cola os teus apontamentos ou a URL do YouTube",
+      "step1Body": "Adiciona qualquer tema: notas de aula, guias de revisão ou um link do YouTube.",
+      "step2Title": "Passo 2 Obtém flashcards, resumo e quiz",
+      "step2Body": "O Bloom gera materiais prontos para estudar, para rever de imediato.",
+      "step3Title": "Passo 3 Estuda com o teu pet e acompanha o progresso",
+      "step3Body": "Ganha moedas, mantém a tua sequência e vê o teu axolote crescer."
+    },
+    "pricing": {
+      "title": "Preços",
+      "subtitle": "Começa grátis. Atualiza quando quiseres mais ritmo.",
+      "fullDetails": "Detalhes",
+      "freeTitle": "Grátis",
+      "freePrice": "£0",
+      "freePeriod": "para sempre",
+      "freeBullets": ["Flashcards + quizzes + cronómetro", "Progressão do pet", "Gerações de IA mensais limitadas"],
+      "premiumTitle": "Premium",
+      "premiumPrice": "£3.99",
+      "premiumPeriod": "/ mês",
+      "annualNote": "Ou £29.99/ano — Poupa 37%",
+      "premiumBullets": ["Mais gerações de IA", "Itens premium na loja", "Rankings de grupos"],
+      "mostPopular": "Mais popular"
+    },
+    "finalCta": {
+      "title": "Pronto para arrasar nos exames?",
+      "subtitle": "Conhece o teu axolote hoje — é grátis"
+    }
+  },
+  "pricingPage": {
+    "title": "Preços",
+    "subtitle": "O Bloom é grátis para começar. Atualiza para limites maiores de IA e itens premium para o teu pet.",
+    "free": {
+      "title": "Grátis",
+      "period": "para sempre",
+      "bullets": ["Flashcards, cronómetro, exames", "Pet básico + moedas", "Geração de IA limitada"]
+    },
+    "monthly": {
+      "title": "Premium mensal",
+      "period": "/ mês",
+      "bullets": ["Mais gerações de IA", "Itens premium na loja", "Rankings"],
+      "cta": "Ir para Premium"
+    },
+    "yearly": {
+      "title": "Premium anual",
+      "period": "/ ano",
+      "bullets": ["Melhor valor", "Mais gerações de IA", "Itens premium na loja"],
+      "cta": "Poupar no anual"
+    }
+  },
+  "loading": {
+    "didYouKnow": "Sabias que…",
+    "loadingAxolotlAria": "Axolote a carregar",
+    "facts": {
+      "1": "O mel nunca estraga; arqueólogos provaram mel com 3.000 anos.",
+      "2": "Os polvos têm três corações e sangue azul.",
+      "3": "Um dia em Vénus é mais longo do que um ano em Vénus.",
+      "4": "Bananas são bagas, mas morangos não.",
+      "5": "A Torre Eiffel pode crescer cerca de 15 cm com o calor do verão.",
+      "6": "Tubarões existem há mais tempo do que árvores.",
+      "7": "O teu cérebro usa cerca de 20% da energia do corpo.",
+      "8": "Um relâmpago é mais quente do que a superfície do Sol.",
+      "9": "Algumas tartarugas conseguem respirar pelo traseiro durante o inverno.",
+      "10": "A guerra mais curta da história durou cerca de 38 minutos.",
+      "11": "Cleópatra viveu mais perto da chegada à Lua do que das pirâmides.",
+      "12": "Há mais jogos de xadrez possíveis do que átomos no universo observável.",
+      "13": "As fezes do wombat são em forma de cubo para não rolarem.",
+      "14": "Um grupo de flamingos chama-se uma “flamboyance”.",
+      "15": "O estômago humano ganha um novo revestimento a cada poucos dias.",
+      "16": "O impacto de um asteroide ajudou a extinguir os dinossauros há 66 milhões de anos.",
+      "17": "A Grande Muralha da China não é visível do espaço a olho nu.",
+      "18": "As formigas podem carregar objetos muitas vezes o seu próprio peso.",
+      "19": "Algumas rãs congelam no inverno e descongelam de volta à vida na primavera.",
+      "20": "O primeiro bug de computador foi uma traça real encontrada em 1947.",
+      "21": "Uma colher de chá de material de estrela de neutrões pesaria milhares de milhões de toneladas na Terra.",
+      "22": "A Lua afasta-se da Terra cerca de 3,8 cm por ano.",
+      "23": "Golfinhos têm assobios característicos que funcionam como nomes.",
+      "24": "O cheiro de chuva é causado em parte por uma molécula chamada geosmina.",
+      "25": "Aranhas não voam, mas muitas “balonam” em fios de seda para viajar.",
+      "26": "Humanos partilham cerca de 60% do ADN com bananas.",
+      "27": "Em algumas espécies, pinguins pedem em casamento com pedrinhas.",
+      "28": "A palavra inglesa mais longa sem vogal é “rhythms”.",
+      "29": "O local mais frio do universo pode ser a Nebulosa Boomerang.",
+      "30": "Uma única nuvem pode pesar mais de um milhão de libras.",
+      "31": "O “centro do medo” no cérebro é a amígdala.",
+      "32": "Os teus olhos não veem o mundo em “alta definição”; o teu cérebro preenche lacunas.",
+      "33": "Os primeiros Jogos Olímpicos foram realizados em Olímpia em 776 a.C.",
+      "34": "A primeira entrega de pizza foi registada em Nápoles em 1889.",
+      "35": "Gatos conseguem fazer mais de 100 sons; cães fazem cerca de 10.",
+      "36": "Alguns cogumelos podem brilhar no escuro (bioluminescência).",
+      "37": "Um caracol pode dormir até três anos em condições difíceis.",
+      "38": "O coração de uma baleia-azul tem aproximadamente o tamanho de um carro pequeno.",
+      "39": "Vacas têm melhores amigas e ficam stressadas quando separadas.",
+      "40": "A floresta amazónica produz uma parte significativa do oxigénio da Terra.",
+      "41": "A palavra “robô” vem de uma palavra checa que significa trabalho forçado.",
+      "42": "O primeiro livro impresso foi produzido na China, não na Europa.",
+      "43": "Um crocodilo não consegue pôr a língua de fora.",
+      "44": "A malagueta mais picante pode parecer uma queimadura por causa da capsaicina.",
+      "45": "O corpo humano tem mais células bacterianas do que células humanas (por contagem).",
+      "46": "O som de um violino vem sobretudo do corpo de madeira, não só das cordas.",
+      "47": "Saturno poderia flutuar na água porque é menos denso do que a água.",
+      "48": "Borboletas provam com os pés.",
+      "49": "Muitas vezes diz-se que o músculo mais forte por peso é o músculo da mandíbula.",
+      "50": "O Deserto do Saara já teve tempestades de neve, apesar de ser extremamente seco."
+    }
+  }
+}
