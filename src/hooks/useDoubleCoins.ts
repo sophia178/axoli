@@ -1,7 +1,6 @@
 'use client'
 
 import { createElement, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
 import { DoubleCoinsModal } from '@/components/coins/DoubleCoinsModal'
 import { useCoinToasts } from '@/components/coins/CoinToastProvider'
 
@@ -13,7 +12,6 @@ type PromptArgs = {
 }
 
 export function useDoubleCoins() {
-  const t = useTranslations('doubleCoins')
   const { showCoins } = useCoinToasts()
 
   const [open, setOpen] = useState(false)
@@ -100,11 +98,11 @@ export function useDoubleCoins() {
           setLimit(Number(json?.limit ?? 3))
           setCanWatch(false)
           setPhase('offer')
-          setError(t('limitError'))
+          setError('Daily ad limit reached. Keep your coins and come back tomorrow.')
           return
         }
         setPhase('offer')
-        setError(t('genericError'))
+        setError('Couldn’t double coins. Please try again.')
         return
       }
 
@@ -115,7 +113,7 @@ export function useDoubleCoins() {
       setCanWatch(Boolean(json?.canWatch ?? (adsWatchedToday + 1 < limit)))
       setPhase('success')
     })()
-  }, [open, phase, secondsLeft, coins, reason, showCoins, t, adsWatchedToday, limit])
+  }, [open, phase, secondsLeft, coins, reason, showCoins, adsWatchedToday, limit])
 
   const modal = createElement(DoubleCoinsModal, {
     open,

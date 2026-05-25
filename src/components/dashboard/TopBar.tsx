@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { logoutAction } from '@/app/actions/auth'
 import type { Profile } from '@/lib/data/profile'
 import { Button } from '@/components/ui/Button'
@@ -8,9 +7,7 @@ function clamp(num: number, min: number, max: number) {
   return Math.max(min, Math.min(max, num))
 }
 
-export async function TopBar({ profile }: { profile: Profile | null }) {
-  const t = await getTranslations('dashboardTopbar')
-  const tCommon = await getTranslations('common')
+export function TopBar({ profile }: { profile: Profile | null }) {
   const coins = profile?.coins ?? 0
   const streak = profile?.streak ?? 0
   const happiness = clamp(profile?.pet_happiness ?? 70, 0, 100)
@@ -31,9 +28,9 @@ export async function TopBar({ profile }: { profile: Profile | null }) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading text-base text-text">{t('petName')}</span>
+                <span className="font-heading text-base text-text">Axolotl</span>
                 <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
-                  {t('level', { level })}
+                  Lv {level}
                 </span>
               </div>
               <div className="mt-1 flex items-center gap-2">
@@ -49,11 +46,11 @@ export async function TopBar({ profile }: { profile: Profile | null }) {
           </Link>
           <div className="hidden items-center gap-3 md:flex">
             <div className="rounded-3xl border border-border bg-card/60 px-4 py-3">
-              <div className="text-xs text-subtext">{t('coins')}</div>
+              <div className="text-xs text-subtext">Coins</div>
               <div className="font-heading text-xl text-text">{coins}</div>
             </div>
             <div className="rounded-3xl border border-border bg-card/60 px-4 py-3">
-              <div className="text-xs text-subtext">{t('streak')}</div>
+              <div className="text-xs text-subtext">Streak</div>
               <div className="font-heading text-xl text-text">{streak}🔥</div>
             </div>
           </div>
@@ -62,12 +59,12 @@ export async function TopBar({ profile }: { profile: Profile | null }) {
         <div className="flex items-center gap-2">
           <Link href="/dashboard/timer" className="hidden sm:block">
             <Button variant="secondary" size="sm">
-              {t('quickTimer')}
+              Quick timer
             </Button>
           </Link>
           <form action={logoutAction}>
             <Button variant="outline" size="sm" type="submit">
-              {tCommon('buttons.logout')}
+              Log out
             </Button>
           </form>
         </div>

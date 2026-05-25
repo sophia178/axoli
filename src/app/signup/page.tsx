@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { signupAction } from '@/app/actions/auth'
 import { MarketingHeader } from '@/components/MarketingHeader'
 import { MotionIn } from '@/components/MotionIn'
@@ -12,7 +11,6 @@ export default async function SignupPage({
 }: {
   searchParams?: Record<string, string | string[] | undefined>
 }) {
-  const t = await getTranslations('auth')
   const error = typeof searchParams?.error === 'string' ? searchParams.error : null
 
   return (
@@ -22,41 +20,41 @@ export default async function SignupPage({
         <MotionIn className="w-full max-w-md">
           <Card>
             <CardHeader>
-              <CardTitle>{t('signup.title')}</CardTitle>
+              <CardTitle>Meet your axolotl</CardTitle>
               <p className="mt-1 text-sm text-subtext">
-                {t('signup.subtitle')}
+                Create an account to start earning coins and building your streak.
               </p>
             </CardHeader>
             <CardContent>
               {error ? (
                 <div className="mb-4 rounded-2xl border border-pink/30 bg-pink/10 px-4 py-3 text-sm text-text">
-                  {t('signup.error')}
+                  Signup failed. Try again.
                 </div>
               ) : null}
               <form action={signupAction} className="space-y-3">
                 <Input
                   name="email"
                   type="email"
-                  placeholder={t('signup.emailPlaceholder')}
+                  placeholder="Email"
                   autoComplete="email"
                   required
                 />
                 <Input
                   name="password"
                   type="password"
-                  placeholder={t('signup.passwordPlaceholder')}
+                  placeholder="Password (min 8 chars)"
                   autoComplete="new-password"
                   required
                 />
                 <Button type="submit" className="w-full">
-                  {t('signup.button')}
+                  Create account
                 </Button>
               </form>
 
               <div className="mt-5 text-center text-sm text-subtext">
-                {t('signup.alreadyHave')}{' '}
+                Already have an account?{' '}
                 <Link href="/login" className="text-pink hover:underline">
-                  {t('signup.loginLink')}
+                  Log in
                 </Link>
               </div>
             </CardContent>

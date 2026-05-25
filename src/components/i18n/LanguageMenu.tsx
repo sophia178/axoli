@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n'
 import { cn } from '@/lib/cn'
 
@@ -48,7 +47,6 @@ export function LanguageMenu({
   variant?: 'icon' | 'select'
   onSelected?: (locale: Locale) => void | Promise<void>
 }) {
-  const t = useTranslations('marketingHeader')
   const rootRef = useRef<HTMLDivElement | null>(null)
   const [open, setOpen] = useState(false)
   const current = (getCookie('NEXT_LOCALE') as Locale | null) ?? 'en'
@@ -128,7 +126,7 @@ export function LanguageMenu({
     <div ref={rootRef} className="relative">
       <button
         type="button"
-        aria-label={t('openLanguageMenu')}
+        aria-label="Open language menu"
         onClick={() => setOpen((v) => !v)}
         className="inline-flex h-9 w-9 items-center justify-center rounded-2xl text-subtext ring-1 ring-border hover:bg-card/60 hover:text-text"
       >
@@ -138,4 +136,3 @@ export function LanguageMenu({
     </div>
   )
 }
-

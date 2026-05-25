@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { loginAction } from '@/app/actions/auth'
 import { MarketingHeader } from '@/components/MarketingHeader'
 import { MotionIn } from '@/components/MotionIn'
@@ -12,7 +11,6 @@ export default async function LoginPage({
 }: {
   searchParams?: Record<string, string | string[] | undefined>
 }) {
-  const t = await getTranslations('auth')
   const error = typeof searchParams?.error === 'string' ? searchParams.error : null
   const notice =
     typeof searchParams?.notice === 'string' ? searchParams.notice : null
@@ -24,20 +22,20 @@ export default async function LoginPage({
         <MotionIn className="w-full max-w-md">
           <Card>
             <CardHeader>
-              <CardTitle>{t('login.title')}</CardTitle>
+              <CardTitle>Welcome back</CardTitle>
               <p className="mt-1 text-sm text-subtext">
-                {t('login.subtitle')}
+                Log in to see your pet, streak, and study progress.
               </p>
             </CardHeader>
             <CardContent>
               {notice === 'check_email' ? (
                 <div className="mb-4 rounded-2xl border border-border bg-card/70 px-4 py-3 text-sm text-subtext">
-                  {t('login.noticeCheckEmail')}
+                  Check your email to confirm your account, then log in.
                 </div>
               ) : null}
               {error ? (
                 <div className="mb-4 rounded-2xl border border-pink/30 bg-pink/10 px-4 py-3 text-sm text-text">
-                  {t('login.error')}
+                  Login failed. Try again.
                 </div>
               ) : null}
 
@@ -45,26 +43,26 @@ export default async function LoginPage({
                 <Input
                   name="email"
                   type="email"
-                  placeholder={t('login.emailPlaceholder')}
+                  placeholder="Email"
                   autoComplete="email"
                   required
                 />
                 <Input
                   name="password"
                   type="password"
-                  placeholder={t('login.passwordPlaceholder')}
+                  placeholder="Password (min 8 chars)"
                   autoComplete="current-password"
                   required
                 />
                 <Button type="submit" className="w-full">
-                  {t('login.button')}
+                  Log in
                 </Button>
               </form>
 
               <div className="mt-5 text-center text-sm text-subtext">
-                {t('login.newHere')}{' '}
+                New here?{' '}
                 <Link href="/signup" className="text-pink hover:underline">
-                  {t('login.createAccount')}
+                  Create an account
                 </Link>
               </div>
             </CardContent>

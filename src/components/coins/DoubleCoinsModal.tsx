@@ -2,9 +2,7 @@
 
 import { useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/Button'
-import { cn } from '@/lib/cn'
 
 type Phase = 'offer' | 'playing' | 'success'
 
@@ -160,8 +158,6 @@ export function DoubleCoinsModal({
   onWatch: () => void
   onClose: () => void
 }) {
-  const t = useTranslations('doubleCoins')
-
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
@@ -194,7 +190,7 @@ export function DoubleCoinsModal({
               type="button"
               onClick={onClose}
               className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-2xl text-subtext ring-1 ring-border hover:bg-bg/20 hover:text-text [[dir=rtl]_&]:left-4 [[dir=rtl]_&]:right-auto"
-              aria-label={t('close')}
+              aria-label="Close"
             >
               ✕
             </button>
@@ -203,12 +199,18 @@ export function DoubleCoinsModal({
           <div className="mx-auto max-w-sm">
             <div className="text-center">
               <div className="font-heading text-3xl text-text">
-                {phase === 'offer' ? t('earnedTitle', { coins }) : phase === 'playing' ? t('adTitle') : t('successTitle')}
+                {phase === 'offer'
+                  ? `You earned ${coins} coins!`
+                  : phase === 'playing'
+                    ? 'Ad playing...'
+                    : 'Nice!'}
               </div>
               <div className="mt-2 text-sm text-subtext">
-                {phase === 'playing' ? t('adPlaying', { seconds: secondsLeft }) : null}
-                {phase === 'offer' && !canWatch ? t('dailyLimit', { watched: adsWatchedToday, limit }) : null}
-                {phase === 'success' ? t('doubledMessage', { total: coins * 2 }) : null}
+                {phase === 'playing' ? `Ad playing... ${secondsLeft} seconds` : null}
+                {phase === 'offer' && !canWatch
+                  ? `Daily limit reached (${adsWatchedToday}/${limit})`
+                  : null}
+                {phase === 'success' ? `You doubled your coins! +${coins * 2}` : null}
               </div>
             </div>
 
@@ -260,18 +262,18 @@ export function DoubleCoinsModal({
                     >
                       <span className="flex items-center gap-2">
                         <span className="text-base">📺</span>
-                        <span>{t('watchButton')}</span>
+                        <span>Watch a short ad to double it!</span>
                       </span>
-                      <span className="text-bg/90">{t('watchSub', { total: coins * 2 })}</span>
+                      <span className="text-bg/90">{`2x = ${coins * 2} coins`}</span>
                     </Button>
                   ) : (
                     <Button variant="secondary" className="w-full" disabled>
-                      {t('dailyLimit', { watched: adsWatchedToday, limit })}
+                      {`Daily limit reached (${adsWatchedToday}/${limit})`}
                     </Button>
                   )}
 
                   <Button variant="outline" className="w-full" onClick={onKeep}>
-                    {t('keepButton', { coins })}
+                    {`Keep my ${coins} coins`}
                   </Button>
                 </div>
               </div>
@@ -286,7 +288,7 @@ export function DoubleCoinsModal({
                     transition={{ duration: 0.25 }}
                   />
                 </div>
-                <div className="text-xs text-subtext">{t('adNoSkip')}</div>
+                <div className="text-xs text-subtext">Please wait — you can’t skip this ad.</div>
               </div>
             ) : null}
 
@@ -294,7 +296,7 @@ export function DoubleCoinsModal({
               <div className="mt-6 space-y-3">
                 <CoinBadge amount={coins * 2} />
                 <Button variant="secondary" className="w-full" onClick={onClose}>
-                  {t('close')}
+                  Close
                 </Button>
               </div>
             ) : null}
@@ -304,4 +306,3 @@ export function DoubleCoinsModal({
     </div>
   )
 }
-

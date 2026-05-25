@@ -2,19 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/cn'
 import { dashboardNav } from '@/components/dashboard/nav'
 
 export function MobileNav() {
   const pathname = usePathname()
-  const tNav = useTranslations('nav')
-  const tCommon = useTranslations('common')
   return (
     <div className="lg:hidden">
       <details className="group">
         <summary className="list-none cursor-pointer rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm font-semibold text-text">
-          {tCommon('menu')}
+          Menu
         </summary>
         <div className="mt-2 grid gap-1 rounded-3xl border border-border bg-bg/60 p-2 backdrop-blur">
           {dashboardNav.map((item) => {
@@ -33,9 +30,7 @@ export function MobileNav() {
                 )}
               >
                 <span className="text-base">{item.icon}</span>
-                <span className="font-semibold">
-                  {tNav((item as any).labelKey ?? item.label)}
-                </span>
+                <span className="font-semibold">{item.label}</span>
               </Link>
             )
           })}
