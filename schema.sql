@@ -176,187 +176,6 @@ using (
   )
 );
 
-create table if not exists public.study_sessions (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id) on delete cascade,
-  duration integer not null,
-  subject text,
-  coins_earned integer not null default 0,
-  created_at timestamptz not null default now()
-);
-
-alter table public.study_sessions enable row level security;
-
-create policy "sessions_select_own"
-on public.study_sessions
-for select
-to authenticated
-using (user_id = auth.uid());
-
-create policy "sessions_insert_own"
-on public.study_sessions
-for insert
-to authenticated
-with check (user_id = auth.uid());
-
-create table if not exists public.exams (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id) on delete cascade,
-  name text not null,
-  subject text not null,
-  exam_date date not null,
-  created_at timestamptz not null default now()
-);
-
-alter table public.exams enable row level security;
-
-create policy "exams_select_own"
-on public.exams
-for select
-to authenticated
-using (user_id = auth.uid());
-
-create policy "exams_insert_own"
-on public.exams
-for insert
-to authenticated
-with check (user_id = auth.uid());
-
-create policy "exams_update_own"
-on public.exams
-for update
-to authenticated
-using (user_id = auth.uid())
-with check (user_id = auth.uid());
-
-create policy "exams_delete_own"
-on public.exams
-for delete
-to authenticated
-using (user_id = auth.uid());
-
-create table if not exists public.study_groups (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  subject text not null,
-  created_by uuid not null references public.users (id) on delete cascade,
-  join_code text not null unique,
-  is_private boolean not null default false,
-  created_at timestamptz not null default now()
-);
-
-alter table public.study_groups enable row level security;
-
-create policy "groups_select_member"
-on public.study_groups
-for select
-to authenticated
-using (
-  created_by = auth.uid()
-  or exists (
-    select 1
-    from public.group_members gm
-    where gm.group_id = id
-      and gm.user_id = auth.uid()
-  )
-);
-
-create policy "groups_insert_any"
-on public.study_groups
-for insert
-to authenticated
-with check (created_by = auth.uid());
-
-create table if not exists public.group_members (
-  id uuid primary key default gen_random_uuid(),
-  group_id uuid not null references public.study_groups (id) on delete cascade,
-  user_id uuid not null references public.users (id) on delete cascade,
-  role text not null default 'member',
-  joined_at timestamptz not null default now(),
-  unique (group_id, user_id)
-);
-
-alter table public.group_members enable row level security;
-
-create policy "group_members_select_own"
-on public.group_members
-for select
-to authenticated
-using (user_id = auth.uid());
-
-create policy "group_members_insert_own"
-on public.group_members
-for insert
-to authenticated
-with check (user_id = auth.uid());
-
-create table if not exists public.group_decks (
-  id uuid primary key default gen_random_uuid(),
-  group_id uuid not null references public.study_groups (id) on delete cascade,
-  deck_id uuid not null references public.flashcard_decks (id) on delete cascade,
-  shared_by uuid not null references public.users (id) on delete cascade,
-  created_at timestamptz not null default now(),
-  unique (group_id, deck_id)
-);
-
-alter table public.group_decks enable row level security;
-
-create policy "group_decks_select_member"
-on public.group_decks
-for select
-to authenticated
-using (
-  exists (
-    select 1 from public.group_members gm
-    where gm.group_id = group_id and gm.user_id = auth.uid()
-  )
-);
-
-create policy "group_decks_insert_member"
-on public.group_decks
-for insert
-to authenticated
-with check (
-  shared_by = auth.uid()
-  and exists (
-    select 1 from public.group_members gm
-    where gm.group_id = group_id and gm.user_id = auth.uid()
-  )
-);
-
-create table if not exists public.group_chat_messages (
-  id uuid primary key default gen_random_uuid(),
-  group_id uuid not null references public.study_groups (id) on delete cascade,
-  user_id uuid not null references public.users (id) on delete cascade,
-  message text not null,
-  created_at timestamptz not null default now()
-);
-
-alter table public.group_chat_messages enable row level security;
-
-create policy "group_chat_select_member"
-on public.group_chat_messages
-for select
-to authenticated
-using (
-  exists (
-    select 1 from public.group_members gm
-    where gm.group_id = group_id and gm.user_id = auth.uid()
-  )
-);
-
-create policy "group_chat_insert_member"
-on public.group_chat_messages
-for insert
-to authenticated
-with check (
-  user_id = auth.uid()
-  and exists (
-    select 1 from public.group_members gm
-    where gm.group_id = group_id and gm.user_id = auth.uid()
-  )
-);
-
 create table if not exists public.flashcard_reviews (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users (id) on delete cascade,
@@ -435,107 +254,186 @@ for insert
 to authenticated
 with check (user_id = auth.uid());
 
-create table if not exists public.quiz_attempts (
+create table if not exists public.study_sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users (id) on delete cascade,
-  deck_id uuid references public.flashcard_decks (id) on delete set null,
-  mode text not null,
-  question_count integer not null,
-  correct_count integer not null,
-  duration_seconds integer not null,
+  duration integer not null,
+  subject text,
+  coins_earned integer not null default 0,
   created_at timestamptz not null default now()
 );
 
-alter table public.quiz_attempts enable row level security;
+alter table public.study_sessions enable row level security;
 
-create policy "quiz_attempts_select_own"
-on public.quiz_attempts
+create policy "sessions_select_own"
+on public.study_sessions
 for select
 to authenticated
 using (user_id = auth.uid());
 
-create policy "quiz_attempts_insert_own"
-on public.quiz_attempts
+create policy "sessions_insert_own"
+on public.study_sessions
 for insert
 to authenticated
 with check (user_id = auth.uid());
 
-create table if not exists public.coins_ledger (
+create table if not exists public.exams (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users (id) on delete cascade,
-  amount integer not null,
-  reason text not null,
-  created_at timestamptz not null default now()
-);
-
-alter table public.coins_ledger enable row level security;
-
-create policy "coins_ledger_select_own"
-on public.coins_ledger
-for select
-to authenticated
-using (user_id = auth.uid());
-
-create table if not exists public.planner_tasks (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id) on delete cascade,
-  title text not null,
+  name text not null,
   subject text not null,
-  estimated_minutes integer not null default 10,
-  scheduled_date date not null default current_date,
-  completed_at timestamptz,
+  exam_date date not null,
   created_at timestamptz not null default now()
 );
 
-alter table public.planner_tasks enable row level security;
+alter table public.exams enable row level security;
 
-create policy "planner_tasks_select_own"
-on public.planner_tasks
+create policy "exams_select_own"
+on public.exams
 for select
 to authenticated
 using (user_id = auth.uid());
 
-create policy "planner_tasks_insert_own"
-on public.planner_tasks
+create policy "exams_insert_own"
+on public.exams
 for insert
 to authenticated
 with check (user_id = auth.uid());
 
-create policy "planner_tasks_update_own"
-on public.planner_tasks
+create policy "exams_update_own"
+on public.exams
 for update
 to authenticated
 using (user_id = auth.uid())
 with check (user_id = auth.uid());
 
-create policy "planner_tasks_delete_own"
-on public.planner_tasks
+create policy "exams_delete_own"
+on public.exams
 for delete
 to authenticated
 using (user_id = auth.uid());
 
-create table if not exists public.revision_completions (
+create table if not exists public.study_groups (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id) on delete cascade,
-  exam_id uuid not null references public.exams (id) on delete cascade,
-  scheduled_date date not null,
-  completed_at timestamptz not null default now(),
-  unique (user_id, exam_id, scheduled_date)
+  name text not null,
+  subject text not null,
+  created_by uuid not null references public.users (id) on delete cascade,
+  join_code text not null unique,
+  is_private boolean not null default false,
+  created_at timestamptz not null default now()
 );
 
-alter table public.revision_completions enable row level security;
+alter table public.study_groups enable row level security;
 
-create policy "revision_completions_select_own"
-on public.revision_completions
+create table if not exists public.group_members (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references public.study_groups (id) on delete cascade,
+  user_id uuid not null references public.users (id) on delete cascade,
+  role text not null default 'member',
+  joined_at timestamptz not null default now(),
+  unique (group_id, user_id)
+);
+
+alter table public.group_members enable row level security;
+
+create policy "group_members_select_own"
+on public.group_members
 for select
 to authenticated
 using (user_id = auth.uid());
 
-create policy "revision_completions_insert_own"
-on public.revision_completions
+create policy "group_members_insert_own"
+on public.group_members
 for insert
 to authenticated
 with check (user_id = auth.uid());
+
+create policy "groups_select_member"
+on public.study_groups
+for select
+to authenticated
+using (
+  created_by = auth.uid()
+  or exists (
+    select 1
+    from public.group_members gm
+    where gm.group_id = id
+      and gm.user_id = auth.uid()
+  )
+);
+
+create policy "groups_insert_any"
+on public.study_groups
+for insert
+to authenticated
+with check (created_by = auth.uid());
+
+create table if not exists public.group_decks (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references public.study_groups (id) on delete cascade,
+  deck_id uuid not null references public.flashcard_decks (id) on delete cascade,
+  shared_by uuid not null references public.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (group_id, deck_id)
+);
+
+alter table public.group_decks enable row level security;
+
+create policy "group_decks_select_member"
+on public.group_decks
+for select
+to authenticated
+using (
+  exists (
+    select 1 from public.group_members gm
+    where gm.group_id = group_id and gm.user_id = auth.uid()
+  )
+);
+
+create policy "group_decks_insert_member"
+on public.group_decks
+for insert
+to authenticated
+with check (
+  shared_by = auth.uid()
+  and exists (
+    select 1 from public.group_members gm
+    where gm.group_id = group_id and gm.user_id = auth.uid()
+  )
+);
+
+create table if not exists public.group_chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references public.study_groups (id) on delete cascade,
+  user_id uuid not null references public.users (id) on delete cascade,
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.group_chat_messages enable row level security;
+
+create policy "group_chat_select_member"
+on public.group_chat_messages
+for select
+to authenticated
+using (
+  exists (
+    select 1 from public.group_members gm
+    where gm.group_id = group_id and gm.user_id = auth.uid()
+  )
+);
+
+create policy "group_chat_insert_member"
+on public.group_chat_messages
+for insert
+to authenticated
+with check (
+  user_id = auth.uid()
+  and exists (
+    select 1 from public.group_members gm
+    where gm.group_id = group_id and gm.user_id = auth.uid()
+  )
+);
 
 create table if not exists public.shop_items (
   id uuid primary key default gen_random_uuid(),
@@ -605,6 +503,108 @@ for update
 to authenticated
 using (user_id = auth.uid())
 with check (user_id = auth.uid());
+
+create table if not exists public.planner_tasks (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users (id) on delete cascade,
+  title text not null,
+  subject text not null,
+  estimated_minutes integer not null default 10,
+  scheduled_date date not null default current_date,
+  completed_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+alter table public.planner_tasks enable row level security;
+
+create policy "planner_tasks_select_own"
+on public.planner_tasks
+for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "planner_tasks_insert_own"
+on public.planner_tasks
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+create policy "planner_tasks_update_own"
+on public.planner_tasks
+for update
+to authenticated
+using (user_id = auth.uid())
+with check (user_id = auth.uid());
+
+create policy "planner_tasks_delete_own"
+on public.planner_tasks
+for delete
+to authenticated
+using (user_id = auth.uid());
+
+create table if not exists public.revision_completions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users (id) on delete cascade,
+  exam_id uuid not null references public.exams (id) on delete cascade,
+  scheduled_date date not null,
+  completed_at timestamptz not null default now(),
+  unique (user_id, exam_id, scheduled_date)
+);
+
+alter table public.revision_completions enable row level security;
+
+create policy "revision_completions_select_own"
+on public.revision_completions
+for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "revision_completions_insert_own"
+on public.revision_completions
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+create table if not exists public.quiz_attempts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users (id) on delete cascade,
+  deck_id uuid references public.flashcard_decks (id) on delete set null,
+  mode text not null,
+  question_count integer not null,
+  correct_count integer not null,
+  duration_seconds integer not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.quiz_attempts enable row level security;
+
+create policy "quiz_attempts_select_own"
+on public.quiz_attempts
+for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "quiz_attempts_insert_own"
+on public.quiz_attempts
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+create table if not exists public.coins_ledger (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.users (id) on delete cascade,
+  amount integer not null,
+  reason text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.coins_ledger enable row level security;
+
+create policy "coins_ledger_select_own"
+on public.coins_ledger
+for select
+to authenticated
+using (user_id = auth.uid());
 
 create or replace function public.handle_new_user()
 returns trigger
