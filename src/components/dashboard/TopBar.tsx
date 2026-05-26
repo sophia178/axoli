@@ -16,6 +16,7 @@ export function TopBar({
   const streak = profile?.streak ?? 0
   const happiness = clamp(profile?.pet_happiness ?? 70, 0, 100)
   const level = profile?.pet_level ?? 1
+  const petName = (profile as any)?.pet_name as string | null | undefined
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-bg/70 backdrop-blur">
@@ -25,10 +26,10 @@ export function TopBar({
             href="/dashboard/pet"
             className="group flex items-center gap-3 rounded-3xl border border-border bg-card/70 px-4 py-3"
           >
-            <img src="/axolotl-happy.png" width="36" height="36" style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
+            <img src="/axolotl-happy.png" alt="" width="36" height="36" style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading text-base text-text">Axolotl</span>
+                <span className="font-heading text-base text-text">{petName ? petName : 'Axolotl'}</span>
                 <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
                   Lv {level}
                 </span>
