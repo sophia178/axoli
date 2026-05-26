@@ -3,9 +3,8 @@
 import { useEffect, useRef } from 'react'
 
 export function AdBanner() {
-  const clientId =
-    process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID ?? 'ca-pub-9710441137160587'
-  const slotId = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID
+  const clientId = 'ca-pub-9710441137160587'
+  const slotId = process.env.NEXT_PUBLIC_ADSENSE_BANNER_SLOT_ID
   const pushed = useRef(false)
 
   useEffect(() => {

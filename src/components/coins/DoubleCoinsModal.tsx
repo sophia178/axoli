@@ -169,8 +169,7 @@ export function DoubleCoinsModal({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose, phase])
 
-  const clientId =
-    process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID ?? 'ca-pub-9710441137160587'
+  const clientId = 'ca-pub-9710441137160587'
   const slotId = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID
   const adPushed = useRef(false)
   useEffect(() => {
@@ -297,7 +296,7 @@ export function DoubleCoinsModal({
             {phase === 'playing' ? (
               <div className="mt-6 space-y-3">
                 <div className="rounded-3xl border border-border bg-bg/20 p-4">
-                  {clientId && slotId ? (
+                  {slotId ? (
                     <ins
                       className="adsbygoogle"
                       style={{ display: 'block', minHeight: 180 }}
