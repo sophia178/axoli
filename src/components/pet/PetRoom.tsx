@@ -287,6 +287,21 @@ function writeItemStates(states: Record<string, ItemState>) {
   } catch {}
 }
 
+function svgMarkup(url: string): string | null {
+  if (!url.startsWith('data:image/svg+xml')) return null
+  try {
+    let svg: string
+    if (url.startsWith('data:image/svg+xml;base64,')) {
+      svg = atob(url.slice('data:image/svg+xml;base64,'.length))
+    } else {
+      svg = decodeURIComponent(url.slice(url.indexOf(',') + 1))
+    }
+    return svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block;" ')
+  } catch {
+    return null
+  }
+}
+
 type ResizeCorner = 'nw' | 'ne' | 'sw' | 'se'
 
 function cornerCursor(corner: ResizeCorner) {
@@ -413,7 +428,12 @@ function DraggableItem({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
+      {(() => {
+        const markup = svgMarkup(imageUrl)
+        return markup
+          ? <div dangerouslySetInnerHTML={{ __html: markup }} className="h-full w-full select-none" />
+          : <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
+      })()}
       {onRemove ? (
         <button
           type="button"
@@ -753,7 +773,14 @@ export function PetRoom({
               ownedDecorations.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
                   {d.image_url ? (
-                    <img src={d.image_url} alt="" className="h-10 w-10 select-none" draggable={false} />
+                    <div style={{ borderRadius: 6, overflow: 'hidden', background: '#1a1a2e', width: 40, height: 40, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {(() => {
+                        const markup = svgMarkup(d.image_url)
+                        return markup
+                          ? <div dangerouslySetInnerHTML={{ __html: markup }} style={{ width: 40, height: 40 }} className="select-none" />
+                          : <img src={d.image_url} alt="" style={{ width: 40, height: 40 }} className="select-none" draggable={false} />
+                      })()}
+                    </div>
                   ) : null}
                   <span>{d.name}</span>
                 </div>

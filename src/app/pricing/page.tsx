@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { createBrowserClient } from '@supabase/ssr'
 import { MarketingHeader } from '@/components/MarketingHeader'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -16,7 +16,6 @@ type Plan =
   | 'coins_1000'
 
 export default function PricingPage() {
-  const router = useRouter()
   const [msg, setMsg] = useState<string | null>(null)
   const [loading, setLoading] = useState<Plan | null>(null)
 
@@ -24,13 +23,23 @@ export default function PricingPage() {
     setMsg(null)
     setLoading(plan)
     try {
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        window.location.href = '/login?redirect=/pricing'
+        return
+      }
+
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan })
       })
       if (res.status === 401) {
-        router.push('/login')
+        window.location.href = '/login?redirect=/pricing'
         return
       }
       const json = (await res.json().catch(() => null)) as any
