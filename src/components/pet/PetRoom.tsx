@@ -543,8 +543,8 @@ export function PetRoom({
     []
   )
   const visibleDecorations = useMemo(
-    () => ownedDecorations.filter((d) => Boolean(d.image_url) && Boolean(decorationDefaultsByName[d.name])),
-    [ownedDecorations, decorationDefaultsByName]
+    () => ownedDecorations.filter((d) => Boolean(d.image_url)),
+    [ownedDecorations]
   )
 
   const equippedAccessoryItems = useMemo(
@@ -560,8 +560,13 @@ export function PetRoom({
         const d = visibleDecorations[i]
         if (next[d.id]) continue
         const def = decorationDefaultsByName[d.name]
-        if (!def) continue
-        next[d.id] = def
+        if (def) {
+          next[d.id] = def
+        } else {
+          const col = i % 5
+          const row = Math.floor(i / 5)
+          next[d.id] = { x: clamp(0.08 + col * 0.19, 0, 0.85), y: clamp(0.6 + row * 0.14, 0, 0.85), size: 80 }
+        }
         changed = true
       }
       for (let i = 0; i < equippedAccessoryItems.length; i += 1) {
@@ -673,37 +678,6 @@ export function PetRoom({
                 <HungerBar value={hunger} />
               </div>
             </div>
-          </div>
-
-          <div className="absolute left-8 bottom-10 grid gap-2">
-            {ownedDecorations.slice(0, 4).map((d, idx) => (
-              <motion.div
-                key={d.id}
-                className="flex items-center gap-3 rounded-3xl border border-border bg-card/60 px-4 py-3 text-sm text-text"
-                animate={
-                  d.is_premium
-                    ? { y: [0, -8, 0] }
-                    : idx % 2 === 0
-                      ? { y: [0, -4, 0] }
-                      : undefined
-                }
-                transition={
-                  d.is_premium
-                    ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
-                    : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
-                }
-              >
-                {d.image_url ? (
-                  <img
-                    src={d.image_url}
-                    alt=""
-                    className="h-10 w-10 select-none"
-                    draggable={false}
-                  />
-                ) : null}
-                <span>{d.name}</span>
-              </motion.div>
-            ))}
           </div>
 
         </div>

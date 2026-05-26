@@ -130,11 +130,11 @@ export default async function ProgressPage() {
         .order('created_at', { ascending: false })
         .limit(5000)
 
-      console.log('[Progress] total sessions:', allSessionsForTotals.data?.length ?? 0, 'error:', allSessionsForTotals.error?.message ?? 'none')
       const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
         (acc: number, s: any) => acc + ((s.duration as number) ?? 0),
         0
       )
+      console.log('[Progress] sessions count:', allSessionsForTotals.data?.length, 'total seconds:', totalStudySeconds, 'error:', allSessionsForTotals.error?.message ?? 'none')
       totalStudyHours = totalStudySeconds / 3600
     } catch {}
 

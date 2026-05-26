@@ -185,12 +185,13 @@ export function ShopTabs({
                 </div>
 
                 {item.image_url ? (
-                  <div className="mt-4 flex items-center justify-center rounded-2xl border border-border bg-card/60 p-4">
+                  <div className="mt-4 flex items-center justify-center">
                     <img
                       src={item.image_url}
                       alt=""
-                      className="h-24 w-24 select-none"
                       draggable={false}
+                      className="select-none"
+                      style={{ width: 60, height: 60, background: 'transparent', imageRendering: 'auto' }}
                     />
                   </div>
                 ) : null}

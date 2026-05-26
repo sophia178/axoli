@@ -62,6 +62,7 @@ export async function POST() {
     .insert({ user_id: user.id, amount: 2, reason: 'daily_login' })
   if (ledgerError) console.error('[Ping] ledger insert error:', ledgerError.message)
 
+  console.log('[Ping] updating streak for user:', user.id, 'new streak:', nextStreak)
   const { error: updateError } = await supabase
     .from('profiles')
     .update({ last_login_date: today, streak: nextStreak, coins: newCoins })
