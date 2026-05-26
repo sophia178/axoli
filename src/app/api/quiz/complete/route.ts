@@ -44,29 +44,6 @@ export async function POST(req: Request) {
     console.error('[QuizComplete] quiz_attempts insert error:', insertError.message)
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('coins')
-    .eq('user_id', user.id)
-    .maybeSingle()
-
-  const newCoins = (profile?.coins ?? 0) + 5
-
-  const { error: ledgerError } = await supabase
-    .from('coins_ledger')
-    .insert({ user_id: user.id, amount: 5, reason: 'quiz_complete' })
-  if (ledgerError) {
-    console.error('[QuizComplete] coins_ledger insert error:', ledgerError.message)
-  }
-
-  const { error: coinsError } = await supabase
-    .from('profiles')
-    .update({ coins: newCoins })
-    .eq('user_id', user.id)
-  if (coinsError) {
-    console.error('[QuizComplete] coins update error:', coinsError.message)
-  }
-
-  console.log('[QuizComplete] done — coins now:', newCoins)
+  console.log('[QuizComplete] done')
   return NextResponse.json({ ok: true, coinsAwarded: 5, promptDouble: true })
 }

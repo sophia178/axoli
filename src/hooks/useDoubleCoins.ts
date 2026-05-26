@@ -46,9 +46,20 @@ export function useDoubleCoins() {
     setSecondsLeft(15)
   }, [])
 
+  const keep = useCallback(() => {
+    close()
+    router.refresh()
+  }, [close, router])
+
   const promptDouble = useCallback(
     async ({ coinsEarned, reason }: PromptArgs) => {
       if (!Number.isFinite(coinsEarned) || coinsEarned <= 0) return
+      // Award base coins immediately before showing modal
+      await fetch('/api/coins/award', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Math.round(coinsEarned), reason })
+      })
       setCoins(Math.round(coinsEarned))
       setReason(reason)
       setSecondsLeft(15)
@@ -149,7 +160,7 @@ export function useDoubleCoins() {
     adsWatchedToday,
     limit,
     error,
-    onKeep: close,
+    onKeep: keep,
     onWatch: watchAd,
     onClose: close
   })

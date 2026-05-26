@@ -1,6 +1,7 @@
 import { requireUser } from '@/lib/auth/user'
 import { getProfile } from '@/lib/data/profile'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 
 function isoDate(d: Date) {
@@ -30,7 +31,12 @@ function clamp(n: number, min: number, max: number) {
 
 export default async function ProgressPage() {
   const user = await requireUser()
-  const supabase = getSupabaseAdmin()
+  const cookieStore = cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
+  )
   const profile = await getProfile(user.id).catch(() => null)
 
   const now = new Date()
@@ -63,7 +69,7 @@ export default async function ProgressPage() {
   const subjectSeconds = new Map<string, number>()
   const subjectSet = new Set<string>()
 
-  if (supabase) {
+  {
     try {
       const sessionsCountRes = await supabase
         .from('study_sessions')
@@ -119,18 +125,14 @@ export default async function ProgressPage() {
     try {
       const allSessionsForTotals = await supabase
         .from('study_sessions')
-        .select('duration,duration_minutes')
+        .select('duration')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5000)
 
+      console.log('[Progress] total sessions:', allSessionsForTotals.data?.length ?? 0, 'error:', allSessionsForTotals.error?.message ?? 'none')
       const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
-        (acc: number, s: any) => {
-          const secs = s.duration_minutes != null
-            ? (s.duration_minutes as number) * 60
-            : (s.duration as number) ?? 0
-          return acc + secs
-        },
+        (acc: number, s: any) => acc + ((s.duration as number) ?? 0),
         0
       )
       totalStudyHours = totalStudySeconds / 3600
@@ -151,7 +153,7 @@ export default async function ProgressPage() {
     try {
       const { data: recentSessions } = await supabase
         .from('study_sessions')
-        .select('duration,duration_minutes,subject,created_at')
+        .select('duration,subject,created_at')
         .eq('user_id', user.id)
         .gte('created_at', thirtyDaysAgo.toISOString())
         .order('created_at', { ascending: true })
@@ -159,9 +161,7 @@ export default async function ProgressPage() {
 
       for (const s of (recentSessions ?? []) as any[]) {
         const date = isoDate(new Date(s.created_at as string))
-        const seconds = s.duration_minutes != null
-          ? (s.duration_minutes as number) * 60
-          : (s.duration as number) ?? 0
+        const seconds = (s.duration as number) ?? 0
         if (hoursByDay7.has(date)) {
           hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
         }
@@ -207,12 +207,6 @@ export default async function ProgressPage() {
 
   return (
     <div className="space-y-5">
-      {!supabase ? (
-        <div className="rounded-3xl border border-pink/25 bg-pink/10 p-5 text-sm text-text">
-          Progress details are unavailable until Supabase admin credentials are configured.
-        </div>
-      ) : null}
-
       <div className="grid gap-5 md:grid-cols-5">
         <Card>
           <CardHeader>

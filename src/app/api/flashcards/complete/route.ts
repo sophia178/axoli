@@ -58,29 +58,6 @@ export async function POST(req: Request) {
     .update({ last_studied_at: new Date().toISOString() })
     .eq('id', parsed.data.deckId)
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('coins')
-    .eq('user_id', user.id)
-    .maybeSingle()
-
-  const newCoins = (profile?.coins ?? 0) + 5
-
-  const { error: ledgerError } = await supabase
-    .from('coins_ledger')
-    .insert({ user_id: user.id, amount: 5, reason: 'deck_review_complete' })
-  if (ledgerError) {
-    console.error('[FlashcardsComplete] coins_ledger insert error:', ledgerError.message)
-  }
-
-  const { error: coinsError } = await supabase
-    .from('profiles')
-    .update({ coins: newCoins })
-    .eq('user_id', user.id)
-  if (coinsError) {
-    console.error('[FlashcardsComplete] coins update error:', coinsError.message)
-  }
-
-  console.log('[FlashcardsComplete] done — coins now:', newCoins)
+  console.log('[FlashcardsComplete] done')
   return NextResponse.json({ ok: true, coinsAwarded: 5, promptDouble: true, completion })
 }

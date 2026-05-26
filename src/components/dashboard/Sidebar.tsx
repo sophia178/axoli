@@ -47,14 +47,7 @@ export function Sidebar({ profile }: { profile?: Profile | null }) {
                 </Link>
               )
             })}
-          <a
-            href="https://axoli.online/pricing"
-            style={{ color: '#FFD700' }}
-            className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition hover:bg-gold/10"
-          >
-            <span className="text-base">⭐</span>
-            <span className="font-semibold">Upgrade to Premium</span>
-          </a>
+          <a href="/pricing" style={{display:'block', padding:'8px 16px', color:'#FFD700', textDecoration:'none'}}>⭐ Upgrade to Premium</a>
         </nav>
 
         <div className="rounded-3xl border border-border bg-card/60 p-4">
