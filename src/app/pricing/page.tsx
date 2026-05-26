@@ -169,7 +169,7 @@ export default function PricingPage() {
             ))}
           </div>
           <div className="mt-4 text-sm text-subtext">
-            You'll be asked to log in before checkout if you're not signed in.
+            You&apos;ll be asked to log in before checkout if you&apos;re not signed in.
           </div>
         </div>
       </main>
