@@ -25,7 +25,8 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode
 }>) {
-  const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+  const adsenseClientId =
+    process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID ?? 'ca-pub-9710441137160587'
   return (
     <html
       lang="en"
@@ -33,13 +34,12 @@ export default function RootLayout({
       className={`${inter.variable} ${nunito.variable}`}
     >
       <head>
-        {adsenseClientId ? (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-            crossOrigin="anonymous"
-          />
-        ) : null}
+        <meta name="google-adsense-account" content="ca-pub-9710441137160587" />
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="font-sans">
         <div className="min-h-screen">
