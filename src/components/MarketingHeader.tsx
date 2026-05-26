@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 
@@ -9,7 +8,7 @@ export function MarketingHeader() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Axoli" width={36} height={36} style={{borderRadius:'50%', objectFit:'cover'}} />
+          <img src="/logo.png" width="36" height="36" style={{borderRadius:'50%', objectFit:'cover'}} alt="Axoli" />
           <span className="font-heading text-lg text-text">Axoli</span>
         </Link>
         <nav className="flex items-center gap-2">

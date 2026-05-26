@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/cn'
@@ -15,7 +14,7 @@ export function Sidebar({ profile }: { profile?: Profile | null }) {
       <div className="flex h-full flex-col p-4">
         <Link href="/dashboard" className="flex items-center gap-2 rounded-2xl px-3 py-2">
           <div style={{ background: 'white', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Image src="/axolotl-happy.png" alt="" width={36} height={36} style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
+            <img src="/axolotl-happy.png" alt="" width="36" height="36" style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
           </div>
           <div className="leading-tight">
             <div className="font-heading text-base text-text">Axoli</div>

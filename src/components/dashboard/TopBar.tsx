@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { logoutAction } from '@/app/actions/auth'
 import type { Profile } from '@/lib/data/profile'
@@ -27,7 +26,7 @@ export function TopBar({
             href="/dashboard/pet"
             className="group flex items-center gap-3 rounded-3xl border border-border bg-card/70 px-4 py-3"
           >
-            <Image src="/axolotl-happy.png" alt="" width={36} height={36} style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
+            <img src="/axolotl-happy.png" alt="" width="36" height="36" style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-base text-text">{petName ? petName : 'Axolotl'}</span>

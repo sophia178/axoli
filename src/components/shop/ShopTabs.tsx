@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { UpgradeButtons } from '@/components/shop/UpgradeButtons'
@@ -156,13 +155,11 @@ export function ShopTabs({
 
                 {item.image_url ? (
                   <div className="mt-4 flex items-center justify-center rounded-2xl border border-border bg-card/60 p-4">
-                    <Image
-                      unoptimized
+                    <img
                       src={item.image_url}
                       alt=""
-                      width={96}
-                      height={96}
-                      className="select-none"
+                      className="h-24 w-24 select-none"
+                      draggable={false}
                     />
                   </div>
                 ) : null}
