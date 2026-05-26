@@ -13,9 +13,7 @@ export function Sidebar({ profile }: { profile?: Profile | null }) {
     <aside className="hidden w-[280px] shrink-0 border-r border-border/60 bg-bg/30 backdrop-blur [[dir=rtl]_&]:border-l [[dir=rtl]_&]:border-r-0 lg:block">
       <div className="flex h-full flex-col p-4">
         <Link href="/dashboard" className="flex items-center gap-2 rounded-2xl px-3 py-2">
-          <div style={{ background: 'white', borderRadius: '50%', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <img src="/axolotl-happy.png" alt="" width="36" height="36" style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
-          </div>
+          <img src="/axolotl-happy.png" alt="" width="36" height="36" style={{ objectFit: 'contain', flexShrink: 0 }} />
           <div className="leading-tight">
             <div className="font-heading text-base text-text">Axoli</div>
             <div className="text-xs text-subtext">{petName ? petName : 'Study with your pet'}</div>

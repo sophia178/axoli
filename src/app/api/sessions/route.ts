@@ -28,7 +28,10 @@ function addDays(date: Date, days: number) {
 
 export async function POST(req: Request) {
   const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  if (!user) {
+    console.log('[Sessions] auth failed — no user')
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  }
 
   const json = await req.json().catch(() => null)
   const parsed = bodySchema.safeParse(json)
@@ -67,15 +70,21 @@ export async function POST(req: Request) {
     }
   }
 
-  const inserted = await supabase.from('study_sessions').insert({
+  const durationMinutes = Math.round(parsed.data.durationSeconds / 60)
+  const sessionRow = {
     user_id: user.id,
     duration: parsed.data.durationSeconds,
+    duration_minutes: durationMinutes,
     subject: parsed.data.subject ?? null,
     coins_earned: coinsEarned
-  })
+  }
+  console.log('[Sessions] inserting row:', sessionRow)
+  const inserted = await supabase.from('study_sessions').insert(sessionRow)
   if (inserted.error) {
+    console.error('[Sessions] insert error:', inserted.error)
     return NextResponse.json({ error: 'session_save_failed' }, { status: 500 })
   }
+  console.log('[Sessions] insert ok — user:', user.id, 'duration:', durationMinutes, 'min')
 
   let petHappiness: number | null = null
   if (applyRewards) {

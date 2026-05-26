@@ -42,10 +42,8 @@ function PetPreview({
       className="group flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 transition hover:bg-card/80"
     >
       <div className="flex items-center gap-4">
-        <div className="relative h-20 w-20 overflow-hidden rounded-3xl ring-1 ring-border" style={{ background: 'white' }}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <img src="/axolotl-happy.png" alt="" width="80" height="80" style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
-          </div>
+        <div className="relative h-20 w-20 overflow-hidden rounded-3xl ring-1 ring-border">
+          <img src="/axolotl-happy.png" alt="" width="80" height="80" style={{ objectFit: 'contain' }} />
         </div>
         <div>
           <div className="flex items-center gap-2">
