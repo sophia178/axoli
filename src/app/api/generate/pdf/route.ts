@@ -19,6 +19,21 @@ function decodeBase64(input: string) {
   return Buffer.from(trimmed, 'base64')
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number) {
+  return new Promise<T>((resolve, reject) => {
+    const id = setTimeout(() => reject(new Error('timeout')), ms)
+    promise
+      .then((v) => {
+        clearTimeout(id)
+        resolve(v)
+      })
+      .catch((e) => {
+        clearTimeout(id)
+        reject(e)
+      })
+  })
+}
+
 export async function POST(req: Request) {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
@@ -41,18 +56,48 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'ai_limit', upgrade: true }, { status: 402 })
   }
 
+  const deadline = Date.now() + 60_000
+  const timeLeft = () => Math.max(0, deadline - Date.now())
+
   const buf = decodeBase64(parsed.data.base64)
-  const parsedPdf = await pdf(buf).catch(() => null)
+  let parsedPdf: Awaited<ReturnType<typeof pdf>> | null = null
+  try {
+    parsedPdf = await withTimeout(pdf(buf), timeLeft())
+  } catch (e) {
+    if (e instanceof Error && e.message === 'timeout') {
+      return NextResponse.json(
+        { error: 'timeout', message: 'PDF extraction timed out. Try a smaller PDF (fewer pages) and try again.' },
+        { status: 504 }
+      )
+    }
+    return NextResponse.json({ error: 'pdf_parse_failed' }, { status: 422 })
+  }
   const text = parsedPdf?.text?.trim() ?? ''
   if (text.length < 80) return NextResponse.json({ error: 'no_text' }, { status: 422 })
 
   let result: Awaited<ReturnType<typeof generateWithClaude>>
   try {
-    result = await generateWithClaude({
+    const remaining = timeLeft()
+    if (remaining <= 0) {
+      return NextResponse.json(
+        { error: 'timeout', message: 'This PDF is taking too long to process. Try again with a smaller PDF.' },
+        { status: 504 }
+      )
+    }
+    result = await withTimeout(
+      generateWithClaude({
       subjectHint: parsed.data.subject,
       content: `PDF filename: ${filename}\n\n${text}`
-    })
+      }),
+      remaining
+    )
   } catch (e) {
+    if (e instanceof Error && e.message === 'timeout') {
+      return NextResponse.json(
+        { error: 'timeout', message: 'Flashcard generation timed out. Try a smaller PDF or split it into sections.' },
+        { status: 504 }
+      )
+    }
     const message = e instanceof Error ? e.message : 'AI request failed'
     return NextResponse.json({ error: 'ai_failed', message }, { status: 502 })
   }

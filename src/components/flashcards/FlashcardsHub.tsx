@@ -374,14 +374,28 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
                 <div className="text-sm text-subtext">Subject</div>
                 <Input value={editSubject} onChange={(e) => setEditSubject(e.target.value)} />
               </div>
-              <label className="flex items-center gap-3 rounded-2xl border border-border bg-bg/20 px-4 py-3 text-sm text-text">
-                <input
-                  type="checkbox"
-                  checked={editPublic}
-                  onChange={(e) => setEditPublic(e.target.checked)}
-                />
-                Public (Discover)
-              </label>
+              <button
+                type="button"
+                onClick={() => setEditPublic((v) => !v)}
+                className="flex w-full items-center justify-between gap-4 rounded-3xl border border-border bg-bg/20 px-5 py-4 text-left"
+                aria-pressed={editPublic}
+              >
+                <div>
+                  <div className="text-sm font-semibold text-text">
+                    Share publicly so others can discover this deck
+                  </div>
+                  <div className="mt-1 text-xs text-subtext">
+                    Turn on to show your deck in Discover.
+                  </div>
+                </div>
+                <div
+                  className={`relative h-7 w-12 rounded-full ring-1 ring-border transition ${editPublic ? 'bg-pink/40' : 'bg-bg/30'}`}
+                >
+                  <div
+                    className={`absolute top-1 h-5 w-5 rounded-full bg-card shadow-sm transition ${editPublic ? 'left-6' : 'left-1'}`}
+                  />
+                </div>
+              </button>
               <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <Button
                   variant="outline"
@@ -437,4 +451,3 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
     </div>
   )
 }
-

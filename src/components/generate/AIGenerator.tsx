@@ -257,6 +257,7 @@ export function AIGenerator() {
 
   const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [pdfSubject, setPdfSubject] = useState<(typeof subjects)[number]>('Biology')
+  const [pdfStage, setPdfStage] = useState<'extracting' | 'generating' | null>(null)
 
   const [output, setOutput] = useState<GenerateOutput | null>(null)
   const [message, setMessage] = useState<string | null>(null)
@@ -298,6 +299,7 @@ export function AIGenerator() {
               setMessage(null)
               setUpgrade(false)
               setOutput(null)
+              setPdfStage(null)
             }}
           >
             {t === 'notes' ? 'Paste notes' : t === 'youtube' ? 'YouTube URL' : 'PDF upload'}
@@ -497,43 +499,62 @@ export function AIGenerator() {
                   onClick={async () => {
                     if (!pdfFile) return
                     await runGenerate(async () => {
-                      const base64 = await readFileBase64(pdfFile)
-                      const res = await withLoading(
-                        fetch('/api/generate/pdf', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            base64,
-                            filename: pdfFile.name,
-                            subject: pdfSubject
+                      const stageTimer = window.setTimeout(() => setPdfStage('generating'), 6500)
+                      const abort = new AbortController()
+                      const abortTimer = window.setTimeout(() => abort.abort(), 60_000)
+                      try {
+                        setPdfStage('extracting')
+                        const base64 = await readFileBase64(pdfFile)
+                        const res = await withLoading(
+                          fetch('/api/generate/pdf', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            signal: abort.signal,
+                            body: JSON.stringify({
+                              base64,
+                              filename: pdfFile.name,
+                              subject: pdfSubject
+                            })
                           })
-                        })
-                      )
-                      const json = (await res.json().catch(() => null)) as any
-                      if (!res.ok) {
-                        setUpgrade(json?.error === 'ai_limit')
-                        setMessage(
-                          json?.error === 'ai_limit'
-                            ? 'Free limit reached (5/month). Upgrade to keep generating.'
-                            : json?.error === 'server_misconfigured'
-                              ? 'AI generation is temporarily unavailable. Please try again later.'
-                              : json?.error === 'ai_failed' && typeof json?.message === 'string'
-                                ? json.message
-                            : json?.error === 'no_text'
-                              ? 'Could not extract text from this PDF.'
-                              : 'Generation failed. Try again.'
                         )
-                        return
+                        const json = (await res.json().catch(() => null)) as any
+                        if (!res.ok) {
+                          setUpgrade(json?.error === 'ai_limit')
+                          setMessage(
+                            json?.error === 'timeout' && typeof json?.message === 'string'
+                              ? json.message
+                              : json?.error === 'ai_limit'
+                                ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                                : json?.error === 'server_misconfigured'
+                                  ? 'AI generation is temporarily unavailable. Please try again later.'
+                                  : json?.error === 'ai_failed' && typeof json?.message === 'string'
+                                    ? json.message
+                                  : json?.error === 'no_text'
+                                    ? 'Could not extract text from this PDF.'
+                                    : 'Generation failed. Try again.'
+                          )
+                          return
+                        }
+                        const out = json?.output as GenerateOutput
+                        setOutput(out)
+                        const coinsAwarded = Number(json?.coinsAwarded ?? 0)
+                        if (coinsAwarded > 0) showCoins(coinsAwarded)
+                        setMessage(
+                          typeof json?.remaining === 'number'
+                            ? `Generated! ${json.remaining} left this month`
+                            : 'Generated!'
+                        )
+                      } catch (e) {
+                        if (e instanceof DOMException && e.name === 'AbortError') {
+                          setMessage('PDF processing timed out after 60 seconds. Try a smaller PDF and try again.')
+                          return
+                        }
+                        throw e
+                      } finally {
+                        window.clearTimeout(stageTimer)
+                        window.clearTimeout(abortTimer)
+                        setPdfStage(null)
                       }
-                      const out = json?.output as GenerateOutput
-                      setOutput(out)
-                      const coinsAwarded = Number(json?.coinsAwarded ?? 0)
-                      if (coinsAwarded > 0) showCoins(coinsAwarded)
-                      setMessage(
-                        typeof json?.remaining === 'number'
-                          ? `Generated! ${json.remaining} left this month`
-                          : 'Generated!'
-                      )
                     })
                   }}
                 >
@@ -541,7 +562,13 @@ export function AIGenerator() {
                     {generating ? (
                       <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-border border-t-pink" />
                     ) : null}
-                    {generating ? 'Generating…' : 'Generate'}
+                    {generating
+                      ? pdfStage === 'extracting'
+                        ? 'Extracting PDF content…'
+                        : pdfStage === 'generating'
+                          ? 'Generating flashcards…'
+                          : 'Generating…'
+                      : 'Generate'}
                   </span>
                 </Button>
               </div>

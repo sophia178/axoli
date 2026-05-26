@@ -12,6 +12,7 @@ export function CreateDeckForm() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [subject, setSubject] = useState('')
+  const [isPublic, setIsPublic] = useState(false)
   const [cards, setCards] = useState<DraftCard[]>([{ front: '', back: '' }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -36,6 +37,29 @@ export function CreateDeckForm() {
           <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="e.g. Biology" />
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsPublic((v) => !v)}
+        className="flex w-full items-center justify-between gap-4 rounded-3xl border border-border bg-bg/20 px-5 py-4 text-left"
+        aria-pressed={isPublic}
+      >
+        <div>
+          <div className="text-sm font-semibold text-text">
+            Share publicly so others can discover this deck
+          </div>
+          <div className="mt-1 text-xs text-subtext">
+            Turn on to show your deck in Discover (you can change this later).
+          </div>
+        </div>
+        <div
+          className={`relative h-7 w-12 rounded-full ring-1 ring-border transition ${isPublic ? 'bg-pink/40' : 'bg-bg/30'}`}
+        >
+          <div
+            className={`absolute top-1 h-5 w-5 rounded-full bg-card shadow-sm transition ${isPublic ? 'left-6' : 'left-1'}`}
+          />
+        </div>
+      </button>
 
       <div className="space-y-3">
         {cards.map((card, idx) => (
@@ -106,6 +130,7 @@ export function CreateDeckForm() {
                 const payload = {
                   title: title.trim(),
                   subject: subject.trim(),
+                  isPublic,
                   cards: cards
                     .filter((c) => c.front.trim() && c.back.trim())
                     .map((c) => ({ front: c.front.trim(), back: c.back.trim() }))

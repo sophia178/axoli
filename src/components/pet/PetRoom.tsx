@@ -43,11 +43,39 @@ function colourStops(colour: string) {
 function UnderwaterScene({ sad }: { sad: boolean }) {
   return (
     <svg viewBox="0 0 900 520" className="absolute inset-0 h-full w-full">
+      <style>
+        {`
+          .axoli-bubble-1 { animation: axoli-bubble 6.5s linear infinite; }
+          .axoli-bubble-2 { animation: axoli-bubble 7.8s linear infinite 0.8s; }
+          .axoli-bubble-3 { animation: axoli-bubble 8.6s linear infinite 1.6s; }
+          .axoli-bubble-4 { animation: axoli-bubble 7.2s linear infinite 2.1s; }
+          @keyframes axoli-bubble {
+            0% { transform: translateY(0px); opacity: 0; }
+            10% { opacity: 0.35; }
+            80% { opacity: 0.28; }
+            100% { transform: translateY(-420px); opacity: 0; }
+          }
+          .axoli-weed-1 { animation: axoli-weed 4.8s ease-in-out infinite; transform-origin: 210px 420px; }
+          .axoli-weed-2 { animation: axoli-weed 5.6s ease-in-out infinite; transform-origin: 180px 420px; }
+          .axoli-weed-3 { animation: axoli-weed 5.1s ease-in-out infinite; transform-origin: 720px 420px; }
+          @keyframes axoli-weed {
+            0% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
+          }
+          .axoli-caustics { animation: axoli-caustics 11s ease-in-out infinite; }
+          @keyframes axoli-caustics {
+            0% { transform: translateX(0px); opacity: 0.06; }
+            50% { transform: translateX(80px); opacity: 0.085; }
+            100% { transform: translateX(0px); opacity: 0.06; }
+          }
+        `}
+      </style>
       <defs>
         <linearGradient id="water" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor={sad ? '#141428' : '#0B2A5B'} />
-          <stop offset="0.55" stopColor={sad ? '#0A0A1A' : '#0A1633'} />
-          <stop offset="1" stopColor="#0A0A1A" />
+          <stop offset="0" stopColor={sad ? '#101024' : '#07224C'} />
+          <stop offset="0.55" stopColor={sad ? '#0A0A1A' : '#0A2A63'} />
+          <stop offset="1" stopColor={sad ? '#0A0A1A' : '#071734'} />
         </linearGradient>
         <linearGradient id="sand" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#D9C29A" />
@@ -61,24 +89,34 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
           <stop offset="0" stopColor="#6EC7FF" stopOpacity={sad ? 0.06 : 0.14} />
           <stop offset="1" stopColor="#6EC7FF" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="glassEdge" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#DDE6FF" stopOpacity={sad ? 0.05 : 0.12} />
+          <stop offset="0.6" stopColor="#DDE6FF" stopOpacity="0" />
+          <stop offset="1" stopColor="#DDE6FF" stopOpacity={sad ? 0.03 : 0.08} />
+        </linearGradient>
+        <linearGradient id="glassSheen" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0.22" stopColor="#FFFFFF" stopOpacity={sad ? 0.03 : 0.08} />
+          <stop offset="0.45" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0.78" stopColor="#FFFFFF" stopOpacity={sad ? 0.02 : 0.06} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
       </defs>
 
       <rect x="0" y="0" width="900" height="520" fill="url(#water)" />
       <rect x="0" y="0" width="900" height="520" fill="url(#light)" />
 
-      <motion.path
+      <path
+        className="axoli-caustics"
         d="M-80 110c120-60 240-60 360 0s240 60 360 0 240-60 360 0v60c-120 60-240 60-360 0s-240-60-360 0-240 60-360 0-240-60-360 0z"
         fill="#FFFFFF"
         opacity={sad ? 0.04 : 0.08}
-        animate={{ x: [0, 80, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <motion.path
+      <path
+        className="axoli-caustics"
         d="M-140 180c140-70 280-70 420 0s280 70 420 0 280-70 420 0v70c-140 70-280 70-420 0s-280-70-420 0-280 70-420 0-280-70-420 0z"
         fill="#FFFFFF"
         opacity={sad ? 0.03 : 0.06}
-        animate={{ x: [0, -90, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       <path
@@ -86,6 +124,13 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
         fill="url(#sand)"
         opacity="0.95"
       />
+      {Array.from({ length: 42 }).map((_, i) => {
+        const x = 40 + (i * 19) % 820
+        const y = 418 + ((i * 13) % 86)
+        const r = 2 + (i % 4)
+        const o = sad ? 0.14 : 0.22
+        return <circle key={i} cx={x} cy={y} r={r} fill="#FFE59A" opacity={o} />
+      })}
       <path
         d="M0 402C160 360 240 430 360 406c150-30 210-10 300 16 120 34 180-16 240-22"
         fill="none"
@@ -106,11 +151,7 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
         opacity="0.88"
       />
 
-      <motion.g
-        animate={{ rotate: sad ? [-2, 2, -2] : [-4, 4, -4] }}
-        transition={{ duration: sad ? 6 : 4.5, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ transformOrigin: '210px 420px' }}
-      >
+      <g className="axoli-weed-1">
         <path
           d="M220 420c-10-70 6-110 30-140 26-32 30-56 12-84 54 24 64 70 30 126 40-14 70-6 92 24-68-10-104 34-108 132h-56z"
           fill={sad ? '#2A2A4A' : '#2EE59D'}
@@ -121,40 +162,85 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
           fill={sad ? '#2A2A4A' : '#7AE7B9'}
           opacity="0.9"
         />
-      </motion.g>
+      </g>
 
-      {Array.from({ length: 14 }).map((_, i) => {
-        const x = 80 + i * 54
-        const delay = (i % 7) * 0.35
-        const size = 3 + (i % 4)
-        return (
-          <motion.circle
-            key={i}
-            cx={x}
-            cy={540}
-            r={size}
-            fill="#DDE6FF"
-            opacity={sad ? 0.14 : 0.22}
-            animate={{ cy: [540, 120], opacity: [0, sad ? 0.18 : 0.32, 0] }}
-            transition={{ duration: 6 + (i % 3) * 1.2, repeat: Infinity, delay, ease: 'easeInOut' }}
-          />
-        )
-      })}
+      <g className="axoli-weed-2">
+        <path
+          d="M740 420c14-70-2-112-26-146-24-34-28-58-12-84-56 26-70 74-36 132-42-12-74-2-98 30 72-12 112 34 116 128h56z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
+          opacity="0.88"
+        />
+        <path
+          d="M700 420c12-78-12-132-52-170-24-24-26-50-2-76-54 32-76 84-58 138-28 2-50 20-60 54 34-8 58 10 70 46 4 10 10 28 10 28h92z"
+          fill={sad ? '#2A2A4A' : '#7AE7B9'}
+          opacity="0.88"
+        />
+      </g>
+
+      <g className="axoli-weed-3">
+        <path
+          d="M468 420c-8-74 12-122 40-164 18-26 18-50-2-74 52 34 70 84 44 136 34-2 58 18 72 56-38-8-62 10-74 46-4 10-10 28-10 28h-70z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
+          opacity="0.86"
+        />
+      </g>
+
+      <g opacity={sad ? 0.18 : 0.28}>
+        <g className="axoli-bubble-1" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="150" cy="500" r="6" fill="#DDE6FF" />
+          <circle cx="176" cy="520" r="3.5" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-2" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="520" cy="510" r="7" fill="#DDE6FF" />
+          <circle cx="548" cy="525" r="4" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-3" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="740" cy="500" r="5.5" fill="#DDE6FF" />
+          <circle cx="760" cy="524" r="3" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-4" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="340" cy="512" r="6.5" fill="#DDE6FF" />
+          <circle cx="362" cy="530" r="3.5" fill="#DDE6FF" opacity="0.8" />
+        </g>
+      </g>
+
+      <rect x="18" y="14" width="38" height="492" fill="url(#glassEdge)" />
+      <rect x="844" y="14" width="38" height="492" fill="url(#glassEdge)" />
+      <rect x="0" y="0" width="900" height="520" fill="url(#glassSheen)" opacity={sad ? 0.5 : 0.9} />
+      <rect
+        x="12"
+        y="12"
+        width="876"
+        height="496"
+        fill="none"
+        stroke="#DDE6FF"
+        strokeOpacity={sad ? 0.08 : 0.16}
+        strokeWidth="4"
+        rx="26"
+      />
     </svg>
   )
 }
 
 function Axolotl({
   happiness,
-  colour
+  colour,
+  accessories
 }: {
   happiness: number
   colour: string
+  accessories: string[]
 }) {
   const sad = happiness <= 30
   const bright = happiness >= 71 && !sad
   const baseStops = sad ? ['#6C6C90', '#8888AA'] : colourStops(colour)
   const bodyStroke = sad ? '#6C6C90' : '#2A2A4A'
+
+  const hasSunglasses = accessories.some((a) => /sunglasses/i.test(a))
+  const hasBowtie = accessories.some((a) => /bow\s*tie/i.test(a))
+  const hasCrown = accessories.some((a) => /^crown$/i.test(a))
+  const hasHalo = accessories.some((a) => /^halo$/i.test(a))
+  const hasHat = accessories.some((a) => /hat/i.test(a))
 
   return (
     <motion.div
@@ -187,6 +273,80 @@ function Axolotl({
           transition={{ duration: sad ? 5.2 : 4.4, repeat: Infinity, ease: 'easeInOut' }}
           style={{ transformOrigin: '260px 230px' }}
         >
+          {hasHalo ? (
+            <g opacity={sad ? 0.55 : 0.9}>
+              <ellipse
+                cx="324"
+                cy="62"
+                rx="74"
+                ry="22"
+                fill="none"
+                stroke="#FFD700"
+                strokeWidth="10"
+                opacity={sad ? 0.35 : 0.55}
+              />
+              <ellipse cx="324" cy="60" rx="56" ry="14" fill="none" stroke="#FFFFFF" strokeWidth="4" opacity="0.25" />
+            </g>
+          ) : null}
+
+          {hasCrown ? (
+            <g opacity={sad ? 0.6 : 0.95}>
+              <path
+                d="M270 122l16-32 22 22 16-30 16 30 22-22 16 32v18H270v-18z"
+                fill="#FFD700"
+                stroke="#2A2A4A"
+                strokeWidth="6"
+                strokeLinejoin="round"
+              />
+              <circle cx="286" cy="90" r="7" fill="#FF8FAB" />
+              <circle cx="324" cy="82" r="7" fill="#6EC7FF" />
+              <circle cx="362" cy="90" r="7" fill="#7C5CFF" />
+            </g>
+          ) : null}
+
+          {hasHat ? (
+            <g opacity={sad ? 0.65 : 0.95}>
+              <path
+                d="M300 78c20-16 56-16 76 0l-10 20c-20-10-36-10-56 0l-10-20z"
+                fill="#FF8FAB"
+                stroke="#2A2A4A"
+                strokeWidth="6"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M292 98c22 10 70 10 92 0"
+                fill="none"
+                stroke="#FFD700"
+                strokeWidth="10"
+                strokeLinecap="round"
+                opacity="0.7"
+              />
+              <circle cx="338" cy="70" r="8" fill="#FFD700" opacity={sad ? 0.45 : 0.85} />
+            </g>
+          ) : null}
+
+          {hasSunglasses ? (
+            <g opacity={sad ? 0.55 : 0.9}>
+              <rect x="244" y="208" width="70" height="46" rx="22" fill="#0A0A1A" opacity="0.78" />
+              <rect x="334" y="208" width="70" height="46" rx="22" fill="#0A0A1A" opacity="0.78" />
+              <rect x="314" y="226" width="20" height="10" rx="5" fill="#2A2A4A" opacity="0.85" />
+              <path
+                d="M252 216c14-10 34-10 48 0"
+                stroke="#DDE6FF"
+                strokeWidth="6"
+                strokeLinecap="round"
+                opacity="0.16"
+              />
+              <path
+                d="M342 216c14-10 34-10 48 0"
+                stroke="#DDE6FF"
+                strokeWidth="6"
+                strokeLinecap="round"
+                opacity="0.16"
+              />
+            </g>
+          ) : null}
+
           <path
             d="M370 232c86 28 112 88 78 144-34 56-104 56-132 24 26-18 48-48 52-84 4-34-2-62-18-84 8-2 14-2 20 0z"
             fill="url(#axFin)"
@@ -384,6 +544,26 @@ function Axolotl({
             strokeLinecap="round"
             opacity="0.22"
           />
+
+          {hasBowtie ? (
+            <g opacity={sad ? 0.6 : 0.95}>
+              <path
+                d="M304 296l-44 18 44 18 10-18-10-18z"
+                fill="#FF8FAB"
+                stroke="#2A2A4A"
+                strokeWidth="6"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M344 296l44 18-44 18-10-18 10-18z"
+                fill="#FF8FAB"
+                stroke="#2A2A4A"
+                strokeWidth="6"
+                strokeLinejoin="round"
+              />
+              <circle cx="324" cy="314" r="10" fill="#FFD700" stroke="#2A2A4A" strokeWidth="5" />
+            </g>
+          ) : null}
         </motion.g>
 
         {bright ? (
@@ -488,6 +668,10 @@ export function PetRoom({
   const starving = hunger < 10
   const hungry = hunger < 30
   const sad = happiness <= 30 || starving
+  const [equippedAccessories, setEquippedAccessories] = useState<string[]>(() => profile.pet_accessories ?? [])
+  useEffect(() => {
+    setEquippedAccessories(profile.pet_accessories ?? [])
+  }, [profile.pet_accessories])
 
   const [speech, setSpeech] = useState(() => (starving ? 'Please feed me... 😢' : hungry ? "I'm hungry! 🍤" : pickMessage()))
   useEffect(() => {
@@ -574,7 +758,11 @@ export function PetRoom({
           </motion.div>
 
           <div className="absolute left-1/2 top-40 -translate-x-1/2">
-            <Axolotl happiness={sad ? Math.min(happiness, 30) : happiness} colour={profile.pet_colour ?? 'pink'} />
+            <Axolotl
+              happiness={sad ? Math.min(happiness, 30) : happiness}
+              colour={profile.pet_colour ?? 'pink'}
+              accessories={equippedAccessories}
+            />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">
                 <HeartBar value={happiness} />
@@ -614,19 +802,6 @@ export function PetRoom({
             ))}
           </div>
 
-          {Array.from({ length: 10 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bottom-[-20px] h-3 w-3 rounded-full bg-pink/15 ring-1 ring-pink/20"
-              style={{ left: `${10 + i * 8}%` }}
-              animate={{ y: [0, -560], opacity: [0, 0.8, 0] }}
-              transition={{
-                duration: 4 + (i % 4) * 0.6,
-                repeat: Infinity,
-                delay: i * 0.25
-              }}
-            />
-          ))}
         </div>
       </div>
 
@@ -643,7 +818,7 @@ export function PetRoom({
               </div>
             ) : (
               ownedAccessories.map((a) => {
-                const equipped = (profile.pet_accessories ?? []).includes(a.name)
+                const equipped = equippedAccessories.includes(a.name)
                 const locked = a.is_premium && plan === 'free'
                 return (
                   <div key={a.id} className="rounded-3xl border border-border bg-bg/20 p-4">
@@ -668,7 +843,11 @@ export function PetRoom({
                               body: JSON.stringify({ itemId: a.id })
                             })
                           )
-                          if (res.ok) window.location.reload()
+                          const json = (await res.json().catch(() => null)) as any
+                          if (!res.ok) return
+                          if (Array.isArray(json?.pet_accessories)) {
+                            setEquippedAccessories(json.pet_accessories as string[])
+                          }
                         }}
                         className="w-full"
                       >
