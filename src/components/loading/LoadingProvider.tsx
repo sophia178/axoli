@@ -10,57 +10,47 @@ type LoadingContextValue = {
 
 const LoadingContext = createContext<LoadingContextValue | null>(null)
 
+const SHOW_DELAY = 200   // ms before showing spinner (debounce fast requests)
+const HARD_MAX  = 3000  // ms maximum — force-hide even if something gets stuck
+
 export function LoadingProvider({ children }: { children: ReactNode }) {
   const [visible, setVisible] = useState(false)
-  const activeCount = useRef(0)
-  const showTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const shownAt = useRef<number | null>(null)
+  const activeCount  = useRef(0)
+  const showTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hardTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const forceHide = useCallback(() => {
+    if (showTimer.current) { clearTimeout(showTimer.current); showTimer.current = null }
+    if (hardTimer.current) { clearTimeout(hardTimer.current); hardTimer.current = null }
+    activeCount.current = 0
+    setVisible(false)
+  }, [])
 
   const start = useCallback(() => {
     activeCount.current += 1
-    if (hideTimer.current) {
-      clearTimeout(hideTimer.current)
-      hideTimer.current = null
-    }
-    if (!showTimer.current && !visible) {
-      showTimer.current = setTimeout(() => {
-        showTimer.current = null
-        if (activeCount.current > 0) {
-          shownAt.current = Date.now()
-          setVisible(true)
-        }
-      }, 200)
-    }
-  }, [visible])
+    if (showTimer.current) return          // already scheduled to show
+    showTimer.current = setTimeout(() => {
+      showTimer.current = null
+      if (activeCount.current > 0) {
+        setVisible(true)
+        // hard safety net — force clear after HARD_MAX ms
+        if (hardTimer.current) clearTimeout(hardTimer.current)
+        hardTimer.current = setTimeout(forceHide, HARD_MAX)
+      }
+    }, SHOW_DELAY)
+  }, [forceHide])
 
   const stop = useCallback(() => {
     activeCount.current = Math.max(0, activeCount.current - 1)
-    if (activeCount.current === 0) {
-      if (showTimer.current) {
-        clearTimeout(showTimer.current)
-        showTimer.current = null
-      }
-      if (!visible) return
-      const started = shownAt.current ?? Date.now()
-      const elapsed = Date.now() - started
-      const remaining = Math.max(0, 400 - elapsed)
-      if (remaining === 0) {
-        shownAt.current = null
-        setVisible(false)
-        return
-      }
-      if (hideTimer.current) clearTimeout(hideTimer.current)
-      hideTimer.current = setTimeout(() => {
-        hideTimer.current = null
-        shownAt.current = null
-        setVisible(false)
-      }, remaining)
-    }
-  }, [visible])
+    if (activeCount.current > 0) return
+    // cancel pending show and hard timer, hide immediately
+    if (showTimer.current) { clearTimeout(showTimer.current); showTimer.current = null }
+    if (hardTimer.current) { clearTimeout(hardTimer.current); hardTimer.current = null }
+    setVisible(false)
+  }, [])
 
   const withLoading = useCallback(
-    async <T,>(work: Promise<T>) => {
+    async <T,>(work: Promise<T>): Promise<T> => {
       start()
       try {
         return await work

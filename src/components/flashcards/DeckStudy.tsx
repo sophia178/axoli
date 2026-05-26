@@ -82,28 +82,31 @@ export function DeckStudy({
     if (completionTimer.current) return
     completionTimer.current = setTimeout(() => {
       void (async () => {
-        const res = await withLoading(
-          fetch('/api/flashcards/complete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              deckId,
-              correctCount,
-              totalCount: cards.length,
-              cardsReviewed: reviewedCount
+        try {
+          const res = await withLoading(
+            fetch('/api/flashcards/complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                deckId,
+                correctCount,
+                totalCount: cards.length,
+                cardsReviewed: reviewedCount
+              })
             })
-          })
-        )
-        const json = (await res.json().catch(() => null)) as any
-        const coinsAwarded = Number(json?.coinsAwarded ?? 0)
-        if (res.ok && coinsAwarded > 0) {
-          showCoins(coinsAwarded)
-          await promptFromResponse(json, 'deck_complete')
+          )
+          const json = (await res.json().catch(() => null)) as any
+          const coinsAwarded = Number(json?.coinsAwarded ?? 0)
+          if (res.ok && coinsAwarded > 0) {
+            showCoins(coinsAwarded)
+            await promptFromResponse(json, 'deck_complete')
+          }
+          if (res.ok && json?.completion) {
+            setCompletions((prev) => [json.completion as DeckCompletion, ...prev])
+          }
+        } finally {
+          setCompletionSent(true)
         }
-        if (res.ok && json?.completion) {
-          setCompletions((prev) => [json.completion as DeckCompletion, ...prev])
-        }
-        setCompletionSent(true)
       })()
     }, 350)
   }, [

@@ -7,6 +7,13 @@ import { UpgradeButtons } from '@/components/shop/UpgradeButtons'
 import { useLoading } from '@/components/loading/LoadingProvider'
 import type { ShopItemRow } from '@/lib/shop/data'
 
+const COIN_BUNDLES = [
+  { id: 'coins_50',   coins: 50,   price: '£0.99', label: 'Starter' },
+  { id: 'coins_150',  coins: 150,  price: '£1.99', label: 'Popular' },
+  { id: 'coins_400',  coins: 400,  price: '£4.99', label: 'Great value' },
+  { id: 'coins_1000', coins: 1000, price: '£9.99', label: 'Best value' },
+]
+
 type Tab = 'food' | 'decoration' | 'accessory' | 'colour' | 'coins'
 
 function tabName(tab: Tab) {
@@ -42,6 +49,7 @@ export function ShopTabs({
   const [tab, setTab] = useState<Tab>(initialTab)
   const [message, setMessage] = useState<string | null>(null)
   const [upgrade, setUpgrade] = useState(false)
+  const [coinBuyingId, setCoinBuyingId] = useState<string | null>(null)
 
   const owned = useMemo(() => new Set(ownedIds), [ownedIds])
   const grouped = useMemo(() => {
@@ -103,26 +111,49 @@ export function ShopTabs({
       {tab === 'coins' ? (
         <div className="space-y-4">
           <div className="rounded-3xl border border-border bg-card/70 p-6">
-            <div className="font-heading text-2xl text-text">Ways to earn coins</div>
+            <div className="font-heading text-2xl text-text">Buy coins</div>
             <div className="mt-1 text-sm text-subtext">
-              Complete activities to earn coins and spend them in the shop.
+              Purchase coins to spend in the shop on food, decorations, and accessories.
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: '📅', label: 'Daily login', amount: '+2 coins', desc: 'Log in each day to keep your streak going.' },
-              { icon: '⏳', label: 'Study session', amount: '+1 per 10 min', desc: 'Earn coins for every 10 minutes studied on the timer.' },
-              { icon: '🧠', label: 'Complete a quiz', amount: '+5 coins', desc: 'Finish any quiz to earn a coin reward.' },
-              { icon: '🃏', label: 'Study a flashcard deck', amount: '+5 coins', desc: 'Review all cards in a deck to earn coins.' },
-              { icon: '📺', label: 'Watch a short ad', amount: '2× your coins', desc: 'Double the coins from your last activity by watching a short ad.' },
-            ].map((row) => (
-              <div key={row.label} className="rounded-3xl border border-border bg-bg/20 p-5">
-                <div className="text-3xl">{row.icon}</div>
-                <div className="mt-3 font-semibold text-text">{row.label}</div>
-                <div className="mt-1 inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold">
-                  {row.amount}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {COIN_BUNDLES.map((bundle) => (
+              <div key={bundle.id} className="rounded-3xl border border-border bg-bg/20 p-5 flex flex-col gap-3">
+                <div className="font-heading text-4xl text-gold">{bundle.coins}</div>
+                <div className="text-sm text-subtext">coins</div>
+                <div className="inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold w-fit">
+                  {bundle.label}
                 </div>
-                <div className="mt-2 text-xs text-subtext">{row.desc}</div>
+                <div className="mt-auto">
+                  <Button
+                    className="w-full"
+                    variant="secondary"
+                    disabled={coinBuyingId === bundle.id}
+                    onClick={async () => {
+                      setCoinBuyingId(bundle.id)
+                      setMessage(null)
+                      try {
+                        const res = await withLoading(
+                          fetch('/api/stripe/checkout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ plan: bundle.id })
+                          })
+                        )
+                        const json = (await res.json().catch(() => null)) as any
+                        if (!res.ok || !json?.url) {
+                          setMessage('Could not start checkout. Please try again.')
+                          return
+                        }
+                        window.location.href = json.url
+                      } finally {
+                        setCoinBuyingId(null)
+                      }
+                    }}
+                  >
+                    {coinBuyingId === bundle.id ? 'Loading…' : `${bundle.price}`}
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

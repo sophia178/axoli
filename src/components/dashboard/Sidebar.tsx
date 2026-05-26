@@ -49,13 +49,14 @@ export function Sidebar({ profile }: { profile?: Profile | null }) {
                 </Link>
               )
             })}
-          <Link
+          <a
             href="/pricing"
-            className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition text-gold hover:bg-gold/10 hover:text-gold"
+            style={{ color: '#FFD700' }}
+            className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition hover:bg-gold/10"
           >
             <span className="text-base">⭐</span>
             <span className="font-semibold">Upgrade to Premium</span>
-          </Link>
+          </a>
         </nav>
 
         <div className="rounded-3xl border border-border bg-card/60 p-4">
