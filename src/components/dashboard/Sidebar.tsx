@@ -11,7 +11,7 @@ export function Sidebar() {
     <aside className="hidden w-[280px] shrink-0 border-r border-border/60 bg-bg/30 backdrop-blur [[dir=rtl]_&]:border-l [[dir=rtl]_&]:border-r-0 lg:block">
       <div className="flex h-full flex-col p-4">
         <Link href="/dashboard" className="flex items-center gap-2 rounded-2xl px-3 py-2">
-          <img src="/logo.png" width="36" height="36" style={{borderRadius:'50%', objectFit:'cover'}} alt="Axoli" />
+          <img src="/axolotl-happy.png" width="36" height="36" style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
           <div className="leading-tight">
             <div className="font-heading text-base text-text">Axoli</div>
             <div className="text-xs text-subtext">Study with your pet</div>

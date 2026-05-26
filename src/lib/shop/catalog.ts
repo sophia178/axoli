@@ -46,6 +46,17 @@ function iconSvg(inner: string, defs = '') {
   `)
 }
 
+function iconSvgTransparent(inner: string, defs = '') {
+  return svgDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+      <defs>
+        ${defs}
+      </defs>
+      ${inner}
+    </svg>
+  `)
+}
+
 function foodIcon(kind: string) {
   const bowl = `
     <path d="M28 66c0 24 14 40 32 40s32-16 32-40v-6H28v6Z" fill="url(#bowl)" stroke="${NAVY}" stroke-width="4" stroke-linejoin="round"/>
@@ -392,7 +403,7 @@ function decorationIcon(kind: string) {
 
 function accessoryIcon(kind: string) {
   if (kind === 'flowerCrown') {
-    return iconSvg(
+    return iconSvgTransparent(
       `<g>
         <path d="M30 70c10-14 20-20 30-20s20 6 30 20" fill="none" stroke="${NAVY}" stroke-width="6" stroke-linecap="round" opacity="0.45"/>
         <circle cx="40" cy="64" r="8" fill="${PINK}" stroke="${NAVY}" stroke-width="4"/><circle cx="40" cy="64" r="3" fill="${GOLD}"/>
@@ -402,7 +413,7 @@ function accessoryIcon(kind: string) {
     )
   }
   if (kind === 'astronautHelmet') {
-    return iconSvg(
+    return iconSvgTransparent(
       `<g>
         <path d="M36 70c0-18 12-32 24-32s24 14 24 32c0 18-12 34-24 34s-24-16-24-34Z" fill="#DDE6FF" stroke="${NAVY}" stroke-width="4"/>
         <path d="M42 70c0-12 8-22 18-22s18 10 18 22-8 22-18 22-18-10-18-22Z" fill="#141428" stroke="${NAVY}" stroke-width="4"/>
@@ -432,7 +443,7 @@ function accessoryIcon(kind: string) {
     cape: `<path d="M44 44c8 8 12 10 16 10s8-2 16-10c6 10 10 20 10 30 0 20-10 32-26 32S34 94 34 74c0-10 4-20 10-30Z" fill="${PINK}" stroke="${NAVY}" stroke-width="4" stroke-linejoin="round"/><path d="M60 54v54" stroke="${GOLD}" stroke-width="6" stroke-linecap="round" opacity="0.75"/><circle cx="60" cy="54" r="5" fill="${GOLD}" stroke="${NAVY}" stroke-width="4"/>`,
     backpack: `<path d="M44 96c-10 0-18-8-18-18V60c0-14 10-26 24-26h20c14 0 24 12 24 26v18c0 10-8 18-18 18H44Z" fill="${PINK}" stroke="${NAVY}" stroke-width="4" stroke-linejoin="round"/><path d="M42 58c0-10 8-18 18-18s18 8 18 18" fill="none" stroke="${GOLD}" stroke-width="6" stroke-linecap="round"/><rect x="42" y="70" width="36" height="20" rx="10" fill="#141428" stroke="${NAVY}" stroke-width="4"/><circle cx="60" cy="80" r="3" fill="${GOLD}" opacity="0.9"/>`
   }
-  if (map[kind]) return iconSvg(`<g>${map[kind]}</g>`)
+  if (map[kind]) return iconSvgTransparent(`<g>${map[kind]}</g>`)
   return accessoryIcon('flowerCrown')
 }
 

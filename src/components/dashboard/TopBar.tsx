@@ -25,7 +25,7 @@ export function TopBar({
             href="/dashboard/pet"
             className="group flex items-center gap-3 rounded-3xl border border-border bg-card/70 px-4 py-3"
           >
-            <img src="/logo.png" width="36" height="36" style={{borderRadius:'50%', objectFit:'cover'}} alt="Axoli" />
+            <img src="/axolotl-happy.png" width="36" height="36" style={{objectFit:'contain', mixBlendMode:'multiply', borderRadius:'50%'}} />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-base text-text">Axolotl</span>

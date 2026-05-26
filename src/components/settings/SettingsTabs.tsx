@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { useLoading } from '@/components/loading/LoadingProvider'
 import { logoutAction } from '@/app/actions/auth'
-import { LanguageMenu } from '@/components/i18n/LanguageMenu'
 import { cn } from '@/lib/cn'
 
 type ProfileLike = {
@@ -70,7 +69,6 @@ export function SettingsTabs({
 
   const [username, setUsername] = useState(initialProfile?.username ?? '')
   const [avatar, setAvatar] = useState<string>(() => initialProfile?.avatar_colour ?? 'pink')
-  const [language, setLanguage] = useState<string>(() => initialProfile?.language ?? 'en')
 
   const [daily, setDaily] = useState(Boolean(initialProfile?.notify_daily ?? true))
   const [streakRisk, setStreakRisk] = useState(Boolean(initialProfile?.notify_streak_risk ?? true))
@@ -173,27 +171,6 @@ export function SettingsTabs({
               <div>
                 <div className="text-sm text-subtext">Email (read only)</div>
                 <Input value={email} readOnly />
-              </div>
-            </div>
-
-            <div>
-              <div className="text-sm text-subtext">Language</div>
-              <div className="mt-2 max-w-sm">
-                <LanguageMenu
-                  variant="select"
-                  onSelected={async (loc) => {
-                    setLanguage(loc)
-                    setMsg(null)
-                    const res = await withLoading(
-                      fetch('/api/settings/profile', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ language: loc })
-                      })
-                    )
-                    if (!res.ok) setMsg('Could not update language.')
-                  }}
-                />
               </div>
             </div>
 
