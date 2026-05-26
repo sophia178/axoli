@@ -5,7 +5,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getUserPlan } from '@/lib/data/user'
 import { ensureShopCatalog } from '@/lib/shop/data'
 import { shopCatalog } from '@/lib/shop/catalog'
-import { applyPetDailyDecay, applyPetHungerDecay, changePetHappiness, changePetHunger } from '@/lib/pet/pet'
+import { applyPetHappinessDecay, applyPetHungerDecay, changePetHappiness, changePetHunger } from '@/lib/pet/pet'
 import { spendCoins } from '@/lib/coins'
 
 export const runtime = 'nodejs'
@@ -23,8 +23,8 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   await ensureShopCatalog()
-  await applyPetDailyDecay(user.id)
   await applyPetHungerDecay(user.id)
+  await applyPetHappinessDecay(user.id)
 
   const item = shopCatalog.find((i) => i.id === parsed.data.itemId)
   if (!item) return NextResponse.json({ error: 'not_found' }, { status: 404 })

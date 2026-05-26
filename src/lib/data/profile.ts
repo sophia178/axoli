@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import { applyPetDailyDecay, applyPetHungerDecay } from '@/lib/pet/pet'
+import { applyPetHappinessDecay, applyPetHungerDecay } from '@/lib/pet/pet'
 
 export type Profile = {
   id: string
@@ -29,8 +29,8 @@ export type Profile = {
 }
 
 export async function getProfile(userId: string): Promise<Profile | null> {
-  await applyPetDailyDecay(userId)
   await applyPetHungerDecay(userId)
+  await applyPetHappinessDecay(userId)
   const supabase = getSupabaseAdmin()
   if (!supabase) return null
   const { data, error } = await supabase

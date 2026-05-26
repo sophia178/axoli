@@ -44,52 +44,9 @@ function PetPreview({
     >
       <div className="flex items-center gap-4">
         <div className="relative h-20 w-20 overflow-hidden rounded-3xl bg-bg/30 ring-1 ring-border">
-          <svg viewBox="0 0 120 120" className="h-full w-full">
-            <defs>
-              <linearGradient id="dPet" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stopColor="#FF8FAB" />
-                <stop offset="1" stopColor="#FFB6C8" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M44 38c-14 0-26 16-26 38 0 28 20 50 42 50s42-22 42-50c0-22-12-38-26-38-8 0-12 4-16 4s-8-4-16-4Z"
-              fill="url(#dPet)"
-              stroke="#2A2A4A"
-              strokeWidth="4"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M32 52c10 4 18 10 22 18"
-              fill="none"
-              stroke="#FFD700"
-              strokeWidth="4"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <path
-              d="M88 52c-10 4-18 10-22 18"
-              fill="none"
-              stroke="#FFD700"
-              strokeWidth="4"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <circle cx="50" cy="70" r="10" fill="#FFFFFF" />
-            <circle cx="70" cy="70" r="10" fill="#FFFFFF" />
-            <circle cx="52" cy="72" r="5" fill="#0A0A1A" />
-            <circle cx="72" cy="72" r="5" fill="#0A0A1A" />
-            <circle cx="46" cy="64" r="3" fill="#FFFFFF" opacity="0.9" />
-            <circle cx="66" cy="64" r="3" fill="#FFFFFF" opacity="0.9" />
-            <path
-              d="M54 84c6 8 14 8 20 0"
-              fill="none"
-              stroke="#2A2A4A"
-              strokeWidth="4"
-              strokeLinecap="round"
-            />
-            <circle cx="44" cy="84" r="6" fill="#FF8FAB" opacity="0.18" />
-            <circle cx="76" cy="84" r="6" fill="#FF8FAB" opacity="0.18" />
-          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src="/axolotl-happy.png" width="80" height="80" style={{objectFit:'contain', mixBlendMode:'multiply'}} />
+          </div>
         </div>
         <div>
           <div className="flex items-center gap-2">

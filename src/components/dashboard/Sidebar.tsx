@@ -20,9 +20,11 @@ export function Sidebar() {
 
         <nav className="mt-4 flex flex-1 flex-col gap-1">
           {dashboardNav.map((item) => {
+            const hrefPath = item.href.split('?')[0] ?? item.href
+            const highlightGold = (item as any).highlight === 'gold'
             const active =
-              pathname === item.href ||
-              (item.href !== '/dashboard' && pathname?.startsWith(item.href))
+              pathname === hrefPath ||
+              (hrefPath !== '/dashboard' && pathname?.startsWith(hrefPath))
             return (
               <Link
                 key={item.href}
@@ -31,7 +33,9 @@ export function Sidebar() {
                   'flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition',
                   active
                     ? 'bg-card/80 text-text ring-1 ring-pink/25'
-                    : 'text-subtext hover:bg-card/60 hover:text-text'
+                    : highlightGold
+                      ? 'text-gold hover:bg-gold/10 hover:text-gold'
+                      : 'text-subtext hover:bg-card/60 hover:text-text'
                 )}
               >
                 <span className="text-base">{item.icon}</span>

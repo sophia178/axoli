@@ -255,6 +255,59 @@ export function StudyTimer() {
             </Button>
             <Button
               size="lg"
+              variant="outline"
+              onClick={() => {
+                if (saving) return
+                const studiedSeconds = Math.max(0, Math.floor(durationSeconds - remaining))
+                if (studiedSeconds <= 0) {
+                  setRunning(false)
+                  setStartedAt(null)
+                  setRemaining(durationSeconds)
+                  setResult(null)
+                  setTimerId(makeId())
+                  writeTimer(null)
+                  return
+                }
+                const ok = window.confirm('Are you sure? Your progress will be saved but the timer will reset.')
+                if (!ok) return
+                setRunning(false)
+                setStartedAt(null)
+                void (async () => {
+                  setSaving(true)
+                  setResult(null)
+                  try {
+                    const res = await withLoading(
+                      fetch('/api/sessions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          durationSeconds: Math.max(1, studiedSeconds),
+                          subject: subject.trim() ? subject.trim() : undefined,
+                          applyRewards: false
+                        })
+                      })
+                    )
+                    if (!res.ok) {
+                      setResult('Could not save progress. Try again.')
+                      return
+                    }
+                    setResult('Progress saved.')
+                  } catch {
+                    setResult('Could not save progress. Try again.')
+                  } finally {
+                    writeTimer(null)
+                    setSaving(false)
+                    setRemaining(durationSeconds)
+                    setTimerId(makeId())
+                  }
+                })()
+              }}
+              disabled={saving}
+            >
+              Quit
+            </Button>
+            <Button
+              size="lg"
               variant="ghost"
               onClick={() => {
                 setRunning(false)

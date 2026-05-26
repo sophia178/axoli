@@ -235,43 +235,45 @@ function HungerBar({ value }: { value: number }) {
   )
 }
 
-function Decoration({
-  item,
-  className
-}: {
-  item: ShopItemRow
-  className: string
-}) {
-  if (!item.image_url) return null
-  return (
-    <div className={className}>
-      <img
-        src={item.image_url}
-        alt=""
-        className="h-full w-full select-none"
-        draggable={false}
-      />
-    </div>
-  )
-}
+type ItemState = { x: number; y: number; size: number }
 
-type AccessoryPos = { x: number; y: number }
+const ITEM_STATE_KEY = 'axoli_pet_item_state_v1'
+const LEGACY_ACCESSORY_POS_KEY = 'axoli_pet_accessory_pos_v1'
+const MIN_ITEM_SIZE = 30
+const MAX_ITEM_SIZE = 150
 
-const ACCESSORY_POS_KEY = 'axoli_pet_accessory_pos_v1'
-
-function readAccessoryPositions(): Record<string, AccessoryPos> {
+function readItemStates(): Record<string, ItemState> {
   try {
-    const raw = window.localStorage.getItem(ACCESSORY_POS_KEY)
+    const raw = window.localStorage.getItem(ITEM_STATE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as any
+      if (parsed && typeof parsed === 'object') {
+        const out: Record<string, ItemState> = {}
+        for (const [k, v] of Object.entries(parsed)) {
+          if (!v || typeof v !== 'object') continue
+          const x = Number((v as any).x)
+          const y = Number((v as any).y)
+          const size = Number((v as any).size)
+          if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(size)) continue
+          out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1), size: clamp(size, MIN_ITEM_SIZE, MAX_ITEM_SIZE) }
+        }
+        return out
+      }
+    }
+  } catch {}
+
+  try {
+    const raw = window.localStorage.getItem(LEGACY_ACCESSORY_POS_KEY)
     if (!raw) return {}
     const parsed = JSON.parse(raw) as any
     if (!parsed || typeof parsed !== 'object') return {}
-    const out: Record<string, AccessoryPos> = {}
+    const out: Record<string, ItemState> = {}
     for (const [k, v] of Object.entries(parsed)) {
       if (!v || typeof v !== 'object') continue
       const x = Number((v as any).x)
       const y = Number((v as any).y)
       if (!Number.isFinite(x) || !Number.isFinite(y)) continue
-      out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1) }
+      out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1), size: 60 }
     }
     return out
   } catch {
@@ -279,32 +281,38 @@ function readAccessoryPositions(): Record<string, AccessoryPos> {
   }
 }
 
-function writeAccessoryPositions(pos: Record<string, AccessoryPos>) {
+function writeItemStates(states: Record<string, ItemState>) {
   try {
-    window.localStorage.setItem(ACCESSORY_POS_KEY, JSON.stringify(pos))
+    window.localStorage.setItem(ITEM_STATE_KEY, JSON.stringify(states))
   } catch {}
 }
 
-function DraggableAccessory({
-  id,
+type ResizeCorner = 'nw' | 'ne' | 'sw' | 'se'
+
+function cornerCursor(corner: ResizeCorner) {
+  if (corner === 'nw') return 'nwse-resize'
+  if (corner === 'se') return 'nwse-resize'
+  return 'nesw-resize'
+}
+
+function DraggableItem({
   name,
   imageUrl,
   containerRef,
   containerSize,
-  pos,
-  onPosChange,
+  state,
+  onStateChange,
   onRemove
 }: {
-  id: string
   name: string
   imageUrl: string
   containerRef: { current: HTMLDivElement | null }
   containerSize: { w: number; h: number }
-  pos: AccessoryPos
-  onPosChange: (next: AccessoryPos) => void
-  onRemove: () => void
+  state: ItemState
+  onStateChange: (next: ItemState) => void
+  onRemove?: () => void
 }) {
-  const dragging = useRef<{
+  const drag = useRef<{
     active: boolean
     startLeft: number
     startTop: number
@@ -312,65 +320,142 @@ function DraggableAccessory({
     pointerStartY: number
   }>({ active: false, startLeft: 0, startTop: 0, pointerStartX: 0, pointerStartY: 0 })
 
-  const size = 60
+  const resize = useRef<{
+    active: boolean
+    corner: ResizeCorner
+    startLeft: number
+    startTop: number
+    startSize: number
+    pointerStartX: number
+    pointerStartY: number
+  } | null>(null)
+
+  const size = clamp(state.size, MIN_ITEM_SIZE, MAX_ITEM_SIZE)
   const maxLeft = Math.max(0, containerSize.w - size)
   const maxTop = Math.max(0, containerSize.h - size)
-  const left = clamp(pos.x, 0, 1) * maxLeft
-  const top = clamp(pos.y, 0, 1) * maxTop
+  const left = clamp(state.x, 0, 1) * maxLeft
+  const top = clamp(state.y, 0, 1) * maxTop
+
+  const setFromPixels = (nextLeft: number, nextTop: number, nextSize: number) => {
+    const s = clamp(nextSize, MIN_ITEM_SIZE, MAX_ITEM_SIZE)
+    const ml = Math.max(0, containerSize.w - s)
+    const mt = Math.max(0, containerSize.h - s)
+    const l = clamp(nextLeft, 0, ml)
+    const t = clamp(nextTop, 0, mt)
+    onStateChange({
+      x: ml === 0 ? 0 : l / ml,
+      y: mt === 0 ? 0 : t / mt,
+      size: s
+    })
+  }
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement | null)?.closest?.('[data-handle],button')) return
+    const el = containerRef.current
+    if (!el) return
+    drag.current = {
+      active: true,
+      startLeft: left,
+      startTop: top,
+      pointerStartX: e.clientX,
+      pointerStartY: e.clientY
+    }
+    ;(e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId)
+  }
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (resize.current?.active) {
+      const dx = e.clientX - resize.current.pointerStartX
+      const dy = e.clientY - resize.current.pointerStartY
+      const base = resize.current.startSize
+      const corner = resize.current.corner
+      const delta =
+        corner === 'se'
+          ? Math.max(dx, dy)
+          : corner === 'nw'
+            ? -Math.max(dx, dy)
+            : corner === 'ne'
+              ? Math.max(dx, -dy)
+              : Math.max(-dx, dy)
+      const nextSize = clamp(base + delta, MIN_ITEM_SIZE, MAX_ITEM_SIZE)
+      const diff = base - nextSize
+
+      let nextLeft = resize.current.startLeft
+      let nextTop = resize.current.startTop
+      if (corner === 'nw' || corner === 'sw') nextLeft = resize.current.startLeft + diff
+      if (corner === 'nw' || corner === 'ne') nextTop = resize.current.startTop + diff
+
+      setFromPixels(nextLeft, nextTop, nextSize)
+      return
+    }
+
+    if (!drag.current.active) return
+    const dx = e.clientX - drag.current.pointerStartX
+    const dy = e.clientY - drag.current.pointerStartY
+    const nextLeft = clamp(drag.current.startLeft + dx, 0, maxLeft)
+    const nextTop = clamp(drag.current.startTop + dy, 0, maxTop)
+    setFromPixels(nextLeft, nextTop, size)
+  }
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    drag.current.active = false
+    resize.current = null
+    try {
+      ;(e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId)
+    } catch {}
+  }
 
   return (
     <div
       className="group absolute z-[20]"
-      style={{
-        left,
-        top,
-        width: size,
-        height: size,
-        touchAction: 'none'
-      }}
-      onPointerDown={(e) => {
-        const el = containerRef.current
-        if (!el) return
-        dragging.current = {
-          active: true,
-          startLeft: left,
-          startTop: top,
-          pointerStartX: e.clientX,
-          pointerStartY: e.clientY
-        }
-        ;(e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId)
-      }}
-      onPointerMove={(e) => {
-        if (!dragging.current.active) return
-        const dx = e.clientX - dragging.current.pointerStartX
-        const dy = e.clientY - dragging.current.pointerStartY
-        const nextLeft = clamp(dragging.current.startLeft + dx, 0, maxLeft)
-        const nextTop = clamp(dragging.current.startTop + dy, 0, maxTop)
-        onPosChange({
-          x: maxLeft === 0 ? 0 : nextLeft / maxLeft,
-          y: maxTop === 0 ? 0 : nextTop / maxTop
-        })
-      }}
-      onPointerUp={(e) => {
-        dragging.current.active = false
-        try {
-          ;(e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId)
-        } catch {}
-      }}
+      style={{ left, top, width: size, height: size, touchAction: 'none' }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
       <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
-      <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          onRemove()
-        }}
-        className="absolute -right-2 -top-2 hidden h-6 w-6 items-center justify-center rounded-full border border-border bg-card/90 text-xs font-semibold text-text shadow-sm group-hover:flex"
-        aria-label={`Remove ${name}`}
-      >
-        ×
-      </button>
+      {onRemove ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onRemove()
+          }}
+          className="absolute -right-2 -top-2 hidden h-6 w-6 items-center justify-center rounded-full border border-border bg-card/90 text-xs font-semibold text-text shadow-sm group-hover:flex"
+          aria-label={`Remove ${name}`}
+        >
+          ×
+        </button>
+      ) : null}
+      {(['nw', 'ne', 'sw', 'se'] as ResizeCorner[]).map((corner) => (
+        <div
+          key={corner}
+          data-handle
+          onPointerDown={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            resize.current = {
+              active: true,
+              corner,
+              startLeft: left,
+              startTop: top,
+              startSize: size,
+              pointerStartX: e.clientX,
+              pointerStartY: e.clientY
+            }
+            ;(e.currentTarget.parentElement as HTMLDivElement).setPointerCapture(e.pointerId)
+          }}
+          className={cn(
+            'absolute hidden h-3 w-3 rounded-sm border border-border bg-card/90 shadow-sm group-hover:block',
+            corner === 'nw' && 'left-0 top-0 -translate-x-1/2 -translate-y-1/2',
+            corner === 'ne' && 'right-0 top-0 translate-x-1/2 -translate-y-1/2',
+            corner === 'sw' && 'left-0 bottom-0 -translate-x-1/2 translate-y-1/2',
+            corner === 'se' && 'right-0 bottom-0 translate-x-1/2 translate-y-1/2'
+          )}
+          style={{ cursor: cornerCursor(corner) }}
+        />
+      ))}
     </div>
   )
 }
@@ -424,16 +509,16 @@ export function PetRoom({
   const showHappyAxolotl = happiness > 50 && hunger > 30
   const tankRef = useRef<HTMLDivElement | null>(null)
   const [tankSize, setTankSize] = useState<{ w: number; h: number }>({ w: 900, h: 520 })
-  const [accessoryPositions, setAccessoryPositions] = useState<Record<string, AccessoryPos>>({})
+  const [itemStates, setItemStates] = useState<Record<string, ItemState>>({})
 
   useEffect(() => {
-    setAccessoryPositions(readAccessoryPositions())
+    setItemStates(readItemStates())
   }, [])
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const id = window.setTimeout(() => writeAccessoryPositions(accessoryPositions), 150)
+    const id = window.setTimeout(() => writeItemStates(itemStates), 150)
     return () => window.clearTimeout(id)
-  }, [accessoryPositions])
+  }, [itemStates])
   useEffect(() => {
     const el = tankRef.current
     if (!el) return
@@ -446,28 +531,51 @@ export function PetRoom({
     return () => window.removeEventListener('resize', update)
   }, [])
 
+  const decorationDefaultsByName: Record<string, ItemState> = useMemo(
+    () => ({
+      'Extra plant': { x: 0.08, y: 0.72, size: 110 },
+      'Fairy lights': { x: 0.45, y: 0.04, size: 100 },
+      'Little desk': { x: 0.78, y: 0.74, size: 110 },
+      Bookshelf: { x: 0.44, y: 0.76, size: 130 },
+      'Disco ball': { x: 0.74, y: 0.10, size: 95 },
+      'Treasure chest': { x: 0.18, y: 0.78, size: 110 }
+    }),
+    []
+  )
+  const visibleDecorations = useMemo(
+    () => ownedDecorations.filter((d) => Boolean(d.image_url) && Boolean(decorationDefaultsByName[d.name])),
+    [ownedDecorations, decorationDefaultsByName]
+  )
+
   const equippedAccessoryItems = useMemo(
     () => items.filter((i) => i.type === 'accessory' && equippedAccessories.includes(i.name) && Boolean(i.image_url)),
     [items, equippedAccessories]
   )
 
   useEffect(() => {
-    if (equippedAccessoryItems.length === 0) return
-    setAccessoryPositions((prev) => {
+    setItemStates((prev) => {
       let changed = false
       const next = { ...prev }
+      for (let i = 0; i < visibleDecorations.length; i += 1) {
+        const d = visibleDecorations[i]
+        if (next[d.id]) continue
+        const def = decorationDefaultsByName[d.name]
+        if (!def) continue
+        next[d.id] = def
+        changed = true
+      }
       for (let i = 0; i < equippedAccessoryItems.length; i += 1) {
         const it = equippedAccessoryItems[i]
         if (next[it.id]) continue
         const baseX = 0.5 + (i % 3 === 0 ? -0.18 : i % 3 === 1 ? 0 : 0.18)
         const baseY = 0.52 + (i % 2 === 0 ? -0.08 : 0.08)
-        next[it.id] = { x: clamp(baseX, 0, 1), y: clamp(baseY, 0, 1) }
+        next[it.id] = { x: clamp(baseX, 0, 1), y: clamp(baseY, 0, 1), size: 60 }
         changed = true
       }
-      if (changed) writeAccessoryPositions(next)
+      if (changed) writeItemStates(next)
       return changed ? next : prev
     })
-  }, [equippedAccessoryItems])
+  }, [equippedAccessoryItems, visibleDecorations, decorationDefaultsByName])
 
   return (
     <div className="space-y-5">
@@ -497,39 +605,30 @@ export function PetRoom({
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
         <div ref={tankRef} className="relative h-[520px]">
           <UnderwaterScene sad={sad} />
-          {ownedDecorations.map((d) => {
-            if (d.name === 'Extra plant') {
-              return <Decoration key={d.id} item={d} className="absolute left-10 bottom-12 h-28 w-28" />
-            }
-            if (d.name === 'Fairy lights') {
-              return <Decoration key={d.id} item={d} className="absolute left-1/2 top-4 h-24 w-24 -translate-x-1/2" />
-            }
-            if (d.name === 'Little desk') {
-              return <Decoration key={d.id} item={d} className="absolute right-12 bottom-14 h-28 w-28" />
-            }
-            if (d.name === 'Bookshelf') {
-              return <Decoration key={d.id} item={d} className="absolute left-1/2 bottom-10 h-32 w-32 -translate-x-1/2" />
-            }
-            if (d.name === 'Disco ball') {
-              return <Decoration key={d.id} item={d} className="absolute right-24 top-6 h-24 w-24" />
-            }
-            if (d.name === 'Treasure chest') {
-              return <Decoration key={d.id} item={d} className="absolute left-28 bottom-10 h-28 w-28" />
-            }
-            return null
-          })}
+          {visibleDecorations.map((d) => (
+            <DraggableItem
+              key={d.id}
+              name={d.name}
+              imageUrl={d.image_url ?? ''}
+              containerRef={tankRef}
+              containerSize={tankSize}
+              state={itemStates[d.id] ?? decorationDefaultsByName[d.name] ?? { x: 0.4, y: 0.7, size: 110 }}
+              onStateChange={(nextState) => {
+                setItemStates((prev) => ({ ...prev, [d.id]: nextState }))
+              }}
+            />
+          ))}
 
           {equippedAccessoryItems.map((a) => (
-            <DraggableAccessory
+            <DraggableItem
               key={a.id}
-              id={a.id}
               name={a.name}
               imageUrl={a.image_url ?? ''}
               containerRef={tankRef}
               containerSize={tankSize}
-              pos={accessoryPositions[a.id] ?? { x: 0.5, y: 0.5 }}
-              onPosChange={(nextPos) => {
-                setAccessoryPositions((prev) => ({ ...prev, [a.id]: nextPos }))
+              state={itemStates[a.id] ?? { x: 0.5, y: 0.5, size: 60 }}
+              onStateChange={(nextState) => {
+                setItemStates((prev) => ({ ...prev, [a.id]: nextState }))
               }}
               onRemove={async () => {
                 const res = await withLoading(
