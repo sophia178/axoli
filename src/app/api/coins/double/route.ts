@@ -19,10 +19,7 @@ function todayISO() {
 
 async function getAndMaybeReset(userId: string) {
   const supabase = getSupabaseAdmin()
-  if (!supabase) {
-    const today = todayISO()
-    return { watchedToday: 0, today }
-  }
+  if (!supabase) throw new Error('missing_supabase_admin')
   const { data } = await supabase
     .from('profiles')
     .select('ads_watched_today,ads_reset_date')
@@ -48,13 +45,20 @@ export async function GET() {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
-  const { watchedToday } = await getAndMaybeReset(user.id)
-  return NextResponse.json({
-    ok: true,
-    adsWatchedToday: watchedToday,
-    limit: LIMIT_PER_DAY,
-    canWatch: watchedToday < LIMIT_PER_DAY
-  })
+  try {
+    const { watchedToday } = await getAndMaybeReset(user.id)
+    return NextResponse.json({
+      ok: true,
+      adsWatchedToday: watchedToday,
+      limit: LIMIT_PER_DAY,
+      canWatch: watchedToday < LIMIT_PER_DAY
+    })
+  } catch (e) {
+    if (e instanceof Error && e.message === 'missing_supabase_admin') {
+      return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+    }
+    return NextResponse.json({ error: 'status_failed' }, { status: 500 })
+  }
 }
 
 export async function POST(req: Request) {
@@ -65,7 +69,18 @@ export async function POST(req: Request) {
   const parsed = postSchema.safeParse(json)
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
-  const { watchedToday, today } = await getAndMaybeReset(user.id)
+  let watchedToday = 0
+  let today = todayISO()
+  try {
+    const res = await getAndMaybeReset(user.id)
+    watchedToday = res.watchedToday
+    today = res.today
+  } catch (e) {
+    if (e instanceof Error && e.message === 'missing_supabase_admin') {
+      return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+    }
+    return NextResponse.json({ error: 'status_failed' }, { status: 500 })
+  }
   if (watchedToday >= LIMIT_PER_DAY) {
     return NextResponse.json(
       { error: 'limit_reached', adsWatchedToday: watchedToday, limit: LIMIT_PER_DAY },
@@ -82,11 +97,13 @@ export async function POST(req: Request) {
   }
 
   const supabase = getSupabaseAdmin()
-  if (supabase) {
-    await supabase
-      .from('profiles')
-      .update({ ads_watched_today: watchedToday + 1, ads_reset_date: today })
-      .eq('user_id', user.id)
+  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+  const { error: adUpdateError } = await supabase
+    .from('profiles')
+    .update({ ads_watched_today: watchedToday + 1, ads_reset_date: today })
+    .eq('user_id', user.id)
+  if (adUpdateError) {
+    return NextResponse.json({ error: 'ad_count_update_failed' }, { status: 500 })
   }
 
   return NextResponse.json({

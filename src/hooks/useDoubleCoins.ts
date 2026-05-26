@@ -1,6 +1,7 @@
 'use client'
 
 import { createElement, useCallback, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { DoubleCoinsModal } from '@/components/coins/DoubleCoinsModal'
 import { useCoinToasts } from '@/components/coins/CoinToastProvider'
 
@@ -13,6 +14,7 @@ type PromptArgs = {
 
 export function useDoubleCoins() {
   const { showCoins } = useCoinToasts()
+  const router = useRouter()
 
   const [open, setOpen] = useState(false)
   const [phase, setPhase] = useState<Phase>('offer')
@@ -26,6 +28,7 @@ export function useDoubleCoins() {
   const [error, setError] = useState<string | null>(null)
 
   const ticking = useRef<ReturnType<typeof setInterval> | null>(null)
+  const claiming = useRef(false)
 
   const refreshStatus = useCallback(async () => {
     const res = await fetch('/api/coins/double', { method: 'GET' })
@@ -84,6 +87,8 @@ export function useDoubleCoins() {
     if (!open) return
     if (phase !== 'playing') return
     if (secondsLeft !== 0) return
+    if (claiming.current) return
+    claiming.current = true
 
     void (async () => {
       const res = await fetch('/api/coins/double', {
@@ -99,10 +104,16 @@ export function useDoubleCoins() {
           setCanWatch(false)
           setPhase('offer')
           setError('Daily ad limit reached. Keep your coins and come back tomorrow.')
+          claiming.current = false
           return
         }
         setPhase('offer')
-        setError('Couldn’t double coins. Please try again.')
+        setError(
+          json?.error === 'missing_supabase_admin'
+            ? 'Double coins is temporarily unavailable. Please try again later.'
+            : 'Couldn’t double coins. Please try again.'
+        )
+        claiming.current = false
         return
       }
 
@@ -112,8 +123,10 @@ export function useDoubleCoins() {
       setLimit(Number(json?.limit ?? limit))
       setCanWatch(Boolean(json?.canWatch ?? (adsWatchedToday + 1 < limit)))
       setPhase('success')
+      router.refresh()
+      claiming.current = false
     })()
-  }, [open, phase, secondsLeft, coins, reason, showCoins, adsWatchedToday, limit])
+  }, [open, phase, secondsLeft, coins, reason, showCoins, adsWatchedToday, limit, router])
 
   const modal = createElement(DoubleCoinsModal, {
     open,
