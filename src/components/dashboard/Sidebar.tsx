@@ -48,7 +48,7 @@ export function Sidebar({ profile }: { profile?: Profile | null }) {
               )
             })}
           <a
-            href="/pricing"
+            href="https://axoli.online/pricing"
             style={{ color: '#FFD700' }}
             className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm transition hover:bg-gold/10"
           >
