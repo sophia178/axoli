@@ -16,15 +16,13 @@ export default async function LoginPage({
     typeof searchParams?.notice === 'string' ? searchParams.notice : null
   const errorMessage =
     error === 'invalid_credentials'
-      ? 'Enter a valid email and password (8+ characters).'
+      ? 'Please enter a valid email and password (min 8 characters).'
       : error === 'missing_supabase_url'
-        ? 'Missing NEXT_PUBLIC_SUPABASE_URL environment variable.'
+        ? 'Server configuration error. Please contact support.'
         : error === 'missing_supabase_anon_key'
-          ? 'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable.'
-      : error === 'server_misconfigured'
-        ? 'Login is temporarily unavailable. Please try again later.'
+          ? 'Server configuration error. Please contact support.'
         : error === 'auth_failed'
-          ? 'Login failed. Check your email and password and try again.'
+          ? 'Incorrect email or password.'
           : error
             ? 'Login failed. Try again.'
             : null
@@ -44,7 +42,7 @@ export default async function LoginPage({
             <CardContent>
               {notice === 'check_email' ? (
                 <div className="mb-4 rounded-2xl border border-border bg-card/70 px-4 py-3 text-sm text-subtext">
-                  Check your email to confirm your account, then log in.
+                  Check your email to confirm your account before logging in.
                 </div>
               ) : null}
               {errorMessage ? (

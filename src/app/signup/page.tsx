@@ -14,19 +14,15 @@ export default async function SignupPage({
   const error = typeof searchParams?.error === 'string' ? searchParams.error : null
   const errorMessage =
     error === 'invalid_credentials'
-      ? 'Enter a valid email and a password (8+ characters).'
+      ? 'Please enter a valid email and password (min 8 characters).'
       : error === 'missing_supabase_url'
-        ? 'Missing NEXT_PUBLIC_SUPABASE_URL environment variable.'
+        ? 'Server configuration error. Please contact support.'
         : error === 'missing_supabase_anon_key'
-          ? 'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable.'
-      : error === 'server_misconfigured'
-        ? 'Signup is temporarily unavailable. Please try again later.'
-        : error === 'profile_create_failed'
-          ? 'Account created, but profile setup failed. Please log in and try again.'
+          ? 'Server configuration error. Please contact support.'
           : error === 'signup_failed'
-            ? 'Signup failed. Try again.'
+            ? 'Something went wrong. Please try a different email or try again.'
             : error
-              ? 'Signup failed. Try again.'
+              ? 'Something went wrong. Please try again.'
               : null
 
   return (
