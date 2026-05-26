@@ -66,6 +66,15 @@ export async function POST() {
   const supabase = getSupabaseServer()
   if (!supabase) return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('plan')
+    .eq('user_id', user.id)
+    .maybeSingle()
+  const userPlan = String((profile as any)?.plan ?? 'free')
+  const premium = userPlan === 'premium' || userPlan.startsWith('premium_')
+  if (!premium) return NextResponse.json({ error: 'premium_required' }, { status: 402 })
+
   const today = new Date()
   const horizon = new Date()
   horizon.setDate(horizon.getDate() + 13)
@@ -89,17 +98,53 @@ export async function POST() {
       return d.getTime() >= new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
     })
 
-  const fallbackPlan: Array<{ date: string; items: Array<{ title: string; subject: string }> }> = []
+  const fallbackPlan: Array<{
+    date: string
+    items: Array<{
+      subject: string
+      examName: string
+      topics: string[]
+      techniques: string[]
+      minutes: number
+    }>
+  }> = []
+
+  const examsByUrgency = [...upcoming].sort((a, b) => (a.examDate < b.examDate ? -1 : 1))
   for (let i = 0; i < 14; i += 1) {
     const d = new Date(today)
     d.setDate(d.getDate() + i)
     const date = isoDate(d)
-    const items: Array<{ title: string; subject: string }> = []
-    for (const exam of upcoming) {
-      if ((i + exam.subject.length) % 3 === 0) {
-        items.push({ title: `Revise ${exam.subject} — ${exam.name}`, subject: exam.subject })
+    const items: Array<{
+      subject: string
+      examName: string
+      topics: string[]
+      techniques: string[]
+      minutes: number
+    }> = []
+
+    for (const exam of examsByUrgency) {
+      const daysLeft = Math.max(
+        0,
+        Math.round((parseLocalDate(exam.examDate).getTime() - d.getTime()) / (1000 * 60 * 60 * 24))
+      )
+      const cadence = Math.max(1, Math.ceil(Math.min(10, daysLeft + 1) / 3))
+      if (items.length < 3 && i % cadence === 0) {
+        const minutes = daysLeft <= 3 ? 60 : daysLeft <= 7 ? 45 : 35
+        const perTopic = Math.max(10, Math.round(minutes / 3 / 5) * 5)
+        items.push({
+          subject: exam.subject,
+          examName: exam.name,
+          minutes,
+          topics: [
+            `${exam.name}: key concepts (${perTopic}m)`,
+            `${exam.subject}: definitions & diagrams (${perTopic}m)`,
+            `Exam-style questions (${Math.max(10, minutes - perTopic * 2)}m)`
+          ],
+          techniques: daysLeft <= 3 ? ['past papers', 'active recall'] : ['flashcards', 'mind map', 'active recall']
+        })
       }
     }
+
     if (items.length) fallbackPlan.push({ date, items })
   }
 
@@ -113,7 +158,18 @@ export async function POST() {
 Return an object:
 {
   "plan": [
-    { "date": "YYYY-MM-DD", "items": [ { "title": "…", "subject": "…" } ] }
+    {
+      "date": "YYYY-MM-DD",
+      "items": [
+        {
+          "subject": "…",
+          "examName": "…",
+          "topics": ["topic 1 (10m)", "topic 2 (15m)", "topic 3 (20m)"],
+          "techniques": ["flashcards", "past papers", "mind maps"],
+          "minutes": 30
+        }
+      ]
+    }
   ]
 }
 
@@ -121,10 +177,15 @@ Rules:
 - Only output dates between ${isoDate(today)} and ${isoDate(horizon)} inclusive.
 - Prioritize the soonest exams.
 - Keep each day to 1-3 items max.
-- Titles should be short, actionable, and reference the exam name.
+- Make topics specific (not generic) and tied to the exam subject/name.
+- Include a short time estimate for each topic inside the topic string like "(15m)".
+- Mix techniques across days (flashcards, past papers, mind maps, blurting, spaced repetition).
+- Include realistic time estimates per item.
+- Spread work across the days leading up to each exam and increase intensity as the exam approaches.
 
 Exams:
-${upcoming.map((e) => `- ${e.examDate}: ${e.name} (${e.subject})`).join('\n')}`
+${upcoming.map((e) => '- ' + e.examDate + ': ' + e.name + ' (' + e.subject + ')').join('\n')}
+`
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -152,9 +213,8 @@ ${upcoming.map((e) => `- ${e.examDate}: ${e.name} (${e.subject})`).join('\n')}`
     : ''
 
   const parsed = extractJsonObject(text) as any
-  const plan = Array.isArray(parsed?.plan) ? parsed.plan : null
-  if (!plan) return NextResponse.json({ error: 'bad_model_output', fallback: fallbackPlan }, { status: 500 })
+  const aiPlan = Array.isArray(parsed?.plan) ? parsed.plan : null
+  if (!aiPlan) return NextResponse.json({ error: 'bad_model_output', fallback: fallbackPlan }, { status: 500 })
 
-  return NextResponse.json({ ok: true, source: 'ai', plan })
+  return NextResponse.json({ ok: true, source: 'ai', plan: aiPlan })
 }
-

@@ -14,6 +14,10 @@ function daysBetween(fromISO: string, toISO: string) {
   return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)))
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n))
+}
+
 export async function applyPetDailyDecay(userId: string) {
   try {
     const supabase = getSupabaseAdmin()
@@ -35,7 +39,7 @@ export async function applyPetDailyDecay(userId: string) {
     const days = daysBetween(lastISO, today)
     if (days <= 0) return { happiness: Math.max(0, Math.min(100, current)), updated: false }
 
-    const decayed = Math.max(0, Math.min(100, current - days * 10))
+    const decayed = clamp(current - days * 10, 0, 100)
     await supabase
       .from('profiles')
       .update({ pet_happiness: decayed, pet_last_updated: today })
@@ -47,17 +51,77 @@ export async function applyPetDailyDecay(userId: string) {
   }
 }
 
+export async function applyPetHungerDecay(userId: string) {
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return null
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('hunger_level,last_fed_at')
+      .eq('user_id', userId)
+      .maybeSingle()
+    if (error) return null
+
+    const now = new Date()
+    const base = (data as any)?.hunger_level as number | null
+    const lastFed = (data as any)?.last_fed_at as string | null
+    if (!lastFed || base === null || typeof base !== 'number') {
+      const initLevel = 100
+      await supabase
+        .from('profiles')
+        .update({ hunger_level: initLevel, last_fed_at: now.toISOString() })
+        .eq('user_id', userId)
+      return { hunger: initLevel, updated: true }
+    }
+
+    const last = new Date(lastFed)
+    const stepMs = 4 * 60 * 60 * 1000
+    const steps = Math.floor((now.getTime() - last.getTime()) / stepMs)
+    if (steps <= 0) return { hunger: clamp(base, 0, 100), updated: false }
+
+    const decayed = clamp(base - steps * 5, 0, 100)
+    const advanced = new Date(last.getTime() + steps * stepMs)
+
+    await supabase
+      .from('profiles')
+      .update({ hunger_level: decayed, last_fed_at: advanced.toISOString() })
+      .eq('user_id', userId)
+
+    return { hunger: decayed, updated: true }
+  } catch {
+    return null
+  }
+}
+
 export async function changePetHappiness(userId: string, delta: number) {
   try {
     const supabase = getSupabaseAdmin()
     if (!supabase) return 100
     const applied = await applyPetDailyDecay(userId)
     const current = applied?.happiness ?? 100
-    const next = Math.max(0, Math.min(100, current + delta))
+    const next = clamp(current + delta, 0, 100)
     const today = toISODate(new Date())
     await supabase
       .from('profiles')
       .update({ pet_happiness: next, pet_last_updated: today })
+      .eq('user_id', userId)
+    return next
+  } catch {
+    return 100
+  }
+}
+
+export async function changePetHunger(userId: string, delta: number) {
+  try {
+    const supabase = getSupabaseAdmin()
+    if (!supabase) return 100
+    const applied = await applyPetHungerDecay(userId)
+    const current = applied?.hunger ?? 100
+    const next = clamp(current + delta, 0, 100)
+    await supabase
+      .from('profiles')
+      .update({ hunger_level: next, last_fed_at: new Date().toISOString() })
       .eq('user_id', userId)
     return next
   } catch {
@@ -74,10 +138,12 @@ export async function ensurePetFields(userId: string) {
       .from('profiles')
       .update({
         pet_happiness: 100,
-        pet_last_updated: today
+        pet_last_updated: today,
+        hunger_level: 100,
+        last_fed_at: new Date().toISOString()
       })
       .eq('user_id', userId)
-      .is('pet_last_updated', null)
+      .or('pet_last_updated.is.null,hunger_level.is.null,last_fed_at.is.null')
   } catch {
     return
   }

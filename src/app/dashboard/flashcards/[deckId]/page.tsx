@@ -1,5 +1,5 @@
 import { requireUser } from '@/lib/auth/user'
-import { getDeckWithCardsForStudy } from '@/lib/data/flashcards'
+import { getDeckCompletionHistory, getDeckWithCardsForStudy } from '@/lib/data/flashcards'
 import { DeckStudy } from '@/components/flashcards/DeckStudy'
 
 export default async function DeckStudyPage({
@@ -9,6 +9,7 @@ export default async function DeckStudyPage({
 }) {
   const user = await requireUser()
   const deck = await getDeckWithCardsForStudy(user.id, params.deckId)
+  const completions = await getDeckCompletionHistory(user.id, params.deckId)
 
   if (!deck) {
     return (
@@ -24,7 +25,7 @@ export default async function DeckStudyPage({
       title={deck.title}
       subject={deck.subject}
       cards={deck.cards.map((c) => ({ id: c.id, front: c.front, back: c.back }))}
+      initialCompletions={completions}
     />
   )
 }
-

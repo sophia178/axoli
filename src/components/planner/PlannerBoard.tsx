@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useLoading } from '@/components/loading/LoadingProvider'
 import { useCoinToasts } from '@/components/coins/CoinToastProvider'
 import { useDoubleCoins } from '@/hooks/useDoubleCoins'
+import { UpgradeButtons } from '@/components/shop/UpgradeButtons'
 import { cn } from '@/lib/cn'
 
 type Task = {
@@ -29,7 +30,13 @@ type RevisionItem = {
 
 type AiPlanDay = {
   date: string
-  items: Array<{ title: string; subject: string }>
+  items: Array<{
+    subject: string
+    examName: string
+    topics: string[]
+    techniques: string[]
+    minutes: number
+  }>
 }
 
 function colourForSubject(subject: string) {
@@ -58,6 +65,7 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
   const [rev, setRev] = useState<RevisionItem[]>(revision)
   const [aiPlan, setAiPlan] = useState<AiPlanDay[] | null>(null)
   const [aiLoading, setAiLoading] = useState(false)
+  const [aiPremiumGate, setAiPremiumGate] = useState(false)
 
   useEffect(() => {
     void (async () => {
@@ -227,10 +235,18 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
               disabled={aiLoading}
               onClick={async () => {
                 setMessage(null)
+                setAiPremiumGate(false)
                 setAiLoading(true)
                 const res = await withLoading(fetch('/api/planner/revision/generate', { method: 'POST' }))
                 const json = (await res.json().catch(() => null)) as any
                 if (!res.ok) {
+                  if (json?.error === 'premium_required') {
+                    setAiPremiumGate(true)
+                    setMessage('Premium required to generate an AI revision plan.')
+                    setAiPlan(null)
+                    setAiLoading(false)
+                    return
+                  }
                   setMessage(
                     json?.error === 'ai_failed' && typeof json?.message === 'string'
                       ? json.message
@@ -248,6 +264,17 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
               {aiLoading ? 'Generating…' : 'Generate AI revision plan'}
             </Button>
           </div>
+          {aiPremiumGate ? (
+            <div className="rounded-3xl border border-gold/30 bg-gold/10 p-4">
+              <div className="text-sm font-semibold text-text">Unlock Premium</div>
+              <div className="mt-1 text-sm text-subtext">
+                Get detailed revision plans with topics, techniques, and time estimates.
+              </div>
+              <div className="mt-4">
+                <UpgradeButtons />
+              </div>
+            </div>
+          ) : null}
           {upcomingRevision.length === 0 ? (
             <div className="rounded-3xl border border-border bg-bg/20 p-4 text-sm text-subtext">
               No upcoming exams. Add one in Exam Countdown.
@@ -311,9 +338,32 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
                     <div className="text-sm font-semibold text-text">{d.date}</div>
                     <div className="mt-2 space-y-2">
                       {(d.items ?? []).slice(0, 3).map((it) => (
-                        <div key={it.title} className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-text">
-                          <div className="text-xs text-subtext">{it.subject}</div>
-                          <div className="mt-1">{it.title}</div>
+                        <div
+                          key={`${it.subject}-${it.examName}-${it.minutes}`}
+                          className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-text"
+                        >
+                          <div className="text-xs text-subtext">
+                            {it.subject} • {it.examName} • {it.minutes} min
+                          </div>
+                          <div className="mt-2 space-y-2">
+                            <div className="text-sm font-semibold text-text">Topics</div>
+                            <ul className="list-disc space-y-1 pl-5 text-sm text-subtext">
+                              {(it.topics ?? []).slice(0, 4).map((t) => (
+                                <li key={t}>{t}</li>
+                              ))}
+                            </ul>
+                            <div className="text-sm font-semibold text-text">Techniques</div>
+                            <div className="flex flex-wrap gap-2">
+                              {(it.techniques ?? []).slice(0, 4).map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="rounded-full bg-bg/30 px-3 py-1 text-xs font-semibold text-subtext ring-1 ring-border"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       ))}
                       {(d.items ?? []).length === 0 ? (

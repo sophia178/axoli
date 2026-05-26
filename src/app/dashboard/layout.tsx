@@ -6,6 +6,7 @@ import { TopBar } from '@/components/dashboard/TopBar'
 import { MobileNav } from '@/components/dashboard/MobileNav'
 import { DashboardProviders } from '@/components/dashboard/DashboardProviders'
 import { AdBanner } from '@/components/ads/AdBanner'
+import { TimerPill } from '@/components/timer/TimerPill'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,6 +23,7 @@ export default async function DashboardLayout({
     <DashboardProviders>
       <div className="min-h-screen">
         <TopBar profile={profile} logoSrc={logoSrc} />
+        <TimerPill />
         <div className="flex [[dir=rtl]_&]:flex-row-reverse">
           <Sidebar logoSrc={logoSrc} />
           <main className="w-full">

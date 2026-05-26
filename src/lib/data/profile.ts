@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import { applyPetDailyDecay } from '@/lib/pet/pet'
+import { applyPetDailyDecay, applyPetHungerDecay } from '@/lib/pet/pet'
 
 export type Profile = {
   id: string
@@ -13,6 +13,8 @@ export type Profile = {
   last_login_date: string | null
   pet_happiness: number
   pet_last_updated: string | null
+  hunger_level?: number
+  last_fed_at?: string | null
   pet_level: number
   pet_colour: string
   pet_accessories: string[]
@@ -28,12 +30,13 @@ export type Profile = {
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   await applyPetDailyDecay(userId)
+  await applyPetHungerDecay(userId)
   const supabase = getSupabaseAdmin()
   if (!supabase) return null
   const { data, error } = await supabase
     .from('profiles')
     .select(
-      'id,user_id,username,plan,language,coins,streak,last_study_date,last_login_date,pet_happiness,pet_last_updated,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
+      'id,user_id,username,plan,language,coins,streak,last_study_date,last_login_date,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
     )
     .eq('user_id', userId)
     .maybeSingle()
@@ -60,7 +63,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     const retry = await supabase
       .from('profiles')
       .select(
-        'id,user_id,username,plan,language,coins,streak,last_study_date,last_login_date,pet_happiness,pet_last_updated,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
+        'id,user_id,username,plan,language,coins,streak,last_study_date,last_login_date,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
       )
       .eq('user_id', userId)
       .maybeSingle()

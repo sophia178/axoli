@@ -45,73 +45,101 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
     <svg viewBox="0 0 900 520" className="absolute inset-0 h-full w-full">
       <defs>
         <linearGradient id="water" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#0A0A1A" />
-          <stop offset="1" stopColor="#141428" />
-        </linearGradient>
-        <linearGradient id="floor" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#141428" />
+          <stop offset="0" stopColor={sad ? '#141428' : '#0B2A5B'} />
+          <stop offset="0.55" stopColor={sad ? '#0A0A1A' : '#0A1633'} />
           <stop offset="1" stopColor="#0A0A1A" />
         </linearGradient>
+        <linearGradient id="sand" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#D9C29A" />
+          <stop offset="1" stopColor="#9B7B52" />
+        </linearGradient>
+        <linearGradient id="rock" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#2A2A4A" />
+          <stop offset="1" stopColor="#0F1030" />
+        </linearGradient>
+        <radialGradient id="light" cx="50%" cy="0%" r="80%">
+          <stop offset="0" stopColor="#6EC7FF" stopOpacity={sad ? 0.06 : 0.14} />
+          <stop offset="1" stopColor="#6EC7FF" stopOpacity="0" />
+        </radialGradient>
       </defs>
 
       <rect x="0" y="0" width="900" height="520" fill="url(#water)" />
-      <path
-        d="M0 420C140 380 220 460 340 430c150-38 210-14 300 12 118 34 170-12 260-24v102H0z"
-        fill="url(#floor)"
-        opacity="0.9"
+      <rect x="0" y="0" width="900" height="520" fill="url(#light)" />
+
+      <motion.path
+        d="M-80 110c120-60 240-60 360 0s240 60 360 0 240-60 360 0v60c-120 60-240 60-360 0s-240-60-360 0-240 60-360 0-240-60-360 0z"
+        fill="#FFFFFF"
+        opacity={sad ? 0.04 : 0.08}
+        animate={{ x: [0, 80, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <path
-        d="M130 420c10-40 20-76 48-92 44-26 90 30 98 92"
-        fill="none"
-        stroke="#2A2A4A"
-        strokeWidth="10"
-        strokeLinecap="round"
-        opacity="0.7"
+      <motion.path
+        d="M-140 180c140-70 280-70 420 0s280 70 420 0 280-70 420 0v70c-140 70-280 70-420 0s-280-70-420 0-280 70-420 0-280-70-420 0z"
+        fill="#FFFFFF"
+        opacity={sad ? 0.03 : 0.06}
+        animate={{ x: [0, -90, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      <g transform="translate(120 285)">
+      <path
+        d="M0 410C140 370 220 450 340 420c150-38 210-14 300 12 118 34 170-12 260-24v112H0z"
+        fill="url(#sand)"
+        opacity="0.95"
+      />
+      <path
+        d="M0 402C160 360 240 430 360 406c150-30 210-10 300 16 120 34 180-16 240-22"
+        fill="none"
+        stroke="#FFE59A"
+        strokeWidth="8"
+        strokeLinecap="round"
+        opacity={sad ? 0.08 : 0.14}
+      />
+
+      <path
+        d="M120 444c0-46 42-84 88-84 58 0 94 42 98 84-24 20-58 30-98 30-38 0-68-10-88-30z"
+        fill="url(#rock)"
+        opacity="0.88"
+      />
+      <path
+        d="M640 458c0-58 54-106 116-106 76 0 124 54 128 106-30 26-76 38-128 38-48 0-86-12-116-38z"
+        fill="url(#rock)"
+        opacity="0.88"
+      />
+
+      <motion.g
+        animate={{ rotate: sad ? [-2, 2, -2] : [-4, 4, -4] }}
+        transition={{ duration: sad ? 6 : 4.5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '210px 420px' }}
+      >
         <path
-          d={sad ? 'M30 130c60-70 90-90 120-110' : 'M30 130c40-90 90-120 130-130'}
-          fill="none"
-          stroke="#2A2A4A"
-          strokeWidth="10"
-          strokeLinecap="round"
-        />
-        <path
-          d={sad ? 'M130 20c-18 10-30 30-28 52' : 'M130 20c22 10 36 28 38 54'}
-          fill="none"
-          stroke={sad ? '#8888AA' : '#7AE7B9'}
-          strokeWidth="12"
-          strokeLinecap="round"
-        />
-        <path
-          d={sad ? 'M110 40c-16 12-22 28-18 44' : 'M110 40c18 10 28 26 28 46'}
-          fill="none"
-          stroke={sad ? '#8888AA' : '#7AE7B9'}
-          strokeWidth="12"
-          strokeLinecap="round"
+          d="M220 420c-10-70 6-110 30-140 26-32 30-56 12-84 54 24 64 70 30 126 40-14 70-6 92 24-68-10-104 34-108 132h-56z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
           opacity="0.9"
         />
-      </g>
+        <path
+          d="M170 420c-10-78 12-126 46-164 26-30 26-54 0-80 54 30 74 78 54 130 30 0 52 18 62 56-34-10-58 8-70 46-4 10-8 28-8 28h-84z"
+          fill={sad ? '#2A2A4A' : '#7AE7B9'}
+          opacity="0.9"
+        />
+      </motion.g>
 
-      <g transform="translate(650 350)">
-        <path
-          d="M30 90c60-40 110-50 170-40"
-          fill="none"
-          stroke="#2A2A4A"
-          strokeWidth="10"
-          strokeLinecap="round"
-          opacity="0.7"
-        />
-        <path
-          d="M60 70c36-34 70-46 104-44"
-          fill="none"
-          stroke="#2A2A4A"
-          strokeWidth="10"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-      </g>
+      {Array.from({ length: 14 }).map((_, i) => {
+        const x = 80 + i * 54
+        const delay = (i % 7) * 0.35
+        const size = 3 + (i % 4)
+        return (
+          <motion.circle
+            key={i}
+            cx={x}
+            cy={540}
+            r={size}
+            fill="#DDE6FF"
+            opacity={sad ? 0.14 : 0.22}
+            animate={{ cy: [540, 120], opacity: [0, sad ? 0.18 : 0.32, 0] }}
+            transition={{ duration: 6 + (i % 3) * 1.2, repeat: Infinity, delay, ease: 'easeInOut' }}
+          />
+        )
+      })}
     </svg>
   )
 }
@@ -124,147 +152,244 @@ function Axolotl({
   colour: string
 }) {
   const sad = happiness <= 30
-  const bright = happiness >= 71
-  const baseStops = sad ? ['#8888AA', '#6C6C90'] : colourStops(colour)
+  const bright = happiness >= 71 && !sad
+  const baseStops = sad ? ['#6C6C90', '#8888AA'] : colourStops(colour)
+  const bodyStroke = sad ? '#6C6C90' : '#2A2A4A'
 
   return (
     <motion.div
-      className="relative w-[320px] max-w-[80vw]"
-      animate={{ y: [0, -10, 0] }}
-      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      className="relative w-[340px] max-w-[86vw]"
+      animate={{ y: sad ? [0, -6, 0] : [0, -12, 0] }}
+      transition={{ duration: sad ? 4 : 3.2, repeat: Infinity, ease: 'easeInOut' }}
     >
-      <svg viewBox="0 0 420 360" className="h-auto w-full">
+      <svg viewBox="0 0 520 420" className="h-auto w-full">
         <defs>
-          <linearGradient id="prBody" x1="0" x2="1" y1="0" y2="1">
+          <linearGradient id="axBody" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0" stopColor={baseStops[0]} />
             <stop offset="1" stopColor={baseStops[1]} />
           </linearGradient>
-          <linearGradient id="prBelly" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stopColor={sad ? '#6C6C90' : '#FFE2EA'} />
-            <stop offset="1" stopColor={sad ? '#8888AA' : '#FFC9D7'} />
+          <linearGradient id="axBelly" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stopColor={sad ? '#505072' : '#FFEAF0'} />
+            <stop offset="1" stopColor={sad ? '#6C6C90' : '#FFC9D7'} />
           </linearGradient>
+          <linearGradient id="axFin" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stopColor={sad ? '#6C6C90' : '#FF8FAB'} stopOpacity="0.35" />
+            <stop offset="1" stopColor={sad ? '#6C6C90' : '#FFD700'} stopOpacity="0.22" />
+          </linearGradient>
+          <radialGradient id="eyeShine" cx="35%" cy="30%" r="60%">
+            <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.9" />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         <motion.g
-          animate={{ rotate: [0, -1.5, 0, 1.5, 0] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: '210px 190px' }}
+          animate={{ rotate: sad ? [0, -1, 0, 1, 0] : [0, -1.8, 0, 1.8, 0] }}
+          transition={{ duration: sad ? 5.2 : 4.4, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ transformOrigin: '260px 230px' }}
         >
           <path
-            d="M150 136c-26 0-50 28-50 68 0 74 52 134 110 134s110-60 110-134c0-40-24-68-50-68-14 0-28 8-42 8-18 0-28-14-42-14s-24 14-42 14c-14 0-28-8-42-8z"
-            fill="url(#prBody)"
-            stroke="#2A2A4A"
-            strokeWidth="6"
+            d="M370 232c86 28 112 88 78 144-34 56-104 56-132 24 26-18 48-48 52-84 4-34-2-62-18-84 8-2 14-2 20 0z"
+            fill="url(#axFin)"
+            opacity="0.9"
+          />
+          <path
+            d="M404 280c40 26 52 56 34 82-18 26-54 26-72 8 18-10 30-28 34-54 4-22 0-40-12-56 6-1 10-1 16 0z"
+            fill="url(#axBody)"
+            opacity="0.65"
+          />
+
+          <path
+            d="M170 244c0-86 70-154 156-154 92 0 168 72 168 162 0 102-84 176-192 176-104 0-132-70-132-184z"
+            fill="url(#axBody)"
+            stroke={bodyStroke}
+            strokeWidth="8"
             strokeLinejoin="round"
           />
           <path
-            d="M174 176c0 56 18 108 36 108s36-52 36-108c0-18-12-32-30-32h-12c-18 0-30 14-30 32z"
-            fill="url(#prBelly)"
+            d="M230 270c0-54 36-96 88-96s88 42 88 96c0 66-36 118-88 118s-88-52-88-118z"
+            fill="url(#axBelly)"
+            opacity="0.95"
+          />
+
+          <path
+            d="M220 134c-52-16-86-52-98-108 52 8 92 30 116 66"
+            fill="url(#axFin)"
+            opacity="0.7"
+          />
+          <path
+            d="M436 140c52-16 86-52 98-108-52 8-92 30-116 66"
+            fill="url(#axFin)"
+            opacity="0.7"
+          />
+
+          <g opacity={sad ? 0.65 : 0.95}>
+            {Array.from({ length: 3 }).map((_, i) => {
+              const x = 210 - i * 22
+              const y = 138 + i * 18
+              return (
+                <g key={`lg-${i}`}>
+                  <path
+                    d={`M${x} ${y}c-38-30-54-60-48-88 34 14 54 40 60 78`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FF8FAB'}
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d={`M${x - 6} ${y - 6}c-20-18-28-34-24-50`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FFD700'}
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    opacity="0.85"
+                  />
+                  <path
+                    d={`M${x + 6} ${y + 4}c-18-14-28-28-30-42`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FFD700'}
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </g>
+              )
+            })}
+            {Array.from({ length: 3 }).map((_, i) => {
+              const x = 430 + i * 22
+              const y = 138 + i * 18
+              return (
+                <g key={`rg-${i}`}>
+                  <path
+                    d={`M${x} ${y}c38-30 54-60 48-88-34 14-54 40-60 78`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FF8FAB'}
+                    strokeWidth="10"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d={`M${x + 6} ${y - 6}c20-18 28-34 24-50`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FFD700'}
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    opacity="0.85"
+                  />
+                  <path
+                    d={`M${x - 6} ${y + 4}c18-14 28-28 30-42`}
+                    fill="none"
+                    stroke={sad ? '#8888AA' : '#FFD700'}
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </g>
+              )
+            })}
+          </g>
+
+          <motion.path
+            d="M238 128c54-44 126-44 180 0"
+            fill="none"
+            stroke="url(#axFin)"
+            strokeWidth="16"
+            strokeLinecap="round"
+            opacity={sad ? 0.18 : 0.28}
+            animate={{ opacity: sad ? [0.14, 0.2, 0.14] : [0.22, 0.32, 0.22] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+
+          <path
+            d="M232 332c-20 0-34 18-34 38 0 18 14 32 30 32 14 0 26-12 30-26"
+            fill="url(#axBody)"
+            stroke={bodyStroke}
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             opacity="0.95"
           />
           <path
-            d="M138 158c-44-10-76-40-88-84 42 4 82 20 106 50"
-            fill="url(#prBody)"
-            opacity="0.9"
-            stroke="#2A2A4A"
-            strokeWidth="6"
+            d="M356 332c20 0 34 18 34 38 0 18-14 32-30 32-14 0-26-12-30-26"
+            fill="url(#axBody)"
+            stroke={bodyStroke}
+            strokeWidth="8"
             strokeLinecap="round"
             strokeLinejoin="round"
+            opacity="0.95"
           />
           <path
-            d="M282 158c44-10 76-40 88-84-42 4-82 20-106 50"
-            fill="url(#prBody)"
-            opacity="0.9"
-            stroke="#2A2A4A"
-            strokeWidth="6"
+            d="M252 338c-10 14-22 18-34 12"
+            fill="none"
+            stroke={bodyStroke}
+            strokeWidth="8"
             strokeLinecap="round"
-            strokeLinejoin="round"
+            opacity="0.25"
           />
-          <g opacity={sad ? 0.7 : 0.95}>
-            <path
-              d="M118 170c18 8 30 20 36 36"
-              fill="none"
-              stroke="#FF8FAB"
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M112 196c20 6 34 18 42 34"
-              fill="none"
-              stroke="#FFD700"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            <path
-              d="M126 144c16 10 26 22 30 36"
-              fill="none"
-              stroke="#FF8FAB"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            <path
-              d="M302 170c-18 8-30 20-36 36"
-              fill="none"
-              stroke="#FF8FAB"
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M308 196c-20 6-34 18-42 34"
-              fill="none"
-              stroke="#FFD700"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            <path
-              d="M294 144c-16 10-26 22-30 36"
-              fill="none"
-              stroke="#FF8FAB"
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-          </g>
+          <path
+            d="M338 338c10 14 22 18 34 12"
+            fill="none"
+            stroke={bodyStroke}
+            strokeWidth="8"
+            strokeLinecap="round"
+            opacity="0.25"
+          />
 
-          <circle cx="178" cy="196" r="22" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
-          <circle cx="242" cy="196" r="22" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
-          <circle cx="180" cy="198" r={sad ? 8 : 10} fill="#0A0A1A" opacity={sad ? 0.8 : 1} />
-          <circle cx="244" cy="198" r={sad ? 8 : 10} fill="#0A0A1A" opacity={sad ? 0.8 : 1} />
-          <circle cx="174" cy="190" r="4" fill="#FFFFFF" opacity={sad ? 0.55 : 0.95} />
-          <circle cx="238" cy="190" r="4" fill="#FFFFFF" opacity={sad ? 0.55 : 0.95} />
-          <circle cx="160" cy="228" r="10" fill="#FF8FAB" opacity={sad ? 0.08 : 0.18} />
-          <circle cx="260" cy="228" r="10" fill="#FF8FAB" opacity={sad ? 0.08 : 0.18} />
           <path
-            d={sad ? 'M198 228c10-8 24-8 34 0' : 'M198 222c10 14 24 14 34 0'}
-            stroke="#2A2A4A"
-            strokeWidth="6"
+            d="M216 300c-10 0-18 10-18 22 0 10 8 18 18 18 8 0 14-6 16-14"
+            fill="url(#axBody)"
+            stroke={bodyStroke}
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity="0.95"
+          />
+          <path
+            d="M372 300c10 0 18 10 18 22 0 10-8 18-18 18-8 0-14-6-16-14"
+            fill="url(#axBody)"
+            stroke={bodyStroke}
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity="0.95"
+          />
+
+          <circle cx="276" cy="230" r="34" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
+          <circle cx="372" cy="230" r="34" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
+          <circle cx="276" cy="232" r={sad ? 12 : 14} fill="#0A0A1A" opacity={sad ? 0.78 : 1} />
+          <circle cx="372" cy="232" r={sad ? 12 : 14} fill="#0A0A1A" opacity={sad ? 0.78 : 1} />
+          <circle cx="266" cy="220" r="10" fill="url(#eyeShine)" />
+          <circle cx="362" cy="220" r="10" fill="url(#eyeShine)" />
+          <circle cx="288" cy="242" r="4" fill="#FFFFFF" opacity={sad ? 0.4 : 0.75} />
+          <circle cx="384" cy="242" r="4" fill="#FFFFFF" opacity={sad ? 0.4 : 0.75} />
+
+          <circle cx="244" cy="266" r="14" fill="#FF8FAB" opacity={sad ? 0.06 : 0.16} />
+          <circle cx="404" cy="266" r="14" fill="#FF8FAB" opacity={sad ? 0.06 : 0.16} />
+          <path
+            d={sad ? 'M304 274c16-10 40-10 56 0' : 'M304 270c16 18 40 18 56 0'}
+            stroke={bodyStroke}
+            strokeWidth="8"
             strokeLinecap="round"
             fill="none"
           />
-          <circle cx="210" cy="214" r="3" fill="#2A2A4A" opacity={sad ? 0.4 : 0.6} />
           <path
-            d="M154 270c-18 0-32 16-32 34 0 16 12 28 26 28 12 0 22-10 26-22"
-            fill="url(#prBody)"
-            opacity="0.9"
-            stroke="#2A2A4A"
+            d={sad ? 'M322 256c-8 6-14 12-16 18' : 'M322 256c-10 8-16 14-18 20'}
+            stroke={bodyStroke}
             strokeWidth="6"
             strokeLinecap="round"
-            strokeLinejoin="round"
+            opacity="0.22"
           />
           <path
-            d="M266 270c18 0 32 16 32 34 0 16-12 28-26 28-12 0-22-10-26-22"
-            fill="url(#prBody)"
-            opacity="0.9"
-            stroke="#2A2A4A"
+            d={sad ? 'M350 256c8 6 14 12 16 18' : 'M350 256c10 8 16 14 18 20'}
+            stroke={bodyStroke}
             strokeWidth="6"
             strokeLinecap="round"
-            strokeLinejoin="round"
+            opacity="0.22"
           />
         </motion.g>
 
         {bright ? (
           <g opacity="0.9">
             <motion.circle
-              cx="92"
+              cx="94"
               cy="120"
               r="7"
               fill="#FFD700"
@@ -272,16 +397,16 @@ function Axolotl({
               transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.circle
-              cx="330"
-              cy="110"
+              cx="462"
+              cy="124"
               r="5"
               fill="#FFD700"
               animate={{ opacity: [0.2, 0.8, 0.2] }}
               transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.circle
-              cx="318"
-              cy="250"
+              cx="450"
+              cy="290"
               r="6"
               fill="#FF8FAB"
               animate={{ opacity: [0.2, 0.7, 0.2] }}
@@ -302,6 +427,21 @@ function HeartBar({ value }: { value: number }) {
       {Array.from({ length: hearts }).map((_, i) => (
         <span key={i} className={cn('text-base', i < filled ? 'text-pink' : 'text-border')}>
           ♥
+        </span>
+      ))}
+      <span className="ml-2 text-xs text-subtext">{clamp(value, 0, 100)}%</span>
+    </div>
+  )
+}
+
+function HungerBar({ value }: { value: number }) {
+  const chunks = 10
+  const filled = Math.round((clamp(value, 0, 100) / 100) * chunks)
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: chunks }).map((_, i) => (
+        <span key={i} className={cn('text-base', i < filled ? 'text-gold' : 'text-border')}>
+          🍤
         </span>
       ))}
       <span className="ml-2 text-xs text-subtext">{clamp(value, 0, 100)}%</span>
@@ -344,13 +484,24 @@ export function PetRoom({
 
   const owned = useMemo(() => new Set(ownedIds), [ownedIds])
   const happiness = clamp(profile.pet_happiness ?? 100, 0, 100)
-  const sad = happiness <= 30
+  const hunger = clamp((profile as any).hunger_level ?? 100, 0, 100)
+  const starving = hunger < 10
+  const hungry = hunger < 30
+  const sad = happiness <= 30 || starving
 
-  const [speech, setSpeech] = useState(() => pickMessage())
+  const [speech, setSpeech] = useState(() => (starving ? 'Please feed me... 😢' : hungry ? "I'm hungry! 🍤" : pickMessage()))
   useEffect(() => {
+    if (starving) {
+      setSpeech('Please feed me... 😢')
+      return
+    }
+    if (hungry) {
+      setSpeech("I'm hungry! 🍤")
+      return
+    }
     const id = setInterval(() => setSpeech(pickMessage()), 30_000)
     return () => clearInterval(id)
-  }, [])
+  }, [hungry, starving])
 
   const ownedDecorations = useMemo(
     () => items.filter((i) => i.type === 'decoration' && owned.has(i.id)),
@@ -370,10 +521,18 @@ export function PetRoom({
           </div>
           <div className="mt-2 text-sm text-subtext">Coins: {profile.coins ?? 0}</div>
         </div>
-        <div className="rounded-3xl border border-border bg-bg/30 px-4 py-3 text-right">
-          <div className="text-xs text-subtext">Happiness</div>
-          <div className="mt-1">
-            <HeartBar value={happiness} />
+        <div className="grid gap-3 rounded-3xl border border-border bg-bg/30 px-4 py-3 text-right">
+          <div>
+            <div className="text-xs text-subtext">Happiness</div>
+            <div className="mt-1">
+              <HeartBar value={happiness} />
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-subtext">Hunger</div>
+            <div className="mt-1">
+              <HungerBar value={hunger} />
+            </div>
           </div>
         </div>
       </div>
@@ -415,9 +574,12 @@ export function PetRoom({
           </motion.div>
 
           <div className="absolute left-1/2 top-40 -translate-x-1/2">
-            <Axolotl happiness={happiness} colour={profile.pet_colour ?? 'pink'} />
+            <Axolotl happiness={sad ? Math.min(happiness, 30) : happiness} colour={profile.pet_colour ?? 'pink'} />
             <div className="mt-3 flex justify-center">
-              <HeartBar value={happiness} />
+              <div className="grid gap-2 text-center">
+                <HeartBar value={happiness} />
+                <HungerBar value={hunger} />
+              </div>
             </div>
           </div>
 

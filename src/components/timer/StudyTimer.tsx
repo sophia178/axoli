@@ -15,6 +15,46 @@ function format(seconds: number) {
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
 }
 
+type StoredTimer = {
+  id: string
+  startedAt: number
+  durationSeconds: number
+  subject: string
+  running: boolean
+  remainingSeconds?: number
+  awarded?: boolean
+}
+
+const STORAGE_KEY = 'axoli_timer_v1'
+
+function readTimer(): StoredTimer | null {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as StoredTimer
+    if (!parsed || typeof parsed !== 'object') return null
+    if (typeof parsed.id !== 'string') return null
+    if (typeof parsed.startedAt !== 'number') return null
+    if (typeof parsed.durationSeconds !== 'number') return null
+    if (typeof parsed.subject !== 'string') return null
+    if (typeof parsed.running !== 'boolean') return null
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+function writeTimer(timer: StoredTimer | null) {
+  try {
+    if (!timer) window.localStorage.removeItem(STORAGE_KEY)
+    else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(timer))
+  } catch {}
+}
+
+function makeId() {
+  return Math.random().toString(16).slice(2)
+}
+
 export function StudyTimer() {
   const [durationMin, setDurationMin] = useState(25)
   const [subject, setSubject] = useState('')
@@ -22,6 +62,8 @@ export function StudyTimer() {
   const [running, setRunning] = useState(false)
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [timerId, setTimerId] = useState<string>(() => makeId())
+  const [startedAt, setStartedAt] = useState<number | null>(null)
   const { withLoading } = useLoading()
   const { showCoins } = useCoinToasts()
   const { promptDouble, modal } = useDoubleCoins()
@@ -32,10 +74,25 @@ export function StudyTimer() {
   )
 
   useEffect(() => {
-    if (!running) return
-    const id = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000)
-    return () => clearInterval(id)
-  }, [running])
+    const stored = readTimer()
+    if (!stored) return
+    if (stored.running) {
+      setTimerId(stored.id)
+      setSubject(stored.subject)
+      setDurationMin(Math.max(1, Math.round(stored.durationSeconds / 60)))
+      setStartedAt(stored.startedAt)
+      const elapsed = Math.floor((Date.now() - stored.startedAt) / 1000)
+      setRemaining(Math.max(0, stored.durationSeconds - elapsed))
+      setRunning(true)
+    } else if (typeof stored.remainingSeconds === 'number') {
+      setTimerId(stored.id)
+      setSubject(stored.subject)
+      setDurationMin(Math.max(1, Math.round(stored.durationSeconds / 60)))
+      setStartedAt(null)
+      setRemaining(Math.max(0, stored.remainingSeconds))
+      setRunning(false)
+    }
+  }, [])
 
   const prevDuration = useRef(durationSeconds)
   useEffect(() => {
@@ -47,6 +104,24 @@ export function StudyTimer() {
   }, [durationSeconds, running])
 
   useEffect(() => {
+    if (!running) return
+    if (startedAt === null) return
+    const id = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000)
+      setRemaining(Math.max(0, durationSeconds - elapsed))
+    }, 1000)
+    return () => clearInterval(id)
+  }, [running, startedAt, durationSeconds])
+
+  useEffect(() => {
+    const stored = readTimer()
+    if (!stored) return
+    if (stored.id !== timerId) return
+    if (!stored.running) return
+    writeTimer({ ...stored, subject })
+  }, [subject, timerId])
+
+  useEffect(() => {
     if (remaining !== 0) return
     if (!running) return
     setRunning(false)
@@ -54,6 +129,10 @@ export function StudyTimer() {
       setSaving(true)
       setResult(null)
       try {
+        const stored = readTimer()
+        if (stored && stored.id === timerId) {
+          writeTimer({ ...stored, running: false, awarded: true, remainingSeconds: 0 })
+        }
         const res = await withLoading(
           fetch('/api/sessions', {
             method: 'POST',
@@ -80,10 +159,11 @@ export function StudyTimer() {
       } catch {
         setResult('Could not save session. Try again.')
       } finally {
+        writeTimer(null)
         setSaving(false)
       }
     })()
-  }, [remaining, running, durationSeconds, subject, withLoading, showCoins, promptDouble])
+  }, [remaining, running, durationSeconds, subject, withLoading, showCoins, promptDouble, timerId])
 
   const progress = 1 - remaining / durationSeconds
 
@@ -140,7 +220,35 @@ export function StudyTimer() {
             <Button
               size="lg"
               variant={running ? 'outline' : 'secondary'}
-              onClick={() => setRunning((v) => !v)}
+              onClick={() => {
+                if (saving) return
+                setResult(null)
+                if (!running) {
+                  const id = timerId || makeId()
+                  const start = Date.now() - Math.max(0, durationSeconds - remaining) * 1000
+                  setTimerId(id)
+                  setStartedAt(start)
+                  setRunning(true)
+                  writeTimer({
+                    id,
+                    startedAt: start,
+                    durationSeconds,
+                    subject,
+                    running: true
+                  })
+                  return
+                }
+                setRunning(false)
+                setStartedAt(null)
+                writeTimer({
+                  id: timerId,
+                  startedAt: Date.now(),
+                  durationSeconds,
+                  subject,
+                  running: false,
+                  remainingSeconds: remaining
+                })
+              }}
               disabled={saving}
             >
               {running ? 'Pause' : 'Start'}
@@ -150,8 +258,11 @@ export function StudyTimer() {
               variant="ghost"
               onClick={() => {
                 setRunning(false)
+                setStartedAt(null)
                 setRemaining(durationSeconds)
                 setResult(null)
+                setTimerId(makeId())
+                writeTimer(null)
               }}
               disabled={saving}
             >

@@ -39,6 +39,8 @@ export default async function PetRoomPage() {
       last_login_date: null,
       pet_happiness: 100,
       pet_last_updated: null,
+      hunger_level: 100,
+      last_fed_at: null,
       pet_level: 1,
       pet_colour: 'pink',
       pet_accessories: []

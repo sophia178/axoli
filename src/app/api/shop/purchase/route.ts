@@ -5,7 +5,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getUserPlan } from '@/lib/data/user'
 import { ensureShopCatalog } from '@/lib/shop/data'
 import { shopCatalog } from '@/lib/shop/catalog'
-import { applyPetDailyDecay, changePetHappiness } from '@/lib/pet/pet'
+import { applyPetDailyDecay, applyPetHungerDecay, changePetHappiness, changePetHunger } from '@/lib/pet/pet'
 import { spendCoins } from '@/lib/coins'
 
 export const runtime = 'nodejs'
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
 
   await ensureShopCatalog()
   await applyPetDailyDecay(user.id)
+  await applyPetHungerDecay(user.id)
 
   const item = shopCatalog.find((i) => i.id === parsed.data.itemId)
   if (!item) return NextResponse.json({ error: 'not_found' }, { status: 404 })
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
   if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: profile } = await supabase
     .from('profiles')
-    .select('coins,pet_happiness,pet_colour')
+    .select('coins,pet_happiness,pet_colour,hunger_level')
     .eq('user_id', user.id)
     .maybeSingle()
 
@@ -63,8 +64,11 @@ export async function POST(req: Request) {
 
   if (item.type === 'food') {
     const happiness = Number((item.meta as any)?.happiness ?? 0)
-    const petHappiness = happiness > 0 ? await changePetHappiness(user.id, happiness) : profile?.pet_happiness ?? 100
-    return NextResponse.json({ ok: true, itemId: item.id, petHappiness })
+    const hunger = Number((item.meta as any)?.hunger ?? 0)
+    const petHappiness =
+      happiness > 0 ? await changePetHappiness(user.id, happiness) : profile?.pet_happiness ?? 100
+    const hungerLevel = hunger > 0 ? await changePetHunger(user.id, hunger) : (profile as any)?.hunger_level ?? 100
+    return NextResponse.json({ ok: true, itemId: item.id, petHappiness, hungerLevel })
   }
 
   if (item.type === 'colour') {

@@ -20,16 +20,27 @@ function shuffle<T>(arr: T[]) {
 
 type Rating = 'again' | 'hard' | 'good' | 'easy'
 
+type DeckCompletion = {
+  id: string
+  created_at: string
+  score_percent: number | null
+  cards_reviewed: number | null
+  correct_count: number | null
+  total_count: number | null
+}
+
 export function DeckStudy({
   deckId,
   title,
   subject,
-  cards
+  cards,
+  initialCompletions
 }: {
   deckId: string
   title: string
   subject: string
   cards: Card[]
+  initialCompletions: DeckCompletion[]
 }) {
   const { withLoading } = useLoading()
   const { showCoins } = useCoinToasts()
@@ -45,12 +56,19 @@ export function DeckStudy({
   })
   const [completionSent, setCompletionSent] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [completions, setCompletions] = useState<DeckCompletion[]>(() => initialCompletions ?? [])
 
   const currentId = queue[0] ?? null
   const current = currentId ? cards.find((c) => c.id === currentId) ?? null : null
 
   const reviewedCount = useMemo(
     () => Object.values(reviewed).filter((v) => v !== null).length,
+    [reviewed]
+  )
+
+  const correctCount = useMemo(
+    () =>
+      Object.values(reviewed).filter((v) => v === 'good' || v === 'easy').length,
     [reviewed]
   )
 
@@ -68,7 +86,12 @@ export function DeckStudy({
           fetch('/api/flashcards/complete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ deckId })
+            body: JSON.stringify({
+              deckId,
+              correctCount,
+              totalCount: cards.length,
+              cardsReviewed: reviewedCount
+            })
           })
         )
         const json = (await res.json().catch(() => null)) as any
@@ -77,10 +100,22 @@ export function DeckStudy({
           showCoins(coinsAwarded)
           await promptDouble({ coinsEarned: coinsAwarded, reason: 'deck_complete' })
         }
+        if (res.ok && json?.completion) {
+          setCompletions((prev) => [json.completion as DeckCompletion, ...prev])
+        }
         setCompletionSent(true)
       })()
     }, 350)
-  }, [completionSent, cards.length, reviewedCount, deckId, withLoading, showCoins, promptDouble])
+  }, [
+    completionSent,
+    cards.length,
+    reviewedCount,
+    deckId,
+    withLoading,
+    showCoins,
+    promptDouble,
+    correctCount
+  ])
 
   if (cards.length === 0) {
     return (
@@ -274,6 +309,52 @@ export function DeckStudy({
           Session complete.
         </div>
       )}
+
+      <div className="rounded-3xl border border-border bg-card/70 p-6">
+        <div className="font-heading text-2xl text-text">Past results</div>
+        <div className="mt-1 text-sm text-subtext">
+          Your previous study attempts for this deck.
+        </div>
+        <div className="mt-4 space-y-2">
+          {completions.length === 0 ? (
+            <div className="rounded-3xl border border-border bg-bg/20 p-4 text-sm text-subtext">
+              No past results yet. Finish a study session to record one.
+            </div>
+          ) : (
+            completions.slice(0, 20).map((c) => {
+              const date = new Date(c.created_at)
+              const score =
+                typeof c.score_percent === 'number'
+                  ? `${c.score_percent}%`
+                  : c.correct_count !== null && c.total_count !== null
+                    ? `${Math.round((Number(c.correct_count) / Math.max(1, Number(c.total_count))) * 100)}%`
+                    : '—'
+              const reviewedLabel =
+                typeof c.cards_reviewed === 'number'
+                  ? `${c.cards_reviewed} cards`
+                  : c.total_count !== null
+                    ? `${c.total_count} cards`
+                    : '—'
+              return (
+                <div
+                  key={c.id}
+                  className="flex flex-col justify-between gap-2 rounded-3xl border border-border bg-bg/20 p-4 sm:flex-row sm:items-center"
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-text">
+                      {date.toLocaleString()}
+                    </div>
+                    <div className="mt-1 text-xs text-subtext">{reviewedLabel}</div>
+                  </div>
+                  <div className="rounded-full bg-card/60 px-4 py-2 text-sm font-semibold text-text ring-1 ring-border">
+                    {score}
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+      </div>
     </div>
   )
 }

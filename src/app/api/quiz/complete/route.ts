@@ -1,10 +1,39 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { getCurrentUser } from '@/lib/auth/user'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { awardCoins } from '@/lib/coins'
 
 export const runtime = 'nodejs'
+
+type CookieToSet = {
+  name: string
+  value: string
+  options: Parameters<ReturnType<typeof cookies>['set']>[2]
+}
+
+async function getAuthedUser() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !anon) return { user: null, error: 'server_misconfigured' as const }
+
+  const cookieStore = cookies()
+  const supabase = createServerClient(url, anon, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(toSet: CookieToSet[]) {
+        for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+      }
+    }
+  })
+
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data.user) return { user: null, error: 'unauthorized' as const }
+  return { user: data.user, error: null }
+}
 
 const bodySchema = z.object({
   deckId: z.string().uuid().nullable(),
@@ -15,8 +44,12 @@ const bodySchema = z.object({
 })
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  const auth = await getAuthedUser()
+  if (auth.error === 'server_misconfigured') {
+    return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
+  }
+  if (!auth.user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  const user = auth.user
 
   const json = await req.json().catch(() => null)
   const parsed = bodySchema.safeParse(json)

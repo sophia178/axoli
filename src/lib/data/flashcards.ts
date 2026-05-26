@@ -304,3 +304,25 @@ export async function getDeckWithCardsForStudy(userId: string, deckId: string) {
     }>
   }
 }
+
+export type DeckCompletion = {
+  id: string
+  created_at: string
+  score_percent: number | null
+  cards_reviewed: number | null
+  correct_count: number | null
+  total_count: number | null
+}
+
+export async function getDeckCompletionHistory(userId: string, deckId: string): Promise<DeckCompletion[]> {
+  const supabase = getSupabaseAdmin()
+  if (!supabase) return []
+  const { data } = await supabase
+    .from('deck_completions')
+    .select('id,created_at,score_percent,cards_reviewed,correct_count,total_count')
+    .eq('user_id', userId)
+    .eq('deck_id', deckId)
+    .order('created_at', { ascending: false })
+    .limit(50)
+  return (data ?? []) as DeckCompletion[]
+}
