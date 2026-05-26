@@ -8,11 +8,9 @@ function clamp(num: number, min: number, max: number) {
 }
 
 export function TopBar({
-  profile,
-  logoSrc = '/logo.png'
+  profile
 }: {
   profile: Profile | null
-  logoSrc?: string
 }) {
   const coins = profile?.coins ?? 0
   const streak = profile?.streak ?? 0
@@ -27,13 +25,7 @@ export function TopBar({
             href="/dashboard/pet"
             className="group flex items-center gap-3 rounded-3xl border border-border bg-card/70 px-4 py-3"
           >
-            <img
-              src={logoSrc}
-              alt="Axoli"
-              width={36}
-              height={36}
-              className="h-9 w-9 rounded-full object-cover"
-            />
+            <img src="/logo.png" width="36" height="36" style={{borderRadius:'50%', objectFit:'cover'}} alt="Axoli" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-base text-text">Axolotl</span>

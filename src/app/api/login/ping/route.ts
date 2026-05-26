@@ -12,6 +12,12 @@ function toISODate(d: Date) {
   return `${y}-${m}-${day}`
 }
 
+function addDays(date: Date, days: number) {
+  const d = new Date(date)
+  d.setDate(d.getDate() + days)
+  return d
+}
+
 export async function POST() {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
@@ -26,8 +32,9 @@ export async function POST() {
 
   if (profileError) return NextResponse.json({ error: 'profile_load_failed' }, { status: 500 })
 
-  const today = toISODate(new Date())
-  const yesterday = toISODate(new Date(Date.now() - 24 * 60 * 60 * 1000))
+  const now = new Date()
+  const today = toISODate(now)
+  const yesterday = toISODate(addDays(new Date(now.getFullYear(), now.getMonth(), now.getDate()), -1))
   const last = (data as any)?.last_login_date as string | null
   const currentStreak = Number((data as any)?.streak ?? 0)
 
@@ -46,6 +53,6 @@ export async function POST() {
     await awardCoins(user.id, 2, 'daily_login')
     return NextResponse.json({ ok: true, coinsAwarded: 2, streak: nextStreak })
   } catch {
-    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+    return NextResponse.json({ ok: true, coinsAwarded: 0, streak: nextStreak })
   }
 }

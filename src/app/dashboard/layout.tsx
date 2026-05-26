@@ -17,15 +17,14 @@ export default async function DashboardLayout({
 }) {
   const user = await requireUser()
   const profile = await getProfile(user.id)
-  const logoSrc = '/logo.png'
 
   return (
     <DashboardProviders>
       <div className="min-h-screen">
-        <TopBar profile={profile} logoSrc={logoSrc} />
+        <TopBar profile={profile} />
         <TimerPill />
         <div className="flex [[dir=rtl]_&]:flex-row-reverse">
-          <Sidebar logoSrc={logoSrc} />
+          <Sidebar />
           <main className="w-full">
             <div className="mx-auto max-w-6xl px-4 py-6 lg:max-w-none">
               <MobileNav />

@@ -36,18 +36,32 @@ function parseYoutubeId(raw: string) {
   return null
 }
 
-async function fetchTitle(videoId: string) {
-  const key = process.env.YOUTUBE_API_KEY
-  if (!key) return null
+async function fetchOembed(videoUrl: string) {
   const res = await fetch(
-    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${encodeURIComponent(videoId)}&key=${encodeURIComponent(
-      key
-    )}`,
+    `https://www.youtube.com/oembed?url=${encodeURIComponent(videoUrl)}&format=json`,
     { cache: 'no-store' }
-  )
+  ).catch(() => null)
+  if (!res || !res.ok) return null
   const json = (await res.json().catch(() => null)) as any
-  const title = json?.items?.[0]?.snippet?.title
-  return typeof title === 'string' ? title : null
+  const title = typeof json?.title === 'string' ? (json.title as string) : null
+  const authorName = typeof json?.author_name === 'string' ? (json.author_name as string) : null
+  return { title, authorName }
+}
+
+async function fetchDescriptionFromWatchPage(videoUrl: string) {
+  const res = await fetch(videoUrl, { cache: 'no-store' }).catch(() => null)
+  if (!res || !res.ok) return null
+  const html = await res.text().catch(() => '')
+  if (!html) return null
+
+  const og =
+    /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["'][^>]*>/i.exec(html)?.[1] ??
+    null
+  if (og) return og
+
+  const nameDesc =
+    /<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["'][^>]*>/i.exec(html)?.[1] ?? null
+  return nameDesc
 }
 
 export async function POST(req: Request) {
@@ -60,6 +74,7 @@ export async function POST(req: Request) {
 
   const videoId = parseYoutubeId(parsed.data.url)
   if (!videoId) return NextResponse.json({ error: 'invalid_youtube_url' }, { status: 400 })
+  const canonicalUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`
 
   const plan = await getUserPlan(user.id)
   const usage = await consumeGeneration(user.id, plan)
@@ -70,23 +85,38 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'ai_limit', upgrade: true }, { status: 402 })
   }
 
-  const [title, transcript] = await Promise.all([
-    fetchTitle(videoId),
+  const [oembed, transcriptFromUrl, transcriptFromId] = await Promise.all([
+    fetchOembed(canonicalUrl),
+    YoutubeTranscript.fetchTranscript(parsed.data.url).catch(() => null),
     YoutubeTranscript.fetchTranscript(videoId).catch(() => null)
   ])
 
-  if (!transcript || transcript.length === 0) {
-    return NextResponse.json({ error: 'no_transcript' }, { status: 502 })
+  const title = oembed?.title ?? null
+  const transcript =
+    (Array.isArray(transcriptFromUrl) && transcriptFromUrl.length > 0 ? transcriptFromUrl : null) ??
+    (Array.isArray(transcriptFromId) && transcriptFromId.length > 0 ? transcriptFromId : null)
+  const transcriptText = transcript ? transcript.map((t: any) => t?.text).filter(Boolean).join(' ') : ''
+
+  let sourceNote = ''
+  let content = ''
+  if (transcriptText.trim()) {
+    content = `YouTube title: ${title ?? ''}\nTranscript:\n${transcriptText}`
+  } else {
+    const [description, fallbackOembed] = await Promise.all([
+      fetchDescriptionFromWatchPage(canonicalUrl),
+      oembed ? Promise.resolve(oembed) : fetchOembed(canonicalUrl)
+    ])
+    sourceNote = 'Generated from video description — transcript unavailable.'
+    content = `YouTube title: ${fallbackOembed?.title ?? ''}\nVideo description:\n${description ?? ''}\n\nNOTE: ${sourceNote}`
   }
 
-  const text = transcript.map((t: any) => t.text).filter(Boolean).join(' ')
   const subjectHint = title ?? 'YouTube'
 
   let result: Awaited<ReturnType<typeof generateWithClaude>>
   try {
     result = await generateWithClaude({
       subjectHint,
-      content: `YouTube title: ${title ?? ''}\nTranscript:\n${text}`
+      content
     })
   } catch (e) {
     const message = e instanceof Error ? e.message : 'AI request failed'
@@ -102,6 +132,10 @@ export async function POST(req: Request) {
     remaining: usage.remaining,
     coinsAwarded: usage.coinsAwarded,
     detectedSubject: title ?? result.parsed.subject,
-    output: { ...result.parsed, subject: title ?? result.parsed.subject }
+    output: {
+      ...result.parsed,
+      subject: title ?? result.parsed.subject,
+      summary: sourceNote ? `${sourceNote}\n\n${result.parsed.summary}` : result.parsed.summary
+    }
   })
 }
