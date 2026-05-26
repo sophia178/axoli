@@ -36,4 +36,3 @@ export function clearAuthCookies() {
   store.delete(ACCESS_TOKEN_COOKIE)
   store.delete(REFRESH_TOKEN_COOKIE)
 }
-

@@ -39,5 +39,34 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     .maybeSingle()
 
   if (error) return null
-  return data as Profile | null
+  if (data) return data as Profile
+
+  try {
+    const authRes = await supabase.auth.admin.getUserById(userId)
+    const email = authRes.data.user?.email ?? null
+    if (authRes.error || !email) return null
+
+    const { error: userUpsertError } = await supabase
+      .from('users')
+      .upsert({ id: userId, email }, { onConflict: 'id' })
+    if (userUpsertError) return null
+
+    const usernameFromEmail = email.split('@')[0] ?? null
+    const { error: profileUpsertError } = await supabase
+      .from('profiles')
+      .upsert({ user_id: userId, username: usernameFromEmail }, { onConflict: 'user_id' })
+    if (profileUpsertError) return null
+
+    const retry = await supabase
+      .from('profiles')
+      .select(
+        'id,user_id,username,plan,language,coins,streak,last_study_date,last_login_date,pet_happiness,pet_last_updated,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
+      )
+      .eq('user_id', userId)
+      .maybeSingle()
+    if (retry.error) return null
+    return (retry.data as Profile | null) ?? null
+  } catch {
+    return null
+  }
 }
