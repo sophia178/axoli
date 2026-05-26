@@ -43,6 +43,20 @@ export default async function HomePage() {
   const premiumBullets = ['More AI generations', 'Premium shop items', 'Group leaderboards']
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'Axoli',
+            url: 'https://axoli.online',
+            description:
+              'Turn notes, YouTube videos or PDFs into flashcards in seconds. Grow your pet axolotl by studying.',
+            applicationCategory: 'EducationApplication'
+          })
+        }}
+      />
       <MarketingHeader />
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-12">
         <section className="grid items-center gap-10 lg:grid-cols-2">

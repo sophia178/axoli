@@ -16,8 +16,34 @@ const nunito = Nunito({
 })
 
 export const metadata: Metadata = {
-  title: 'Axoli',
-  description: 'Study smarter with your new best friend'
+  metadataBase: new URL('https://axoli.online'),
+  title: 'Axoli — Study smarter with your axolotl companion',
+  description:
+    'Turn notes, YouTube videos or PDFs into flashcards in seconds. Grow your pet axolotl by studying.',
+  icons: {
+    icon: '/favicon.svg'
+  },
+  openGraph: {
+    title: 'Axoli — Study smarter with your axolotl companion',
+    description:
+      'Turn notes, YouTube videos or PDFs into flashcards in seconds. Grow your pet axolotl by studying.',
+    url: 'https://axoli.online',
+    siteName: 'Axoli',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Axoli — Study smarter with your axolotl companion',
+    description:
+      'Turn notes, YouTube videos or PDFs into flashcards in seconds. Grow your pet axolotl by studying.',
+    images: ['/og-image.png']
+  }
 }
 
 export default function RootLayout({
