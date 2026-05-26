@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { useLoading } from '@/components/loading/LoadingProvider'
@@ -413,7 +414,7 @@ function DraggableItem({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
+      <Image unoptimized src={imageUrl} alt={name} fill className="select-none" style={{ objectFit: 'contain' }} />
       {onRemove ? (
         <button
           type="button"
@@ -659,13 +660,12 @@ export function PetRoom({
           </motion.div>
 
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <img
+            <Image
               src={showHappyAxolotl ? '/axolotl-happy.png' : '/axolotl-sad.png'}
               alt="Axolotl"
               width={220}
               height={220}
-              draggable={false}
-              style={{ width: 220, height: 220, objectFit: 'contain', mixBlendMode: 'multiply' }}
+              style={{ objectFit: 'contain', mixBlendMode: 'multiply' }}
             />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">
@@ -694,12 +694,7 @@ export function PetRoom({
                 }
               >
                 {d.image_url ? (
-                  <img
-                    src={d.image_url}
-                    alt=""
-                    className="h-10 w-10 select-none"
-                    draggable={false}
-                  />
+                  <Image unoptimized src={d.image_url} alt="" width={40} height={40} className="select-none" />
                 ) : null}
                 <span>{d.name}</span>
               </motion.div>
@@ -779,7 +774,7 @@ export function PetRoom({
               ownedDecorations.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
                   {d.image_url ? (
-                    <img src={d.image_url} alt="" className="h-10 w-10 select-none" draggable={false} />
+                    <Image unoptimized src={d.image_url} alt="" width={40} height={40} className="select-none" />
                   ) : null}
                   <span>{d.name}</span>
                 </div>

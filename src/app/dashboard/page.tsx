@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { requireUser } from '@/lib/auth/user'
 import { getProfile } from '@/lib/data/profile'
@@ -44,7 +45,7 @@ function PetPreview({
       <div className="flex items-center gap-4">
         <div className="relative h-20 w-20 overflow-hidden rounded-3xl ring-1 ring-border" style={{ background: 'white' }}>
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src="/axolotl-happy.png" alt="" width="80" height="80" style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
+            <Image src="/axolotl-happy.png" alt="" width={80} height={80} style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
           </div>
         </div>
         <div>

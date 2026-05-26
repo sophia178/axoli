@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import enMessages from '@/messages/en.json'
 
@@ -56,7 +57,7 @@ export function LoadingScreen({ visible = true }: { visible?: boolean }) {
       </div>
       <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-6">
         <div className="mb-8 w-full">{bubble}</div>
-        <img src="/axolotl-happy.png" alt="" width="120" height="120" style={{objectFit:'contain', mixBlendMode:'multiply'}} />
+        <Image src="/axolotl-happy.png" alt="" width={120} height={120} style={{objectFit:'contain', mixBlendMode:'multiply'}} />
       </div>
     </div>
   )
