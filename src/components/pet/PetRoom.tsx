@@ -24,6 +24,14 @@ function clamp(n: number, min: number, max: number) {
 }
 
 function colourStops(colour: string) {
+  if (colour === 'pink') return ['#FF8FAB', '#FFB6C8']
+  if (colour === 'blue') return ['#6EC7FF', '#3A86FF']
+  if (colour === 'purple') return ['#C77DFF', '#7C5CFF']
+  if (colour === 'green') return ['#7AE7B9', '#2EE59D']
+  if (colour === 'albino') return ['#FFFFFF', '#DDE6FF']
+  if (colour === 'spotted') return ['#FFB6C8', '#FF8FAB']
+  if (colour === 'striped') return ['#6EC7FF', '#B9A8FF']
+  if (colour === 'sakura') return ['#FF8FAB', '#FFD1DC']
   if (colour === 'golden') return ['#FFD700', '#FFE59A']
   if (colour === 'galaxy') return ['#7C5CFF', '#1B1B6B']
   if (colour === 'rainbow') return ['#FF8FAB', '#7AE7B9']
