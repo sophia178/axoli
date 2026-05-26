@@ -18,21 +18,33 @@ export async function POST() {
 
   const supabase = getSupabaseAdmin()
   if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
-  const { data } = await supabase
+  const { data, error: profileError } = await supabase
     .from('profiles')
-    .select('last_login_date')
+    .select('last_login_date,streak')
     .eq('user_id', user.id)
     .maybeSingle()
 
+  if (profileError) return NextResponse.json({ error: 'profile_load_failed' }, { status: 500 })
+
   const today = toISODate(new Date())
+  const yesterday = toISODate(new Date(Date.now() - 24 * 60 * 60 * 1000))
   const last = (data as any)?.last_login_date as string | null
+  const currentStreak = Number((data as any)?.streak ?? 0)
 
-  if (last === today) return NextResponse.json({ ok: true, coinsAwarded: 0 })
+  if (last === today) {
+    return NextResponse.json({ ok: true, coinsAwarded: 0, streak: currentStreak })
+  }
 
-  await supabase.from('profiles').update({ last_login_date: today }).eq('user_id', user.id)
+  const nextStreak = last === yesterday ? Math.max(1, currentStreak + 1) : 1
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ last_login_date: today, streak: nextStreak })
+    .eq('user_id', user.id)
+  if (updateError) return NextResponse.json({ error: 'profile_update_failed' }, { status: 500 })
+
   try {
     await awardCoins(user.id, 2, 'daily_login')
-    return NextResponse.json({ ok: true, coinsAwarded: 2 })
+    return NextResponse.json({ ok: true, coinsAwarded: 2, streak: nextStreak })
   } catch {
     return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
   }

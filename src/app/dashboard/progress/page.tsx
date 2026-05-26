@@ -21,168 +21,191 @@ function clamp(n: number, min: number, max: number) {
 export default async function ProgressPage() {
   const user = await requireUser()
   const supabase = getSupabaseAdmin()
-  if (!supabase) {
-    return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
-        Server is missing Supabase configuration.
-      </div>
-    )
+  const profile = await getProfile(user.id).catch(() => null)
+
+  const now = new Date()
+  const sevenDaysAgo = startOfDay(new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000))
+  const thirtyDaysAgo = startOfDay(new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000))
+
+  const hoursByDay7 = new Map<string, number>()
+  for (let i = 0; i < 7; i += 1) {
+    const d = new Date(sevenDaysAgo)
+    d.setDate(d.getDate() + i)
+    hoursByDay7.set(isoDate(d), 0)
   }
-  try {
-    const profile = await getProfile(user.id)
 
-    const sessionsCountRes = await supabase
-      .from('study_sessions')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-    const sessionsCount = sessionsCountRes.count ?? 0
+  const hoursByDay30 = new Map<string, number>()
+  for (let i = 0; i < 30; i += 1) {
+    const d = new Date(thirtyDaysAgo)
+    d.setDate(d.getDate() + i)
+    hoursByDay30.set(isoDate(d), 0)
+  }
 
-    const decksCountRes = await supabase
-      .from('flashcard_decks')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-    const decksCount = decksCountRes.count ?? 0
+  let sessionsCount = 0
+  let decksCount = 0
+  let groupsCount = 0
+  let quizzesCompleted = 0
+  let flashcardsMastered = 0
+  let perfectQuiz = false
+  let totalStudyHours = 0
+  let totalCoinsEarnedAllTime = 0
 
-    const groupsCountRes = await supabase
-      .from('group_members')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-    const groupsCount = groupsCountRes.count ?? 0
+  const subjectSeconds = new Map<string, number>()
+  const subjectSet = new Set<string>()
 
-    const quizzesCountRes = await supabase
-      .from('quiz_attempts')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-    const quizzesCompleted = quizzesCountRes.count ?? 0
+  if (supabase) {
+    try {
+      const sessionsCountRes = await supabase
+        .from('study_sessions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      sessionsCount = sessionsCountRes.count ?? 0
+    } catch {}
 
-    const masteredRes = await supabase
-      .from('flashcard_mastery')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .eq('mastered', true)
-    const flashcardsMastered = masteredRes.count ?? 0
+    try {
+      const decksCountRes = await supabase
+        .from('flashcard_decks')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      decksCount = decksCountRes.count ?? 0
+    } catch {}
 
-    const perfectRes = await supabase
-      .from('quiz_attempts')
-      .select('id,question_count,correct_count')
-      .eq('user_id', user.id)
-      .limit(2000)
-    const perfectQuiz = (perfectRes.data ?? []).some(
-      (a: any) => a.question_count === a.correct_count
-    )
+    try {
+      const groupsCountRes = await supabase
+        .from('group_members')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      groupsCount = groupsCountRes.count ?? 0
+    } catch {}
 
-    const now = new Date()
-    const sevenDaysAgo = startOfDay(
-      new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000)
-    )
-    const thirtyDaysAgo = startOfDay(
-      new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000)
-    )
+    try {
+      const quizzesCountRes = await supabase
+        .from('quiz_attempts')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      quizzesCompleted = quizzesCountRes.count ?? 0
+    } catch {}
 
-    const { data: recentSessions } = await supabase
-      .from('study_sessions')
-      .select('duration,subject,created_at')
-      .eq('user_id', user.id)
-      .gte('created_at', thirtyDaysAgo.toISOString())
-      .order('created_at', { ascending: true })
-      .limit(5000)
+    try {
+      const masteredRes = await supabase
+        .from('flashcard_mastery')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('mastered', true)
+      flashcardsMastered = masteredRes.count ?? 0
+    } catch {}
 
-    const allSessionsForTotals = await supabase
-      .from('study_sessions')
-      .select('duration,subject,created_at')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(5000)
+    try {
+      const perfectRes = await supabase
+        .from('quiz_attempts')
+        .select('id,question_count,correct_count')
+        .eq('user_id', user.id)
+        .limit(2000)
+      perfectQuiz = (perfectRes.data ?? []).some(
+        (a: any) => a.question_count === a.correct_count
+      )
+    } catch {}
 
-    const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
-      (acc: number, s: any) => acc + (s.duration as number),
-      0
-    )
-    const totalStudyHours = Math.round((totalStudySeconds / 3600) * 10) / 10
+    try {
+      const allSessionsForTotals = await supabase
+        .from('study_sessions')
+        .select('duration')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5000)
 
-    const { data: ledger } = await supabase
-      .from('coins_ledger')
-      .select('amount')
-      .eq('user_id', user.id)
-      .limit(5000)
+      const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
+        (acc: number, s: any) => acc + (s.duration as number),
+        0
+      )
+      totalStudyHours = Math.round((totalStudySeconds / 3600) * 10) / 10
+    } catch {}
 
-    const totalCoinsEarnedAllTime = (ledger ?? [])
-      .map((l: any) => l.amount as number)
-      .filter((a) => a > 0)
-      .reduce((acc, a) => acc + a, 0)
+    try {
+      const { data: ledger } = await supabase
+        .from('coins_ledger')
+        .select('amount')
+        .eq('user_id', user.id)
+        .limit(5000)
+      totalCoinsEarnedAllTime = (ledger ?? [])
+        .map((l: any) => l.amount as number)
+        .filter((a) => a > 0)
+        .reduce((acc, a) => acc + a, 0)
+    } catch {}
 
-    const hoursByDay7 = new Map<string, number>()
-    for (let i = 0; i < 7; i += 1) {
-      const d = new Date(sevenDaysAgo)
-      d.setDate(d.getDate() + i)
-      hoursByDay7.set(isoDate(d), 0)
-    }
+    try {
+      const { data: recentSessions } = await supabase
+        .from('study_sessions')
+        .select('duration,subject,created_at')
+        .eq('user_id', user.id)
+        .gte('created_at', thirtyDaysAgo.toISOString())
+        .order('created_at', { ascending: true })
+        .limit(5000)
 
-    const hoursByDay30 = new Map<string, number>()
-    for (let i = 0; i < 30; i += 1) {
-      const d = new Date(thirtyDaysAgo)
-      d.setDate(d.getDate() + i)
-      hoursByDay30.set(isoDate(d), 0)
-    }
+      for (const s of (recentSessions ?? []) as any[]) {
+        const date = isoDate(new Date(s.created_at as string))
+        const seconds = s.duration as number
+        if (hoursByDay7.has(date)) {
+          hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
+        }
+        if (hoursByDay30.has(date)) {
+          hoursByDay30.set(date, (hoursByDay30.get(date) ?? 0) + seconds / 3600)
+        }
+        const subj = (s.subject as string | null) ?? 'Unspecified'
+        subjectSet.add(subj)
+        subjectSeconds.set(subj, (subjectSeconds.get(subj) ?? 0) + seconds)
+      }
+    } catch {}
+  }
 
-    const subjectSeconds = new Map<string, number>()
-    const subjectSet = new Set<string>()
+  const distinctSubjectsCount = Array.from(subjectSet).filter(
+    (s) => s !== 'Unspecified'
+  ).length
 
-    for (const s of (recentSessions ?? []) as any[]) {
-      const date = isoDate(new Date(s.created_at as string))
-      const seconds = s.duration as number
-      if (hoursByDay7.has(date))
-        hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
-      if (hoursByDay30.has(date))
-        hoursByDay30.set(date, (hoursByDay30.get(date) ?? 0) + seconds / 3600)
-      const subj = (s.subject as string | null) ?? 'Unspecified'
-      subjectSet.add(subj)
-      subjectSeconds.set(subj, (subjectSeconds.get(subj) ?? 0) + seconds)
-    }
+  const barDays = Array.from(hoursByDay7.entries()).map(([date, hours]) => ({
+    date,
+    hours
+  }))
+  const maxBar = Math.max(1, ...barDays.map((d) => d.hours))
+  const studyHoursThisWeek = Math.round(barDays.reduce((acc, d) => acc + d.hours, 0) * 10) / 10
 
-    const distinctSubjectsCount = Array.from(subjectSet).filter(
-      (s) => s !== 'Unspecified'
-    ).length
+  const subjectParts = Array.from(subjectSeconds.entries())
+    .map(([subject, seconds]) => ({ subject, hours: seconds / 3600 }))
+    .sort((a, b) => b.hours - a.hours)
+    .filter((p) => p.hours > 0)
 
-    const barDays = Array.from(hoursByDay7.entries()).map(([date, hours]) => ({
-      date,
-      hours
-    }))
-    const maxBar = Math.max(1, ...barDays.map((d) => d.hours))
-    const studyHoursThisWeek =
-      Math.round(barDays.reduce((acc, d) => acc + d.hours, 0) * 10) / 10
+  const topSubjects = subjectParts.slice(0, 6)
+  const subjectTotal = topSubjects.reduce((acc, p) => acc + p.hours, 0) || 1
 
-    const subjectParts = Array.from(subjectSeconds.entries())
-      .map(([subject, seconds]) => ({ subject, hours: seconds / 3600 }))
-      .sort((a, b) => b.hours - a.hours)
-      .filter((p) => p.hours > 0)
+  const achievements = [
+    { name: 'First study session', unlocked: sessionsCount > 0 },
+    { name: '7 day streak', unlocked: (profile?.streak ?? 0) >= 7 },
+    { name: 'Study 10 hours total', unlocked: totalStudyHours >= 10 },
+    { name: 'Create first flashcard deck', unlocked: decksCount > 0 },
+    { name: 'Join first study group', unlocked: groupsCount > 0 },
+    { name: 'Score 100% on a quiz', unlocked: perfectQuiz },
+    { name: 'Study 5 subjects', unlocked: distinctSubjectsCount >= 5 },
+    { name: 'Earn 500 coins', unlocked: totalCoinsEarnedAllTime >= 500 }
+  ]
 
-    const topSubjects = subjectParts.slice(0, 6)
-    const subjectTotal = topSubjects.reduce((acc, p) => acc + p.hours, 0) || 1
+  return (
+    <div className="space-y-5">
+      {!supabase ? (
+        <div className="rounded-3xl border border-pink/25 bg-pink/10 p-5 text-sm text-text">
+          Progress details are unavailable until Supabase admin credentials are configured.
+        </div>
+      ) : null}
 
-    const achievements = [
-      { name: 'First study session', unlocked: sessionsCount > 0 },
-      { name: '7 day streak', unlocked: (profile?.streak ?? 0) >= 7 },
-      { name: 'Study 10 hours total', unlocked: totalStudyHours >= 10 },
-      { name: 'Create first flashcard deck', unlocked: decksCount > 0 },
-      { name: 'Join first study group', unlocked: groupsCount > 0 },
-      { name: 'Score 100% on a quiz', unlocked: perfectQuiz },
-      { name: 'Study 5 subjects', unlocked: distinctSubjectsCount >= 5 },
-      { name: 'Earn 500 coins', unlocked: totalCoinsEarnedAllTime >= 500 }
-    ]
-
-    return (
-      <div className="space-y-5">
-        <div className="grid gap-5 md:grid-cols-5">
-          <Card>
-            <CardHeader>
-              <CardTitle>Study hours</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="font-heading text-3xl text-text">{studyHoursThisWeek}</div>
-              <div className="mt-2 text-sm text-subtext">This week</div>
-            </CardContent>
-          </Card>
+      <div className="grid gap-5 md:grid-cols-5">
+        <Card>
+          <CardHeader>
+            <CardTitle>Study hours</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="font-heading text-3xl text-text">{studyHoursThisWeek}</div>
+            <div className="mt-2 text-sm text-subtext">This week</div>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Current streak</CardTitle>
@@ -219,7 +242,7 @@ export default async function ProgressPage() {
             <div className="mt-2 text-sm text-subtext">Completed</div>
           </CardContent>
         </Card>
-        </div>
+      </div>
 
         <div className="grid gap-5 lg:grid-cols-2">
           <Card>
@@ -370,13 +393,6 @@ export default async function ProgressPage() {
           </CardContent>
         </Card>
         </div>
-      </div>
-    )
-  } catch {
-    return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
-        Loading your progress…
-      </div>
-    )
-  }
+    </div>
+  )
 }

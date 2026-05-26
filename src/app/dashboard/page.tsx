@@ -15,6 +15,95 @@ function daysUntil(dateStr: string) {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n))
+}
+
+function PetPreview({
+  happiness,
+  level
+}: {
+  happiness: number
+  level: number
+}) {
+  const h = clamp(happiness, 0, 100)
+  return (
+    <Link
+      href="/dashboard/pet"
+      className="group flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 transition hover:bg-card/80"
+    >
+      <div className="flex items-center gap-4">
+        <div className="relative h-20 w-20 overflow-hidden rounded-3xl bg-bg/30 ring-1 ring-border">
+          <svg viewBox="0 0 120 120" className="h-full w-full">
+            <defs>
+              <linearGradient id="dPet" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stopColor="#FF8FAB" />
+                <stop offset="1" stopColor="#FFB6C8" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M44 38c-14 0-26 16-26 38 0 28 20 50 42 50s42-22 42-50c0-22-12-38-26-38-8 0-12 4-16 4s-8-4-16-4Z"
+              fill="url(#dPet)"
+              stroke="#2A2A4A"
+              strokeWidth="4"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M32 52c10 4 18 10 22 18"
+              fill="none"
+              stroke="#FFD700"
+              strokeWidth="4"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <path
+              d="M88 52c-10 4-18 10-22 18"
+              fill="none"
+              stroke="#FFD700"
+              strokeWidth="4"
+              strokeLinecap="round"
+              opacity="0.9"
+            />
+            <circle cx="50" cy="70" r="10" fill="#FFFFFF" />
+            <circle cx="70" cy="70" r="10" fill="#FFFFFF" />
+            <circle cx="52" cy="72" r="5" fill="#0A0A1A" />
+            <circle cx="72" cy="72" r="5" fill="#0A0A1A" />
+            <circle cx="46" cy="64" r="3" fill="#FFFFFF" opacity="0.9" />
+            <circle cx="66" cy="64" r="3" fill="#FFFFFF" opacity="0.9" />
+            <path
+              d="M54 84c6 8 14 8 20 0"
+              fill="none"
+              stroke="#2A2A4A"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+            <circle cx="44" cy="84" r="6" fill="#FF8FAB" opacity="0.18" />
+            <circle cx="76" cy="84" r="6" fill="#FF8FAB" opacity="0.18" />
+          </svg>
+        </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="font-heading text-2xl text-text">Your axolotl</div>
+            <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
+              Lv {level}
+            </span>
+          </div>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-2 w-40 overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
+              <div className="h-full rounded-full bg-pink" style={{ width: `${h}%` }} />
+            </div>
+            <div className="text-xs text-subtext">{h}%</div>
+          </div>
+          <div className="mt-2 text-xs text-subtext group-hover:text-text">
+            Visit the pet room
+          </div>
+        </div>
+      </div>
+      <div className="text-subtext transition group-hover:text-text">→</div>
+    </Link>
+  )
+}
+
 export default async function DashboardHomePage() {
   const user = await requireUser()
   let profile: Awaited<ReturnType<typeof getProfile>> = null
@@ -35,9 +124,12 @@ export default async function DashboardHomePage() {
 
   const streak = profile?.streak ?? 0
   const coins = profile?.coins ?? 0
+  const happiness = profile?.pet_happiness ?? 70
+  const level = profile?.pet_level ?? 1
 
   return (
     <div className="space-y-6">
+      <PetPreview happiness={happiness} level={level} />
       <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 md:flex-row md:items-center">
         <div>
           <div className="text-sm text-subtext">Today&apos;s study streak</div>
