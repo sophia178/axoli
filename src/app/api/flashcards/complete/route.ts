@@ -41,10 +41,10 @@ export async function POST(req: Request) {
     .insert({
       user_id: user.id,
       deck_id: parsed.data.deckId,
-      score_percent: scorePercent,
+      score_percentage: scorePercent,
       cards_reviewed: cardsReviewed
     })
-    .select('id,created_at,score_percent,cards_reviewed')
+    .select('id,created_at,score_percentage,cards_reviewed')
     .single()
 
   if (insertError) {
