@@ -186,8 +186,8 @@ export function ShopTabs({
 
                 {item.image_url ? (
                   <div className="mt-4 flex items-center justify-center">
-                    <div style={{ width: 56, height: 56, borderRadius: 8, background: '#1e1e3a', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                      <img src={item.image_url} width={48} height={48} alt="" draggable={false} className="select-none" style={{ objectFit: 'contain' }} />
+                    <div style={{ width: 56, height: 56, borderRadius: 12, background: '#1e1e3a', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <img src={item.image_url} width={45} height={45} alt="" draggable={false} className="select-none" style={{ objectFit: 'contain', filter: 'brightness(1.2)' }} />
                     </div>
                   </div>
                 ) : null}

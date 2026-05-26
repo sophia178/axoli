@@ -428,12 +428,19 @@ function DraggableItem({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      {(() => {
-        const markup = svgMarkup(imageUrl)
-        return markup
-          ? <div dangerouslySetInnerHTML={{ __html: markup }} className="h-full w-full select-none" />
-          : <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
-      })()}
+      <div style={{
+        width: size,
+        height: size,
+        background: '#1e1e3a',
+        borderRadius: 12,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <img src={imageUrl} alt={name} width={size * 0.8} height={size * 0.8} draggable={false} className="select-none" style={{ objectFit: 'contain', filter: 'brightness(1.2)' }} />
+      </div>
       {onRemove ? (
         <button
           type="button"
