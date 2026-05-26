@@ -36,9 +36,9 @@ export async function POST(req: Request) {
     user_id: user.id,
     deck_id: parsed.data.deckId,
     mode: parsed.data.mode,
-    score: parsed.data.correctCount,
-    total: parsed.data.questionCount,
-    time_seconds: parsed.data.durationSeconds
+    correct_count: parsed.data.correctCount,
+    question_count: parsed.data.questionCount,
+    duration_seconds: parsed.data.durationSeconds
   })
   if (insertError) {
     console.error('[QuizComplete] quiz_attempts insert error:', insertError.message)
