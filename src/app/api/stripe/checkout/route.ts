@@ -31,17 +31,25 @@ export async function POST(req: Request) {
   const parsed = bodySchema.safeParse(json)
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
-  const priceMap: Record<string, string | undefined> = {
-    premium_monthly: process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID,
-    premium_yearly: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID,
-    coins_50: process.env.STRIPE_COINS_50_PRICE_ID,
-    coins_150: process.env.STRIPE_COINS_150_PRICE_ID,
-    coins_400: process.env.STRIPE_COINS_400_PRICE_ID,
-    coins_1000: process.env.STRIPE_COINS_1000_PRICE_ID
+  const priceMap: Record<(typeof parsed.data.plan), { env: string; value?: string }> = {
+    premium_monthly: {
+      env: 'STRIPE_PREMIUM_MONTHLY_PRICE_ID',
+      value: process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID
+    },
+    premium_yearly: {
+      env: 'STRIPE_PREMIUM_YEARLY_PRICE_ID',
+      value: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID
+    },
+    coins_50: { env: 'STRIPE_COINS_50_PRICE_ID', value: process.env.STRIPE_COINS_50_PRICE_ID },
+    coins_150: { env: 'STRIPE_COINS_150_PRICE_ID', value: process.env.STRIPE_COINS_150_PRICE_ID },
+    coins_400: { env: 'STRIPE_COINS_400_PRICE_ID', value: process.env.STRIPE_COINS_400_PRICE_ID },
+    coins_1000: { env: 'STRIPE_COINS_1000_PRICE_ID', value: process.env.STRIPE_COINS_1000_PRICE_ID }
   }
 
-  const priceId = priceMap[parsed.data.plan]
-  if (!priceId) return NextResponse.json({ error: 'missing_price_id' }, { status: 500 })
+  const price = priceMap[parsed.data.plan]
+  if (!price.value) {
+    return NextResponse.json({ error: 'missing_price_id', missing: price.env }, { status: 500 })
+  }
 
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ??
@@ -69,7 +77,7 @@ export async function POST(req: Request) {
           customer: customerId ?? undefined,
           success_url: `${baseUrl}/dashboard/settings?tab=subscription&checkout=success`,
           cancel_url: `${baseUrl}/dashboard/settings?tab=subscription&checkout=cancel`,
-          line_items: [{ price: priceId, quantity: 1 }],
+          line_items: [{ price: price.value, quantity: 1 }],
           metadata: { userId: user.id, plan: parsed.data.plan },
           subscription_data: { metadata: { userId: user.id, plan: parsed.data.plan } }
         }
@@ -79,7 +87,7 @@ export async function POST(req: Request) {
           customer: customerId ?? undefined,
           success_url: `${baseUrl}/dashboard/settings?tab=subscription&checkout=success`,
           cancel_url: `${baseUrl}/dashboard/settings?tab=subscription&checkout=cancel`,
-          line_items: [{ price: priceId, quantity: 1 }],
+          line_items: [{ price: price.value, quantity: 1 }],
           metadata: { userId: user.id, plan: parsed.data.plan }
         }
   )

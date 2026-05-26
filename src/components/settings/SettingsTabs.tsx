@@ -82,6 +82,14 @@ export function SettingsTabs({
   const [pw2, setPw2] = useState('')
 
   const plan = initialPlan === 'premium_monthly' || initialPlan === 'premium_yearly' ? 'premium' : initialPlan
+  const planLabel =
+    initialPlan === 'premium_monthly'
+      ? 'Premium Monthly'
+      : initialPlan === 'premium_yearly'
+        ? 'Premium Yearly'
+        : plan === 'premium'
+          ? 'Premium'
+          : 'Free'
   const renewal = useMemo(() => formatRenewal(initialProfile?.stripe_renewal_at ?? null), [initialProfile?.stripe_renewal_at])
 
   async function goCheckout(kind:
@@ -247,7 +255,7 @@ export function SettingsTabs({
               <div className="rounded-3xl border border-border bg-bg/20 p-5">
                 <div className="text-xs text-subtext">Current plan</div>
                 <div className="mt-1 font-heading text-2xl text-text">
-                  {plan === 'premium' ? 'Premium' : 'Free'}
+                  {planLabel}
                 </div>
                 {plan === 'premium' ? (
                   <div className="mt-2 text-sm text-subtext">
