@@ -287,20 +287,6 @@ function writeItemStates(states: Record<string, ItemState>) {
   } catch {}
 }
 
-function svgMarkup(url: string): string | null {
-  if (!url.startsWith('data:image/svg+xml')) return null
-  try {
-    let svg: string
-    if (url.startsWith('data:image/svg+xml;base64,')) {
-      svg = atob(url.slice('data:image/svg+xml;base64,'.length))
-    } else {
-      svg = decodeURIComponent(url.slice(url.indexOf(',') + 1))
-    }
-    return svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block;" ')
-  } catch {
-    return null
-  }
-}
 
 type ResizeCorner = 'nw' | 'ne' | 'sw' | 'se'
 
@@ -428,18 +414,8 @@ function DraggableItem({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      <div style={{
-        width: size,
-        height: size,
-        background: '#1e1e3a',
-        borderRadius: 12,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        border: '1px solid rgba(255,255,255,0.1)'
-      }}>
-        <img src={imageUrl} alt={name} width={size * 0.8} height={size * 0.8} draggable={false} className="select-none" style={{ objectFit: 'contain', filter: 'brightness(1.2)' }} />
+      <div style={{ width: size, height: size, background: 'transparent' }}>
+        <img src={imageUrl} alt={name} width={size} height={size} draggable={false} className="select-none" style={{ objectFit: 'contain' }} />
       </div>
       {onRemove ? (
         <button
@@ -780,9 +756,7 @@ export function PetRoom({
               ownedDecorations.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
                   {d.image_url ? (
-                    <div style={{ width: 56, height: 56, borderRadius: 8, background: '#1e1e3a', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                      <img src={d.image_url} width={48} height={48} alt="" draggable={false} className="select-none" style={{ objectFit: 'contain' }} />
-                    </div>
+                    <img src={d.image_url} width={48} height={48} alt="" draggable={false} className="select-none flex-shrink-0" style={{ objectFit: 'contain' }} />
                   ) : null}
                   <span>{d.name}</span>
                 </div>

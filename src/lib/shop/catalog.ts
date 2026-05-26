@@ -25,25 +25,7 @@ function id(hex: number) {
 }
 
 function iconSvg(inner: string, defs = '') {
-  return svgDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-      <defs>
-        <linearGradient id="bgGlow" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="${PINK}" stop-opacity="0.18"/>
-          <stop offset="1" stop-color="${GOLD}" stop-opacity="0.12"/>
-        </linearGradient>
-        <radialGradient id="shine" cx="35%" cy="28%" r="60%">
-          <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
-          <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </radialGradient>
-        ${defs}
-      </defs>
-      <rect width="120" height="120" rx="24" fill="${NAVY}"/>
-      <rect x="8" y="8" width="104" height="104" rx="20" fill="url(#bgGlow)"/>
-      <rect x="14" y="14" width="92" height="92" rx="18" fill="url(#shine)"/>
-      ${inner}
-    </svg>
-  `)
+  return svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs>${defs}</defs>${inner}</svg>`)
 }
 
 function iconSvgTransparent(inner: string, defs = '') {
