@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { useLoading } from '@/components/loading/LoadingProvider'
@@ -21,23 +21,6 @@ function pickMessage() {
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n))
-}
-
-function colourStops(colour: string) {
-  if (colour === 'pink') return ['#FF8FAB', '#FFB6C8']
-  if (colour === 'blue') return ['#6EC7FF', '#3A86FF']
-  if (colour === 'purple') return ['#C77DFF', '#7C5CFF']
-  if (colour === 'green') return ['#7AE7B9', '#2EE59D']
-  if (colour === 'albino') return ['#FFFFFF', '#DDE6FF']
-  if (colour === 'spotted') return ['#FFB6C8', '#FF8FAB']
-  if (colour === 'striped') return ['#6EC7FF', '#B9A8FF']
-  if (colour === 'sakura') return ['#FF8FAB', '#FFD1DC']
-  if (colour === 'golden') return ['#FFD700', '#FFE59A']
-  if (colour === 'galaxy') return ['#7C5CFF', '#1B1B6B']
-  if (colour === 'rainbow') return ['#FF8FAB', '#7AE7B9']
-  if (colour === 'cherry') return ['#FF8FAB', '#FFD1DC']
-  if (colour === 'midnight') return ['#2A2A4A', '#0A0A1A']
-  return ['#FF8FAB', '#FFB6C8']
 }
 
 function UnderwaterScene({ sad }: { sad: boolean }) {
@@ -222,383 +205,6 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
   )
 }
 
-function Axolotl({
-  happiness,
-  colour,
-  accessories
-}: {
-  happiness: number
-  colour: string
-  accessories: string[]
-}) {
-  const sad = happiness <= 30
-  const bright = happiness >= 71 && !sad
-  const baseStops = sad ? ['#6C6C90', '#8888AA'] : colourStops(colour)
-  const bodyStroke = sad ? '#6C6C90' : '#2A2A4A'
-
-  const hasSunglasses = accessories.some((a) => /sunglasses/i.test(a))
-  const hasBowtie = accessories.some((a) => /bow\s*tie/i.test(a))
-  const hasCrown = accessories.some((a) => /^crown$/i.test(a))
-  const hasHalo = accessories.some((a) => /^halo$/i.test(a))
-  const hasHat = accessories.some((a) => /hat/i.test(a))
-
-  return (
-    <motion.div
-      className="relative w-[340px] max-w-[86vw]"
-      animate={{ y: sad ? [0, -6, 0] : [0, -12, 0] }}
-      transition={{ duration: sad ? 4 : 3.2, repeat: Infinity, ease: 'easeInOut' }}
-    >
-      <svg viewBox="0 0 520 420" className="h-auto w-full">
-        <defs>
-          <linearGradient id="axBody" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stopColor={baseStops[0]} />
-            <stop offset="1" stopColor={baseStops[1]} />
-          </linearGradient>
-          <linearGradient id="axBelly" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stopColor={sad ? '#505072' : '#FFEAF0'} />
-            <stop offset="1" stopColor={sad ? '#6C6C90' : '#FFC9D7'} />
-          </linearGradient>
-          <linearGradient id="axFin" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor={sad ? '#6C6C90' : '#FF8FAB'} stopOpacity="0.35" />
-            <stop offset="1" stopColor={sad ? '#6C6C90' : '#FFD700'} stopOpacity="0.22" />
-          </linearGradient>
-          <radialGradient id="eyeShine" cx="35%" cy="30%" r="60%">
-            <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.9" />
-            <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        <motion.g
-          animate={{ rotate: sad ? [0, -1, 0, 1, 0] : [0, -1.8, 0, 1.8, 0] }}
-          transition={{ duration: sad ? 5.2 : 4.4, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: '260px 230px' }}
-        >
-          {hasHalo ? (
-            <g opacity={sad ? 0.55 : 0.9}>
-              <ellipse
-                cx="324"
-                cy="62"
-                rx="74"
-                ry="22"
-                fill="none"
-                stroke="#FFD700"
-                strokeWidth="10"
-                opacity={sad ? 0.35 : 0.55}
-              />
-              <ellipse cx="324" cy="60" rx="56" ry="14" fill="none" stroke="#FFFFFF" strokeWidth="4" opacity="0.25" />
-            </g>
-          ) : null}
-
-          {hasCrown ? (
-            <g opacity={sad ? 0.6 : 0.95}>
-              <path
-                d="M270 122l16-32 22 22 16-30 16 30 22-22 16 32v18H270v-18z"
-                fill="#FFD700"
-                stroke="#2A2A4A"
-                strokeWidth="6"
-                strokeLinejoin="round"
-              />
-              <circle cx="286" cy="90" r="7" fill="#FF8FAB" />
-              <circle cx="324" cy="82" r="7" fill="#6EC7FF" />
-              <circle cx="362" cy="90" r="7" fill="#7C5CFF" />
-            </g>
-          ) : null}
-
-          {hasHat ? (
-            <g opacity={sad ? 0.65 : 0.95}>
-              <path
-                d="M300 78c20-16 56-16 76 0l-10 20c-20-10-36-10-56 0l-10-20z"
-                fill="#FF8FAB"
-                stroke="#2A2A4A"
-                strokeWidth="6"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M292 98c22 10 70 10 92 0"
-                fill="none"
-                stroke="#FFD700"
-                strokeWidth="10"
-                strokeLinecap="round"
-                opacity="0.7"
-              />
-              <circle cx="338" cy="70" r="8" fill="#FFD700" opacity={sad ? 0.45 : 0.85} />
-            </g>
-          ) : null}
-
-          {hasSunglasses ? (
-            <g opacity={sad ? 0.55 : 0.9}>
-              <rect x="244" y="208" width="70" height="46" rx="22" fill="#0A0A1A" opacity="0.78" />
-              <rect x="334" y="208" width="70" height="46" rx="22" fill="#0A0A1A" opacity="0.78" />
-              <rect x="314" y="226" width="20" height="10" rx="5" fill="#2A2A4A" opacity="0.85" />
-              <path
-                d="M252 216c14-10 34-10 48 0"
-                stroke="#DDE6FF"
-                strokeWidth="6"
-                strokeLinecap="round"
-                opacity="0.16"
-              />
-              <path
-                d="M342 216c14-10 34-10 48 0"
-                stroke="#DDE6FF"
-                strokeWidth="6"
-                strokeLinecap="round"
-                opacity="0.16"
-              />
-            </g>
-          ) : null}
-
-          <path
-            d="M370 232c86 28 112 88 78 144-34 56-104 56-132 24 26-18 48-48 52-84 4-34-2-62-18-84 8-2 14-2 20 0z"
-            fill="url(#axFin)"
-            opacity="0.9"
-          />
-          <path
-            d="M404 280c40 26 52 56 34 82-18 26-54 26-72 8 18-10 30-28 34-54 4-22 0-40-12-56 6-1 10-1 16 0z"
-            fill="url(#axBody)"
-            opacity="0.65"
-          />
-
-          <path
-            d="M170 244c0-86 70-154 156-154 92 0 168 72 168 162 0 102-84 176-192 176-104 0-132-70-132-184z"
-            fill="url(#axBody)"
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M230 270c0-54 36-96 88-96s88 42 88 96c0 66-36 118-88 118s-88-52-88-118z"
-            fill="url(#axBelly)"
-            opacity="0.95"
-          />
-
-          <path
-            d="M220 134c-52-16-86-52-98-108 52 8 92 30 116 66"
-            fill="url(#axFin)"
-            opacity="0.7"
-          />
-          <path
-            d="M436 140c52-16 86-52 98-108-52 8-92 30-116 66"
-            fill="url(#axFin)"
-            opacity="0.7"
-          />
-
-          <g opacity={sad ? 0.65 : 0.95}>
-            {Array.from({ length: 3 }).map((_, i) => {
-              const x = 210 - i * 22
-              const y = 138 + i * 18
-              return (
-                <g key={`lg-${i}`}>
-                  <path
-                    d={`M${x} ${y}c-38-30-54-60-48-88 34 14 54 40 60 78`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FF8FAB'}
-                    strokeWidth="10"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d={`M${x - 6} ${y - 6}c-20-18-28-34-24-50`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FFD700'}
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    opacity="0.85"
-                  />
-                  <path
-                    d={`M${x + 6} ${y + 4}c-18-14-28-28-30-42`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FFD700'}
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    opacity="0.75"
-                  />
-                </g>
-              )
-            })}
-            {Array.from({ length: 3 }).map((_, i) => {
-              const x = 430 + i * 22
-              const y = 138 + i * 18
-              return (
-                <g key={`rg-${i}`}>
-                  <path
-                    d={`M${x} ${y}c38-30 54-60 48-88-34 14-54 40-60 78`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FF8FAB'}
-                    strokeWidth="10"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d={`M${x + 6} ${y - 6}c20-18 28-34 24-50`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FFD700'}
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    opacity="0.85"
-                  />
-                  <path
-                    d={`M${x - 6} ${y + 4}c18-14 28-28 30-42`}
-                    fill="none"
-                    stroke={sad ? '#8888AA' : '#FFD700'}
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    opacity="0.75"
-                  />
-                </g>
-              )
-            })}
-          </g>
-
-          <motion.path
-            d="M238 128c54-44 126-44 180 0"
-            fill="none"
-            stroke="url(#axFin)"
-            strokeWidth="16"
-            strokeLinecap="round"
-            opacity={sad ? 0.18 : 0.28}
-            animate={{ opacity: sad ? [0.14, 0.2, 0.14] : [0.22, 0.32, 0.22] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          <path
-            d="M232 332c-20 0-34 18-34 38 0 18 14 32 30 32 14 0 26-12 30-26"
-            fill="url(#axBody)"
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.95"
-          />
-          <path
-            d="M356 332c20 0 34 18 34 38 0 18-14 32-30 32-14 0-26-12-30-26"
-            fill="url(#axBody)"
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.95"
-          />
-          <path
-            d="M252 338c-10 14-22 18-34 12"
-            fill="none"
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinecap="round"
-            opacity="0.25"
-          />
-          <path
-            d="M338 338c10 14 22 18 34 12"
-            fill="none"
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinecap="round"
-            opacity="0.25"
-          />
-
-          <path
-            d="M216 300c-10 0-18 10-18 22 0 10 8 18 18 18 8 0 14-6 16-14"
-            fill="url(#axBody)"
-            stroke={bodyStroke}
-            strokeWidth="7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.95"
-          />
-          <path
-            d="M372 300c10 0 18 10 18 22 0 10-8 18-18 18-8 0-14-6-16-14"
-            fill="url(#axBody)"
-            stroke={bodyStroke}
-            strokeWidth="7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.95"
-          />
-
-          <circle cx="276" cy="230" r="34" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
-          <circle cx="372" cy="230" r="34" fill="#FFFFFF" opacity={sad ? 0.85 : 1} />
-          <circle cx="276" cy="232" r={sad ? 12 : 14} fill="#0A0A1A" opacity={sad ? 0.78 : 1} />
-          <circle cx="372" cy="232" r={sad ? 12 : 14} fill="#0A0A1A" opacity={sad ? 0.78 : 1} />
-          <circle cx="266" cy="220" r="10" fill="url(#eyeShine)" />
-          <circle cx="362" cy="220" r="10" fill="url(#eyeShine)" />
-          <circle cx="288" cy="242" r="4" fill="#FFFFFF" opacity={sad ? 0.4 : 0.75} />
-          <circle cx="384" cy="242" r="4" fill="#FFFFFF" opacity={sad ? 0.4 : 0.75} />
-
-          <circle cx="244" cy="266" r="14" fill="#FF8FAB" opacity={sad ? 0.06 : 0.16} />
-          <circle cx="404" cy="266" r="14" fill="#FF8FAB" opacity={sad ? 0.06 : 0.16} />
-          <path
-            d={sad ? 'M304 274c16-10 40-10 56 0' : 'M304 270c16 18 40 18 56 0'}
-            stroke={bodyStroke}
-            strokeWidth="8"
-            strokeLinecap="round"
-            fill="none"
-          />
-          <path
-            d={sad ? 'M322 256c-8 6-14 12-16 18' : 'M322 256c-10 8-16 14-18 20'}
-            stroke={bodyStroke}
-            strokeWidth="6"
-            strokeLinecap="round"
-            opacity="0.22"
-          />
-          <path
-            d={sad ? 'M350 256c8 6 14 12 16 18' : 'M350 256c10 8 16 14 18 20'}
-            stroke={bodyStroke}
-            strokeWidth="6"
-            strokeLinecap="round"
-            opacity="0.22"
-          />
-
-          {hasBowtie ? (
-            <g opacity={sad ? 0.6 : 0.95}>
-              <path
-                d="M304 296l-44 18 44 18 10-18-10-18z"
-                fill="#FF8FAB"
-                stroke="#2A2A4A"
-                strokeWidth="6"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M344 296l44 18-44 18-10-18 10-18z"
-                fill="#FF8FAB"
-                stroke="#2A2A4A"
-                strokeWidth="6"
-                strokeLinejoin="round"
-              />
-              <circle cx="324" cy="314" r="10" fill="#FFD700" stroke="#2A2A4A" strokeWidth="5" />
-            </g>
-          ) : null}
-        </motion.g>
-
-        {bright ? (
-          <g opacity="0.9">
-            <motion.circle
-              cx="94"
-              cy="120"
-              r="7"
-              fill="#FFD700"
-              animate={{ opacity: [0.3, 0.9, 0.3] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.circle
-              cx="462"
-              cy="124"
-              r="5"
-              fill="#FFD700"
-              animate={{ opacity: [0.2, 0.8, 0.2] }}
-              transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.circle
-              cx="450"
-              cy="290"
-              r="6"
-              fill="#FF8FAB"
-              animate={{ opacity: [0.2, 0.7, 0.2] }}
-              transition={{ duration: 2.1, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </g>
-        ) : null}
-      </svg>
-    </motion.div>
-  )
-}
-
 function HeartBar({ value }: { value: number }) {
   const hearts = 10
   const filled = Math.round((clamp(value, 0, 100) / 100) * hearts)
@@ -649,6 +255,126 @@ function Decoration({
   )
 }
 
+type AccessoryPos = { x: number; y: number }
+
+const ACCESSORY_POS_KEY = 'axoli_pet_accessory_pos_v1'
+
+function readAccessoryPositions(): Record<string, AccessoryPos> {
+  try {
+    const raw = window.localStorage.getItem(ACCESSORY_POS_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as any
+    if (!parsed || typeof parsed !== 'object') return {}
+    const out: Record<string, AccessoryPos> = {}
+    for (const [k, v] of Object.entries(parsed)) {
+      if (!v || typeof v !== 'object') continue
+      const x = Number((v as any).x)
+      const y = Number((v as any).y)
+      if (!Number.isFinite(x) || !Number.isFinite(y)) continue
+      out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1) }
+    }
+    return out
+  } catch {
+    return {}
+  }
+}
+
+function writeAccessoryPositions(pos: Record<string, AccessoryPos>) {
+  try {
+    window.localStorage.setItem(ACCESSORY_POS_KEY, JSON.stringify(pos))
+  } catch {}
+}
+
+function DraggableAccessory({
+  id,
+  name,
+  imageUrl,
+  containerRef,
+  containerSize,
+  pos,
+  onPosChange,
+  onRemove
+}: {
+  id: string
+  name: string
+  imageUrl: string
+  containerRef: { current: HTMLDivElement | null }
+  containerSize: { w: number; h: number }
+  pos: AccessoryPos
+  onPosChange: (next: AccessoryPos) => void
+  onRemove: () => void
+}) {
+  const dragging = useRef<{
+    active: boolean
+    startLeft: number
+    startTop: number
+    pointerStartX: number
+    pointerStartY: number
+  }>({ active: false, startLeft: 0, startTop: 0, pointerStartX: 0, pointerStartY: 0 })
+
+  const size = 60
+  const maxLeft = Math.max(0, containerSize.w - size)
+  const maxTop = Math.max(0, containerSize.h - size)
+  const left = clamp(pos.x, 0, 1) * maxLeft
+  const top = clamp(pos.y, 0, 1) * maxTop
+
+  return (
+    <div
+      className="group absolute z-[20]"
+      style={{
+        left,
+        top,
+        width: size,
+        height: size,
+        touchAction: 'none'
+      }}
+      onPointerDown={(e) => {
+        const el = containerRef.current
+        if (!el) return
+        dragging.current = {
+          active: true,
+          startLeft: left,
+          startTop: top,
+          pointerStartX: e.clientX,
+          pointerStartY: e.clientY
+        }
+        ;(e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId)
+      }}
+      onPointerMove={(e) => {
+        if (!dragging.current.active) return
+        const dx = e.clientX - dragging.current.pointerStartX
+        const dy = e.clientY - dragging.current.pointerStartY
+        const nextLeft = clamp(dragging.current.startLeft + dx, 0, maxLeft)
+        const nextTop = clamp(dragging.current.startTop + dy, 0, maxTop)
+        onPosChange({
+          x: maxLeft === 0 ? 0 : nextLeft / maxLeft,
+          y: maxTop === 0 ? 0 : nextTop / maxTop
+        })
+      }}
+      onPointerUp={(e) => {
+        dragging.current.active = false
+        try {
+          ;(e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId)
+        } catch {}
+      }}
+    >
+      <img src={imageUrl} alt={name} className="h-full w-full select-none" draggable={false} />
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onRemove()
+        }}
+        className="absolute -right-2 -top-2 hidden h-6 w-6 items-center justify-center rounded-full border border-border bg-card/90 text-xs font-semibold text-text shadow-sm group-hover:flex"
+        aria-label={`Remove ${name}`}
+      >
+        ×
+      </button>
+    </div>
+  )
+}
+
 export function PetRoom({
   profile,
   items,
@@ -695,6 +421,53 @@ export function PetRoom({
     () => items.filter((i) => i.type === 'accessory' && owned.has(i.id)),
     [items, owned]
   )
+  const showHappyAxolotl = happiness > 50 && hunger > 30
+  const tankRef = useRef<HTMLDivElement | null>(null)
+  const [tankSize, setTankSize] = useState<{ w: number; h: number }>({ w: 900, h: 520 })
+  const [accessoryPositions, setAccessoryPositions] = useState<Record<string, AccessoryPos>>({})
+
+  useEffect(() => {
+    setAccessoryPositions(readAccessoryPositions())
+  }, [])
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const id = window.setTimeout(() => writeAccessoryPositions(accessoryPositions), 150)
+    return () => window.clearTimeout(id)
+  }, [accessoryPositions])
+  useEffect(() => {
+    const el = tankRef.current
+    if (!el) return
+    const update = () => {
+      const r = el.getBoundingClientRect()
+      setTankSize({ w: Math.max(1, r.width), h: Math.max(1, r.height) })
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  const equippedAccessoryItems = useMemo(
+    () => items.filter((i) => i.type === 'accessory' && equippedAccessories.includes(i.name) && Boolean(i.image_url)),
+    [items, equippedAccessories]
+  )
+
+  useEffect(() => {
+    if (equippedAccessoryItems.length === 0) return
+    setAccessoryPositions((prev) => {
+      let changed = false
+      const next = { ...prev }
+      for (let i = 0; i < equippedAccessoryItems.length; i += 1) {
+        const it = equippedAccessoryItems[i]
+        if (next[it.id]) continue
+        const baseX = 0.5 + (i % 3 === 0 ? -0.18 : i % 3 === 1 ? 0 : 0.18)
+        const baseY = 0.52 + (i % 2 === 0 ? -0.08 : 0.08)
+        next[it.id] = { x: clamp(baseX, 0, 1), y: clamp(baseY, 0, 1) }
+        changed = true
+      }
+      if (changed) writeAccessoryPositions(next)
+      return changed ? next : prev
+    })
+  }, [equippedAccessoryItems])
 
   return (
     <div className="space-y-5">
@@ -722,7 +495,7 @@ export function PetRoom({
       </div>
 
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
-        <div className="relative h-[520px]">
+        <div ref={tankRef} className="relative h-[520px]">
           <UnderwaterScene sad={sad} />
           {ownedDecorations.map((d) => {
             if (d.name === 'Extra plant') {
@@ -746,6 +519,35 @@ export function PetRoom({
             return null
           })}
 
+          {equippedAccessoryItems.map((a) => (
+            <DraggableAccessory
+              key={a.id}
+              id={a.id}
+              name={a.name}
+              imageUrl={a.image_url ?? ''}
+              containerRef={tankRef}
+              containerSize={tankSize}
+              pos={accessoryPositions[a.id] ?? { x: 0.5, y: 0.5 }}
+              onPosChange={(nextPos) => {
+                setAccessoryPositions((prev) => ({ ...prev, [a.id]: nextPos }))
+              }}
+              onRemove={async () => {
+                const res = await withLoading(
+                  fetch('/api/pet/equip', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ itemId: a.id })
+                  })
+                )
+                const json = (await res.json().catch(() => null)) as any
+                if (!res.ok) return
+                if (Array.isArray(json?.pet_accessories)) {
+                  setEquippedAccessories(json.pet_accessories as string[])
+                }
+              }}
+            />
+          ))}
+
           <motion.div
             className="absolute left-1/2 top-10 w-[360px] -translate-x-1/2 px-4"
             animate={{ scale: [1, 1.04, 1] }}
@@ -757,11 +559,14 @@ export function PetRoom({
             </div>
           </motion.div>
 
-          <div className="absolute left-1/2 top-40 -translate-x-1/2">
-            <Axolotl
-              happiness={sad ? Math.min(happiness, 30) : happiness}
-              colour={profile.pet_colour ?? 'pink'}
-              accessories={equippedAccessories}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <img
+              src={showHappyAxolotl ? '/axolotl-happy.png' : '/axolotl-sad.png'}
+              alt="Axolotl"
+              width={220}
+              height={220}
+              draggable={false}
+              style={{ width: 220, height: 220, objectFit: 'contain', mixBlendMode: 'multiply' }}
             />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">

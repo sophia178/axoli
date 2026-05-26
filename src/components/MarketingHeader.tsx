@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
-import { LanguageMenu } from '@/components/i18n/LanguageMenu'
 
 export function MarketingHeader() {
   return (
@@ -13,7 +12,6 @@ export function MarketingHeader() {
           <span className="font-heading text-lg text-text">Axoli</span>
         </Link>
         <nav className="flex items-center gap-2">
-          <LanguageMenu />
           <Link
             href="/pricing"
             className="rounded-2xl px-3 py-2 text-sm text-subtext hover:bg-card/60 hover:text-text"
