@@ -38,16 +38,24 @@ export async function POST() {
   const last = (data as any)?.last_login_date as string | null
   const currentStreak = Number((data as any)?.streak ?? 0)
 
+  console.log('[LoginPing] user:', user.id, '| last_login_date:', last, '| today:', today, '| current streak:', currentStreak)
+
   if (last === today) {
+    console.log('[LoginPing] already pinged today — no update needed')
     return NextResponse.json({ ok: true, coinsAwarded: 0, streak: currentStreak })
   }
 
   const nextStreak = last === yesterday ? Math.max(1, currentStreak + 1) : 1
+  console.log('[LoginPing] updating streak:', currentStreak, '->', nextStreak, '| last was:', last, '| yesterday was:', yesterday)
   const { error: updateError } = await supabase
     .from('profiles')
     .update({ last_login_date: today, streak: nextStreak })
     .eq('user_id', user.id)
-  if (updateError) return NextResponse.json({ error: 'profile_update_failed' }, { status: 500 })
+  if (updateError) {
+    console.error('[LoginPing] profile update error:', updateError)
+    return NextResponse.json({ error: 'profile_update_failed' }, { status: 500 })
+  }
+  console.log('[LoginPing] streak saved successfully to', nextStreak)
 
   try {
     await awardCoins(user.id, 2, 'daily_login')

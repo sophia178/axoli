@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { getCurrentUser } from '@/lib/auth/user'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { awardCoins } from '@/lib/coins'
 
@@ -14,8 +15,29 @@ const bodySchema = z.object({
 })
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseAnon) {
+    return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
+  }
+
+  const cookieStore = cookies()
+  const supabaseAuth = createServerClient(supabaseUrl, supabaseAnon, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(toSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
+        for (const c of toSet) cookieStore.set(c.name, c.value, c.options as Parameters<typeof cookieStore.set>[2])
+      }
+    }
+  })
+
+  const { data, error: authError } = await supabaseAuth.auth.getUser()
+  if (authError || !data.user) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  }
+  const user = data.user
 
   const json = await req.json().catch(() => null)
   const parsed = bodySchema.safeParse(json)
@@ -42,7 +64,10 @@ export async function POST(req: Request) {
     .select('id,created_at,score_percent,cards_reviewed,correct_count,total_count')
     .single()
 
-  if (inserted.error) return NextResponse.json({ error: 'completion_save_failed' }, { status: 500 })
+  if (inserted.error) {
+    console.error('[flashcards/complete] insert error:', inserted.error)
+    return NextResponse.json({ error: 'completion_save_failed' }, { status: 500 })
+  }
 
   await supabase
     .from('flashcard_decks')
@@ -50,9 +75,10 @@ export async function POST(req: Request) {
     .eq('id', parsed.data.deckId)
 
   try {
-    const coins = await awardCoins(user.id, 5, 'deck_review_complete')
-    return NextResponse.json({ ok: true, coinsAwarded: 5, coins, completion: inserted.data })
-  } catch {
-    return NextResponse.json({ error: 'coin_award_failed' }, { status: 500 })
+    await awardCoins(user.id, 5, 'deck_review_complete')
+  } catch (e) {
+    console.error('[flashcards/complete] awardCoins error:', e)
   }
+
+  return NextResponse.json({ ok: true, coinsAwarded: 5, promptDouble: true, completion: inserted.data })
 }

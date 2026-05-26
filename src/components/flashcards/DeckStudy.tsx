@@ -44,7 +44,7 @@ export function DeckStudy({
 }) {
   const { withLoading } = useLoading()
   const { showCoins } = useCoinToasts()
-  const { promptDouble, modal } = useDoubleCoins()
+  const { promptFromResponse, modal } = useDoubleCoins()
 
   const allIds = useMemo(() => cards.map((c) => c.id), [cards])
   const [queue, setQueue] = useState<string[]>(() => shuffle(allIds))
@@ -98,7 +98,7 @@ export function DeckStudy({
         const coinsAwarded = Number(json?.coinsAwarded ?? 0)
         if (res.ok && coinsAwarded > 0) {
           showCoins(coinsAwarded)
-          await promptDouble({ coinsEarned: coinsAwarded, reason: 'deck_complete' })
+          await promptFromResponse(json, 'deck_complete')
         }
         if (res.ok && json?.completion) {
           setCompletions((prev) => [json.completion as DeckCompletion, ...prev])
@@ -113,7 +113,7 @@ export function DeckStudy({
     deckId,
     withLoading,
     showCoins,
-    promptDouble,
+    promptFromResponse,
     correctCount
   ])
 
@@ -218,13 +218,11 @@ export function DeckStudy({
                     const rest = prev.slice(1)
                     return [...rest, currentId, currentId]
                   })
-                  const res = await withLoading(
-                    fetch('/api/flashcards/review', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ deckId, cardId: currentId, known: false })
-                    })
-                  )
+                  const res = await fetch('/api/flashcards/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deckId, cardId: currentId, known: false })
+                  })
                   if (!res.ok) setMessage('Could not save progress. Try again.')
                   else setReviewed((prev) => ({ ...prev, [currentId]: 'again' }))
                 }}
@@ -242,13 +240,11 @@ export function DeckStudy({
                     const rest = prev.slice(1)
                     return [...rest, currentId]
                   })
-                  const res = await withLoading(
-                    fetch('/api/flashcards/review', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ deckId, cardId: currentId, known: false })
-                    })
-                  )
+                  const res = await fetch('/api/flashcards/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deckId, cardId: currentId, known: false })
+                  })
                   if (!res.ok) setMessage('Could not save progress. Try again.')
                   else setReviewed((prev) => ({ ...prev, [currentId]: 'hard' }))
                 }}
@@ -263,13 +259,11 @@ export function DeckStudy({
                   setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'good' }))
                   setFlipped(false)
                   setQueue((prev) => prev.slice(1))
-                  const res = await withLoading(
-                    fetch('/api/flashcards/review', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ deckId, cardId: currentId, known: true })
-                    })
-                  )
+                  const res = await fetch('/api/flashcards/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deckId, cardId: currentId, known: true })
+                  })
                   if (!res.ok) setMessage('Could not save progress. Try again.')
                   else setReviewed((prev) => ({ ...prev, [currentId]: 'good' }))
                 }}
@@ -284,13 +278,11 @@ export function DeckStudy({
                   setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'easy' }))
                   setFlipped(false)
                   setQueue((prev) => prev.slice(1))
-                  const res = await withLoading(
-                    fetch('/api/flashcards/review', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ deckId, cardId: currentId, known: true })
-                    })
-                  )
+                  const res = await fetch('/api/flashcards/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deckId, cardId: currentId, known: true })
+                  })
                   if (!res.ok) setMessage('Could not save progress. Try again.')
                   else setReviewed((prev) => ({ ...prev, [currentId]: 'easy' }))
                 }}

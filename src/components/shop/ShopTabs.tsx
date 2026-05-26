@@ -1,20 +1,23 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { UpgradeButtons } from '@/components/shop/UpgradeButtons'
 import { useLoading } from '@/components/loading/LoadingProvider'
 import type { ShopItemRow } from '@/lib/shop/data'
 
-type Tab = 'food' | 'decoration' | 'accessory' | 'colour'
+type Tab = 'food' | 'decoration' | 'accessory' | 'colour' | 'coins'
 
 function tabName(tab: Tab) {
   if (tab === 'food') return 'Food'
   if (tab === 'decoration') return 'Decorations'
   if (tab === 'accessory') return 'Accessories'
+  if (tab === 'coins') return 'Get Coins'
   return 'Colour changes'
 }
+
+const VALID_TABS: Tab[] = ['food', 'decoration', 'accessory', 'colour', 'coins']
 
 export function ShopTabs({
   items,
@@ -29,20 +32,26 @@ export function ShopTabs({
 }) {
   const router = useRouter()
   const { withLoading } = useLoading()
+  const params = useSearchParams()
 
-  const [tab, setTab] = useState<Tab>('food')
+  const initialTab: Tab = (() => {
+    const p = params?.get('tab') as Tab | null
+    return p && VALID_TABS.includes(p) ? p : 'food'
+  })()
+
+  const [tab, setTab] = useState<Tab>(initialTab)
   const [message, setMessage] = useState<string | null>(null)
   const [upgrade, setUpgrade] = useState(false)
 
   const owned = useMemo(() => new Set(ownedIds), [ownedIds])
   const grouped = useMemo(() => {
-    const g: Record<Tab, ShopItemRow[]> = {
+    const g: Record<Exclude<Tab, 'coins'>, ShopItemRow[]> = {
       food: [],
       decoration: [],
       accessory: [],
       colour: []
     }
-    for (const item of items) g[item.type as Tab].push(item)
+    for (const item of items) g[item.type as Exclude<Tab, 'coins'>]?.push(item)
     return g
   }, [items])
 
@@ -56,7 +65,7 @@ export function ShopTabs({
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          {(['food', 'decoration', 'accessory', 'colour'] as Tab[]).map((t) => (
+          {VALID_TABS.map((t) => (
             <Button
               key={t}
               type="button"
@@ -91,89 +100,118 @@ export function ShopTabs({
         </div>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {grouped[tab].map((item) => {
-          const isOwned = owned.has(item.id)
-          const premiumLocked = item.is_premium && plan === 'free'
-          const canBuy = !premiumLocked && coins >= item.cost
-          return (
-            <div key={item.id} className="rounded-3xl border border-border bg-bg/20 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-sm font-semibold text-text">{item.name}</div>
-                  <div className="mt-2 inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold">
-                    {item.cost} coins
-                  </div>
+      {tab === 'coins' ? (
+        <div className="space-y-4">
+          <div className="rounded-3xl border border-border bg-card/70 p-6">
+            <div className="font-heading text-2xl text-text">Ways to earn coins</div>
+            <div className="mt-1 text-sm text-subtext">
+              Complete activities to earn coins and spend them in the shop.
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { icon: '📅', label: 'Daily login', amount: '+2 coins', desc: 'Log in each day to keep your streak going.' },
+              { icon: '⏳', label: 'Study session', amount: '+1 per 10 min', desc: 'Earn coins for every 10 minutes studied on the timer.' },
+              { icon: '🧠', label: 'Complete a quiz', amount: '+5 coins', desc: 'Finish any quiz to earn a coin reward.' },
+              { icon: '🃏', label: 'Study a flashcard deck', amount: '+5 coins', desc: 'Review all cards in a deck to earn coins.' },
+              { icon: '📺', label: 'Watch a short ad', amount: '2× your coins', desc: 'Double the coins from your last activity by watching a short ad.' },
+            ].map((row) => (
+              <div key={row.label} className="rounded-3xl border border-border bg-bg/20 p-5">
+                <div className="text-3xl">{row.icon}</div>
+                <div className="mt-3 font-semibold text-text">{row.label}</div>
+                <div className="mt-1 inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold">
+                  {row.amount}
                 </div>
-                {item.is_premium ? (
-                  <div className="rounded-full bg-pink/15 px-3 py-1 text-xs font-semibold text-pink">
-                    Premium
+                <div className="mt-2 text-xs text-subtext">{row.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {grouped[tab as Exclude<Tab, 'coins'>].map((item) => {
+            const isOwned = owned.has(item.id)
+            const premiumLocked = item.is_premium && plan === 'free'
+            const canBuy = !premiumLocked && coins >= item.cost
+            return (
+              <div key={item.id} className="rounded-3xl border border-border bg-bg/20 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-semibold text-text">{item.name}</div>
+                    <div className="mt-2 inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold">
+                      {item.cost} coins
+                    </div>
                   </div>
-                ) : item.is_seasonal ? (
-                  <div className="rounded-full bg-card/60 px-3 py-1 text-xs font-semibold text-subtext">
-                    Seasonal
+                  {item.is_premium ? (
+                    <div className="rounded-full bg-pink/15 px-3 py-1 text-xs font-semibold text-pink">
+                      Premium
+                    </div>
+                  ) : item.is_seasonal ? (
+                    <div className="rounded-full bg-card/60 px-3 py-1 text-xs font-semibold text-subtext">
+                      Seasonal
+                    </div>
+                  ) : null}
+                </div>
+
+                {item.image_url ? (
+                  <div className="mt-4 flex items-center justify-center rounded-2xl border border-border bg-card/60 p-4">
+                    <img
+                      src={item.image_url}
+                      alt=""
+                      className="h-24 w-24 select-none"
+                      draggable={false}
+                    />
                   </div>
                 ) : null}
-              </div>
 
-              {item.image_url ? (
-                <div className="mt-4 flex items-center justify-center rounded-2xl border border-border bg-card/60 p-4">
-                  <img
-                    src={item.image_url}
-                    alt=""
-                    className="h-24 w-24 select-none"
-                    draggable={false}
-                  />
+                <div className="mt-4">
+                  {tab !== 'food' && isOwned ? (
+                    <div className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-subtext">
+                      Owned
+                    </div>
+                  ) : (
+                    <Button
+                      className="w-full"
+                      variant={premiumLocked ? 'outline' : 'secondary'}
+                      disabled={!canBuy && !premiumLocked}
+                      onClick={async () => {
+                        setMessage(null)
+                        setUpgrade(false)
+                        if (premiumLocked) {
+                          setUpgrade(true)
+                          return
+                        }
+                        if (coins < item.cost) {
+                          setMessage('Not enough coins.')
+                          return
+                        }
+                        const res = await withLoading(
+                          fetch('/api/shop/purchase', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ itemId: item.id })
+                          })
+                        )
+                        const json = (await res.json().catch(() => null)) as any
+                        if (!res.ok) {
+                          if (json?.error === 'not_enough_coins') setMessage('Not enough coins.')
+                          else if (json?.error === 'premium_only') setUpgrade(true)
+                          else setMessage('Purchase failed.')
+                          return
+                        }
+                        setMessage(tab === 'food' ? 'Yum! Happiness boosted.' : 'Purchased!')
+                        router.refresh()
+                      }}
+                    >
+                      {premiumLocked ? 'Premium only' : tab === 'food' ? 'Feed' : 'Buy'}
+                    </Button>
+                  )}
                 </div>
-              ) : null}
-
-              <div className="mt-4">
-                {tab !== 'food' && isOwned ? (
-                  <div className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-subtext">
-                    Owned
-                  </div>
-                ) : (
-                  <Button
-                    className="w-full"
-                    variant={premiumLocked ? 'outline' : 'secondary'}
-                    disabled={!canBuy && !premiumLocked}
-                    onClick={async () => {
-                      setMessage(null)
-                      setUpgrade(false)
-                      if (premiumLocked) {
-                        setUpgrade(true)
-                        return
-                      }
-                      if (coins < item.cost) {
-                        setMessage('Not enough coins.')
-                        return
-                      }
-                      const res = await withLoading(
-                        fetch('/api/shop/purchase', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ itemId: item.id })
-                        })
-                      )
-                      const json = (await res.json().catch(() => null)) as any
-                      if (!res.ok) {
-                        if (json?.error === 'not_enough_coins') setMessage('Not enough coins.')
-                        else if (json?.error === 'premium_only') setUpgrade(true)
-                        else setMessage('Purchase failed.')
-                        return
-                      }
-                      setMessage(tab === 'food' ? 'Yum! Happiness boosted.' : 'Purchased!')
-                      router.refresh()
-                    }}
-                  >
-                    {premiumLocked ? 'Premium only' : tab === 'food' ? 'Feed' : 'Buy'}
-                  </Button>
-                )}
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

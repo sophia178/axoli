@@ -62,6 +62,7 @@ export function StudyTimer() {
   const [running, setRunning] = useState(false)
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [quitConfirm, setQuitConfirm] = useState(false)
   const [timerId, setTimerId] = useState<string>(() => makeId())
   const [startedAt, setStartedAt] = useState<number | null>(null)
   const { withLoading } = useLoading()
@@ -268,44 +269,77 @@ export function StudyTimer() {
                   writeTimer(null)
                   return
                 }
-                const ok = window.confirm('Are you sure? Your progress will be saved but the timer will reset.')
-                if (!ok) return
-                setRunning(false)
-                setStartedAt(null)
-                void (async () => {
-                  setSaving(true)
-                  setResult(null)
-                  try {
-                    const res = await withLoading(
-                      fetch('/api/sessions', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          durationSeconds: Math.max(1, studiedSeconds),
-                          subject: subject.trim() ? subject.trim() : undefined,
-                          applyRewards: false
-                        })
-                      })
-                    )
-                    if (!res.ok) {
-                      setResult('Could not save progress. Try again.')
-                      return
-                    }
-                    setResult('Progress saved.')
-                  } catch {
-                    setResult('Could not save progress. Try again.')
-                  } finally {
-                    writeTimer(null)
-                    setSaving(false)
-                    setRemaining(durationSeconds)
-                    setTimerId(makeId())
-                  }
-                })()
+                setQuitConfirm(true)
               }}
               disabled={saving}
             >
               Quit
             </Button>
+            {quitConfirm ? (
+              <div
+                className="rounded-2xl p-4"
+                style={{ background: '#0A0A1A', border: '1px solid #FF8FAB44' }}
+              >
+                <div className="text-sm font-semibold" style={{ color: '#FF8FAB' }}>
+                  Quit session?
+                </div>
+                <div className="mt-1 text-xs" style={{ color: '#8888AA' }}>
+                  Your progress so far will be saved and the timer will reset.
+                </div>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-xl px-4 py-2 text-xs font-semibold transition"
+                    style={{ background: '#FF8FAB', color: '#0A0A1A' }}
+                    onClick={() => {
+                      setQuitConfirm(false)
+                      const studiedSeconds = Math.max(0, Math.floor(durationSeconds - remaining))
+                      setRunning(false)
+                      setStartedAt(null)
+                      void (async () => {
+                        setSaving(true)
+                        setResult(null)
+                        try {
+                          const res = await withLoading(
+                            fetch('/api/sessions', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                durationSeconds: Math.max(1, studiedSeconds),
+                                subject: subject.trim() ? subject.trim() : undefined,
+                                applyRewards: false
+                              })
+                            })
+                          )
+                          if (!res.ok) {
+                            setResult('Could not save progress. Try again.')
+                            return
+                          }
+                          setResult('Progress saved.')
+                        } catch {
+                          setResult('Could not save progress. Try again.')
+                        } finally {
+                          writeTimer(null)
+                          setSaving(false)
+                          setRemaining(durationSeconds)
+                          setTimerId(makeId())
+                        }
+                      })()
+                    }}
+                  >
+                    Yes, quit
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-xl px-4 py-2 text-xs font-semibold transition"
+                    style={{ background: '#1A1A2E', color: '#FF8FAB', border: '1px solid #FF8FAB44' }}
+                    onClick={() => setQuitConfirm(false)}
+                  >
+                    Keep going
+                  </button>
+                </div>
+              </div>
+            ) : null}
             <Button
               size="lg"
               variant="ghost"

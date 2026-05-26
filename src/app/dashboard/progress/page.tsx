@@ -10,6 +10,16 @@ function isoDate(d: Date) {
   return `${y}-${m}-${day}`
 }
 
+function formatStudyTime(hours: number): string {
+  const totalMinutes = Math.round(hours * 60)
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  if (h === 0 && m === 0) return '0m'
+  if (h === 0) return `${m}m`
+  if (m === 0) return `${h}h`
+  return `${h}h ${m}m`
+}
+
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
 }
@@ -109,16 +119,21 @@ export default async function ProgressPage() {
     try {
       const allSessionsForTotals = await supabase
         .from('study_sessions')
-        .select('duration')
+        .select('duration,duration_minutes')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(5000)
 
       const totalStudySeconds = (allSessionsForTotals.data ?? []).reduce(
-        (acc: number, s: any) => acc + (s.duration as number),
+        (acc: number, s: any) => {
+          const secs = s.duration_minutes != null
+            ? (s.duration_minutes as number) * 60
+            : (s.duration as number) ?? 0
+          return acc + secs
+        },
         0
       )
-      totalStudyHours = Math.round((totalStudySeconds / 3600) * 10) / 10
+      totalStudyHours = totalStudySeconds / 3600
     } catch {}
 
     try {
@@ -136,7 +151,7 @@ export default async function ProgressPage() {
     try {
       const { data: recentSessions } = await supabase
         .from('study_sessions')
-        .select('duration,subject,created_at')
+        .select('duration,duration_minutes,subject,created_at')
         .eq('user_id', user.id)
         .gte('created_at', thirtyDaysAgo.toISOString())
         .order('created_at', { ascending: true })
@@ -144,30 +159,32 @@ export default async function ProgressPage() {
 
       for (const s of (recentSessions ?? []) as any[]) {
         const date = isoDate(new Date(s.created_at as string))
-        const seconds = s.duration as number
+        const seconds = s.duration_minutes != null
+          ? (s.duration_minutes as number) * 60
+          : (s.duration as number) ?? 0
         if (hoursByDay7.has(date)) {
           hoursByDay7.set(date, (hoursByDay7.get(date) ?? 0) + seconds / 3600)
         }
         if (hoursByDay30.has(date)) {
           hoursByDay30.set(date, (hoursByDay30.get(date) ?? 0) + seconds / 3600)
         }
-        const subj = (s.subject as string | null) ?? 'Unspecified'
+        const subj = (s.subject as string | null)?.trim()
+        if (!subj) continue
         subjectSet.add(subj)
         subjectSeconds.set(subj, (subjectSeconds.get(subj) ?? 0) + seconds)
       }
     } catch {}
   }
 
-  const distinctSubjectsCount = Array.from(subjectSet).filter(
-    (s) => s !== 'Unspecified'
-  ).length
+  const distinctSubjectsCount = subjectSet.size
 
   const barDays = Array.from(hoursByDay7.entries()).map(([date, hours]) => ({
     date,
     hours
   }))
   const maxBar = Math.max(1, ...barDays.map((d) => d.hours))
-  const studyHoursThisWeek = Math.round(barDays.reduce((acc, d) => acc + d.hours, 0) * 10) / 10
+  const studyHoursThisWeek = barDays.reduce((acc, d) => acc + d.hours, 0)
+  const studyTimeDisplay = formatStudyTime(studyHoursThisWeek)
 
   const subjectParts = Array.from(subjectSeconds.entries())
     .map(([subject, seconds]) => ({ subject, hours: seconds / 3600 }))
@@ -202,7 +219,7 @@ export default async function ProgressPage() {
             <CardTitle>Study hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{studyHoursThisWeek}</div>
+            <div className="font-heading text-3xl text-text">{studyTimeDisplay}</div>
             <div className="mt-2 text-sm text-subtext">This week</div>
           </CardContent>
         </Card>

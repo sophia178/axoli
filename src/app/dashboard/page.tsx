@@ -5,7 +5,6 @@ import { getUpcomingExams } from '@/lib/data/exams'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { TodaysTasks } from '@/components/dashboard/TodaysTasks'
-import { LoginPing } from '@/components/dashboard/LoginPing'
 
 function parseLocalDate(dateStr: string) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr)
@@ -43,9 +42,9 @@ function PetPreview({
       className="group flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 transition hover:bg-card/80"
     >
       <div className="flex items-center gap-4">
-        <div className="relative h-20 w-20 overflow-hidden rounded-3xl bg-bg/30 ring-1 ring-border">
+        <div className="relative h-20 w-20 overflow-hidden rounded-3xl ring-1 ring-border" style={{ background: 'white' }}>
           <div className="absolute inset-0 flex items-center justify-center">
-            <img src="/axolotl-happy.png" width="80" height="80" style={{objectFit:'contain', mixBlendMode:'multiply'}} />
+            <img src="/axolotl-happy.png" alt="" width="80" height="80" style={{ objectFit: 'contain', mixBlendMode: 'multiply', background: 'transparent' }} />
           </div>
         </div>
         <div>
@@ -96,7 +95,6 @@ export default async function DashboardHomePage() {
 
   return (
     <div className="space-y-6">
-      <LoginPing />
       <PetPreview happiness={happiness} level={level} />
       <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 md:flex-row md:items-center">
         <div>
