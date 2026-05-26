@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn'
 import { dashboardNav } from '@/components/dashboard/nav'
 import type { Profile } from '@/lib/data/profile'
 
-export function Sidebar({ profile }: { profile: Profile | null }) {
+export function Sidebar({ profile }: { profile?: Profile | null }) {
   const pathname = usePathname()
   const petName = (profile as any)?.pet_name as string | null | undefined
   return (
