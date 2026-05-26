@@ -2,12 +2,40 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getCurrentUser } from '@/lib/auth/user'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 
 export const runtime = 'nodejs'
 
 const postSchema = z.object({
   message: z.string().min(1).max(800)
 })
+
+type CookieToSet = {
+  name: string
+  value: string
+  options: Parameters<ReturnType<typeof cookies>['set']>[2]
+}
+
+function getSupabaseServer() {
+  const admin = getSupabaseAdmin()
+  if (admin) return admin
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !anon) return null
+  const cookieStore = cookies()
+  return createServerClient(url, anon, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(toSet: CookieToSet[]) {
+        for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+      }
+    }
+  })
+}
 
 export async function GET(
   req: Request,
@@ -16,8 +44,8 @@ export async function GET(
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
-  const supabase = getSupabaseAdmin()
-  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+  const supabase = getSupabaseServer()
+  if (!supabase) return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
   const { data: member } = await supabase
     .from('group_members')
     .select('id')
@@ -63,8 +91,8 @@ export async function POST(
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
-  const supabase = getSupabaseAdmin()
-  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+  const supabase = getSupabaseServer()
+  if (!supabase) return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
   const { data: member } = await supabase
     .from('group_members')
     .select('id')

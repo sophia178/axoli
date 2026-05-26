@@ -20,6 +20,13 @@ function FeatureIcon({ label }: { label: string }) {
       </div>
     )
   }
+  if (label === 'Progress') {
+    return (
+      <div className={`${common} bg-card ring-1 ring-border`}>
+        <span className="text-xl">📈</span>
+      </div>
+    )
+  }
   return (
     <div className={`${common} bg-card ring-1 ring-border`}>
       <span className="text-xl">🏆</span>
@@ -45,10 +52,10 @@ export default async function HomePage() {
               New: AI flashcards + study pet in one place
             </div>
             <h1 className="mt-5 font-heading text-4xl leading-tight text-text md:text-5xl">
-              Study smarter with your new best friend
+              Study smarter with your axolotl companion
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-subtext md:text-lg">
-              Turn any video, PDF or notes into flashcards in seconds. Grow your pet. Ace your exams.
+              Turn notes, YouTube videos, and PDFs into flashcards in seconds. Stay consistent with streaks, rewards, and your pet by your side.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link href="/signup">
@@ -109,7 +116,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="mt-16 grid gap-5 md:grid-cols-3">
+        <section className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center gap-3">
               <FeatureIcon label="AI" />
@@ -135,6 +142,15 @@ export default async function HomePage() {
             </CardHeader>
             <CardContent className="text-sm leading-relaxed text-subtext">
               Create study groups, share decks, compete on leaderboards.
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-3">
+              <FeatureIcon label="Progress" />
+              <CardTitle>Progress Tracking</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-subtext">
+              Track hours, streaks, coins, and your last 7 days — see what’s working and keep improving.
             </CardContent>
           </Card>
         </section>

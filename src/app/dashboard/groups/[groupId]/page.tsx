@@ -1,8 +1,14 @@
 import { requireUser } from '@/lib/auth/user'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import { getDecks } from '@/lib/data/flashcards'
-import { getGroupDetail } from '@/lib/data/groups'
 import { GroupRoom } from '@/components/groups/GroupRoom'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
+
+type CookieToSet = {
+  name: string
+  value: string
+  options: Parameters<ReturnType<typeof cookies>['set']>[2]
+}
 
 function weekStartISO(d = new Date()) {
   const date = new Date(d)
@@ -15,16 +21,25 @@ function weekStartISO(d = new Date()) {
 
 export default async function GroupPage({ params }: { params: { groupId: string } }) {
   const user = await requireUser()
-  const detail = await getGroupDetail(user.id, params.groupId)
-  if (!detail) {
-    return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
-        Group not found.
-      </div>
-    )
-  }
+  const admin = getSupabaseAdmin()
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const cookieStore = cookies()
+  const supabase =
+    admin ??
+    (url && anon
+      ? createServerClient(url, anon, {
+          cookies: {
+            getAll() {
+              return cookieStore.getAll()
+            },
+            setAll(toSet: CookieToSet[]) {
+              for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+            }
+          }
+        })
+      : null)
 
-  const supabase = getSupabaseAdmin()
   if (!supabase) {
     return (
       <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
@@ -32,7 +47,68 @@ export default async function GroupPage({ params }: { params: { groupId: string 
       </div>
     )
   }
-  const myDecks = await getDecks(user.id)
+
+  const { data: membership } = await supabase
+    .from('group_members')
+    .select('role')
+    .eq('group_id', params.groupId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (!membership) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Group not found.
+      </div>
+    )
+  }
+
+  const { data: group } = await supabase
+    .from('study_groups')
+    .select('id,name,subject,join_code,is_private,created_by,created_at')
+    .eq('id', params.groupId)
+    .maybeSingle()
+
+  if (!group) {
+    return (
+      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        Group not found.
+      </div>
+    )
+  }
+
+  const { data: memberRows } = await supabase
+    .from('group_members')
+    .select('user_id,role')
+    .eq('group_id', params.groupId)
+
+  const memberIds = (memberRows ?? []).map((m: any) => m.user_id as string)
+  const { data: profiles } =
+    memberIds.length > 0
+      ? await supabase.from('profiles').select('user_id,username,coins,streak').in('user_id', memberIds)
+      : { data: [] as any[] }
+
+  const profileById = new Map<string, any>()
+  for (const p of (profiles ?? []) as any[]) profileById.set(p.user_id as string, p)
+
+  const members = (memberRows ?? []).map((m: any) => {
+    const p = profileById.get(m.user_id as string)
+    return {
+      user_id: m.user_id as string,
+      username: (p?.username as string | null) ?? null,
+      coins: Number(p?.coins ?? 0),
+      streak: Number(p?.streak ?? 0),
+      role: (m.role as string) ?? 'member'
+    }
+  })
+
+  const role = (membership as any)?.role ?? 'member'
+
+  const { data: myDecks } = await supabase
+    .from('flashcard_decks')
+    .select('id,title,subject')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
 
   const { data: sharedRows } = await supabase
     .from('group_decks')
@@ -82,12 +158,12 @@ export default async function GroupPage({ params }: { params: { groupId: string 
     creatorUsername: usernameByUser.get(d.user_id as string) ?? null
   }))
 
-  const memberIds = detail.members.map((m) => m.user_id)
+  const memberUserIds = members.map((m) => m.user_id)
   const start = weekStartISO()
   const { data: sessions } = await supabase
     .from('study_sessions')
     .select('user_id,duration')
-    .in('user_id', memberIds)
+    .in('user_id', memberUserIds)
     .gte('created_at', start)
     .limit(5000)
 
@@ -97,7 +173,7 @@ export default async function GroupPage({ params }: { params: { groupId: string 
     secondsByUser.set(uid, (secondsByUser.get(uid) ?? 0) + (s.duration as number))
   }
 
-  const leaderboard = detail.members
+  const leaderboard = members
     .map((m) => ({
       user_id: m.user_id,
       username: m.username,
@@ -105,7 +181,7 @@ export default async function GroupPage({ params }: { params: { groupId: string 
       streak: m.streak,
       coins: m.coins
     }))
-    .sort((a, b) => b.hours - a.hours)
+    .sort((a: any, b: any) => b.coins - a.coins || b.hours - a.hours)
 
   const { data: messagesDesc } = await supabase
     .from('group_chat_messages')
@@ -116,18 +192,18 @@ export default async function GroupPage({ params }: { params: { groupId: string 
 
   const messages = [...(messagesDesc ?? [])].reverse()
   const memberUsernameById = new Map<string, string>()
-  for (const m of detail.members) {
+  for (const m of members) {
     if (m.username) memberUsernameById.set(m.user_id, m.username)
   }
 
   return (
     <GroupRoom
       currentUserId={user.id}
-      currentUsername={detail.members.find((m) => m.user_id === user.id)?.username ?? null}
-      group={detail.group}
-      role={detail.role}
-      members={detail.members}
-      myDecks={myDecks.map((d) => ({ id: d.id, title: d.title, subject: d.subject }))}
+      currentUsername={members.find((m: any) => m.user_id === user.id)?.username ?? null}
+      group={group as any}
+      role={role}
+      members={members as any}
+      myDecks={(myDecks ?? []).map((d: any) => ({ id: d.id, title: d.title, subject: d.subject }))}
       sharedDecks={sharedDeckCards}
       leaderboard={leaderboard}
       initialMessages={messages.map((m: any) => ({

@@ -282,7 +282,7 @@ export function GroupRoom({
           </CardHeader>
           <CardContent>
             <div className="rounded-3xl border border-border bg-bg/20 p-4 text-sm text-subtext">
-              Ranked by study hours this week.
+              Ranked by coins.
             </div>
             <div className="mt-4 space-y-2">
               {leaderboard.map((row, i) => (
@@ -300,12 +300,12 @@ export function GroupRoom({
                     <div>
                       <div className="text-sm font-semibold text-text">{row.username ?? 'Unknown'}</div>
                       <div className="mt-1 text-xs text-subtext">
-                        {row.streak}🔥 • {row.coins} coins
+                        {row.streak}🔥 • {row.hours}h this week
                       </div>
                     </div>
                   </div>
                   <div className="rounded-full bg-card/60 px-4 py-2 text-sm font-semibold text-text ring-1 ring-border">
-                    {row.hours}h
+                    {row.coins} coins
                   </div>
                 </div>
               ))}

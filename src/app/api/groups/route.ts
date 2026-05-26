@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getCurrentUser } from '@/lib/auth/user'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 
 export const runtime = 'nodejs'
 
@@ -21,6 +23,32 @@ function makeCode() {
   return Math.random().toString(36).slice(2, 8).toUpperCase()
 }
 
+type CookieToSet = {
+  name: string
+  value: string
+  options: Parameters<ReturnType<typeof cookies>['set']>[2]
+}
+
+function getSupabaseServer() {
+  const admin = getSupabaseAdmin()
+  if (admin) return admin
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !anon) return null
+  const cookieStore = cookies()
+  return createServerClient(url, anon, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(toSet: CookieToSet[]) {
+        for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+      }
+    }
+  })
+}
+
 export async function POST(req: Request) {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
@@ -29,8 +57,8 @@ export async function POST(req: Request) {
   const createParsed = createSchema.safeParse(json)
   const joinParsed = createParsed.success ? null : joinSchema.safeParse(json)
 
-  const supabase = getSupabaseAdmin()
-  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
+  const supabase = getSupabaseServer()
+  if (!supabase) return NextResponse.json({ error: 'server_misconfigured' }, { status: 500 })
 
   if (createParsed.success) {
     const data = createParsed.data

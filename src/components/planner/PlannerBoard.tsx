@@ -27,6 +27,11 @@ type RevisionItem = {
   completed: boolean
 }
 
+type AiPlanDay = {
+  date: string
+  items: Array<{ title: string; subject: string }>
+}
+
 function colourForSubject(subject: string) {
   const s = subject.toLowerCase()
   if (s.includes('bio')) return '#7AE7B9'
@@ -51,6 +56,8 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
   const [message, setMessage] = useState<string | null>(null)
 
   const [rev, setRev] = useState<RevisionItem[]>(revision)
+  const [aiPlan, setAiPlan] = useState<AiPlanDay[] | null>(null)
+  const [aiLoading, setAiLoading] = useState(false)
 
   useEffect(() => {
     void (async () => {
@@ -211,6 +218,36 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
           <div className="text-sm text-subtext">
             Auto-generated from your exam countdowns.
           </div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-subtext">
+              Want a smarter plan? Generate a focused schedule.
+            </div>
+            <Button
+              variant="secondary"
+              disabled={aiLoading}
+              onClick={async () => {
+                setMessage(null)
+                setAiLoading(true)
+                const res = await withLoading(fetch('/api/planner/revision/generate', { method: 'POST' }))
+                const json = (await res.json().catch(() => null)) as any
+                if (!res.ok) {
+                  setMessage(
+                    json?.error === 'ai_failed' && typeof json?.message === 'string'
+                      ? json.message
+                      : 'Could not generate an AI revision plan.'
+                  )
+                  const fb = Array.isArray(json?.fallback) ? (json.fallback as AiPlanDay[]) : null
+                  setAiPlan(fb)
+                  setAiLoading(false)
+                  return
+                }
+                setAiPlan((json?.plan ?? null) as AiPlanDay[] | null)
+                setAiLoading(false)
+              }}
+            >
+              {aiLoading ? 'Generating…' : 'Generate AI revision plan'}
+            </Button>
+          </div>
           {upcomingRevision.length === 0 ? (
             <div className="rounded-3xl border border-border bg-bg/20 p-4 text-sm text-subtext">
               No upcoming exams. Add one in Exam Countdown.
@@ -262,6 +299,32 @@ export function PlannerBoard({ revision }: { revision: RevisionItem[] }) {
               ))}
             </div>
           )}
+
+          {aiPlan && aiPlan.length > 0 ? (
+            <div className="mt-4 space-y-3">
+              <div className="rounded-3xl border border-gold/30 bg-gold/10 p-4 text-sm text-text">
+                AI plan generated. Adjust as needed and keep your streak alive.
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                {aiPlan.slice(0, 14).map((d) => (
+                  <div key={d.date} className="rounded-3xl border border-border bg-bg/20 p-4">
+                    <div className="text-sm font-semibold text-text">{d.date}</div>
+                    <div className="mt-2 space-y-2">
+                      {(d.items ?? []).slice(0, 3).map((it) => (
+                        <div key={it.title} className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-text">
+                          <div className="text-xs text-subtext">{it.subject}</div>
+                          <div className="mt-1">{it.title}</div>
+                        </div>
+                      ))}
+                      {(d.items ?? []).length === 0 ? (
+                        <div className="text-sm text-subtext">Rest day</div>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
     </div>

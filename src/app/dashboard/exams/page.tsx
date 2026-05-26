@@ -3,8 +3,17 @@ import { getUpcomingExams } from '@/lib/data/exams'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { ExamManager } from '@/components/exams/ExamManager'
 
+function parseLocalDate(dateStr: string) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr)
+  if (!m) return new Date(dateStr)
+  const y = Number(m[1])
+  const mo = Number(m[2]) - 1
+  const d = Number(m[3])
+  return new Date(y, mo, d)
+}
+
 function daysUntil(dateStr: string) {
-  const target = new Date(dateStr)
+  const target = parseLocalDate(dateStr)
   const today = new Date()
   const start = new Date(today.getFullYear(), today.getMonth(), today.getDate())
   const end = new Date(target.getFullYear(), target.getMonth(), target.getDate())
@@ -64,4 +73,3 @@ export default async function ExamsPage() {
     </div>
   )
 }
-
