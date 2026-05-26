@@ -25,12 +25,22 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode
 }>) {
+  const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
   return (
     <html
       lang="en"
       dir="ltr"
       className={`${inter.variable} ${nunito.variable}`}
     >
+      <head>
+        {adsenseClientId ? (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+          />
+        ) : null}
+      </head>
       <body className="font-sans">
         <div className="min-h-screen">
           <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

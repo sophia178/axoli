@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 
@@ -169,6 +169,20 @@ export function DoubleCoinsModal({
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose, phase])
 
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+  const slotId = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID
+  const adPushed = useRef(false)
+  useEffect(() => {
+    if (!open) return
+    if (phase !== 'playing') return
+    if (!clientId || !slotId) return
+    if (adPushed.current) return
+    adPushed.current = true
+    try {
+      ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+    } catch {}
+  }, [open, phase, clientId, slotId])
+
   const progress = phase === 'playing' ? clamp(secondsLeft / 15, 0, 1) : 0
 
   if (!open) return null
@@ -281,6 +295,22 @@ export function DoubleCoinsModal({
 
             {phase === 'playing' ? (
               <div className="mt-6 space-y-3">
+                <div className="rounded-3xl border border-border bg-bg/20 p-4">
+                  {clientId && slotId ? (
+                    <ins
+                      className="adsbygoogle"
+                      style={{ display: 'block', minHeight: 180 }}
+                      data-ad-client={clientId}
+                      data-ad-slot={slotId}
+                      data-ad-format="auto"
+                      data-full-width-responsive="true"
+                    />
+                  ) : (
+                    <div className="text-sm text-subtext">
+                      Ad is loading… (missing AdSense env vars in this environment)
+                    </div>
+                  )}
+                </div>
                 <div className="h-3 w-full overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
                   <motion.div
                     className="h-full rounded-full bg-gold"

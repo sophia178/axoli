@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/dashboard/Sidebar'
 import { TopBar } from '@/components/dashboard/TopBar'
 import { MobileNav } from '@/components/dashboard/MobileNav'
 import { DashboardProviders } from '@/components/dashboard/DashboardProviders'
+import { AdBanner } from '@/components/ads/AdBanner'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,6 +27,9 @@ export default async function DashboardLayout({
             <div className="mx-auto max-w-6xl px-4 py-6 lg:max-w-none">
               <MobileNav />
               <div className="mt-4">{children}</div>
+              <div className="mt-8">
+                <AdBanner />
+              </div>
             </div>
           </main>
         </div>
