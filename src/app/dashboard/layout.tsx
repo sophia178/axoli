@@ -7,6 +7,7 @@ import { MobileNav } from '@/components/dashboard/MobileNav'
 import { DashboardProviders } from '@/components/dashboard/DashboardProviders'
 import { AdBanner } from '@/components/ads/AdBanner'
 import { TimerPill } from '@/components/timer/TimerPill'
+import { LoginPing } from '@/components/dashboard/LoginPing'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,10 +22,11 @@ export default async function DashboardLayout({
   return (
     <DashboardProviders>
       <div className="min-h-screen">
+        <LoginPing />
         <TopBar profile={profile} />
         <TimerPill />
         <div className="flex [[dir=rtl]_&]:flex-row-reverse">
-          <Sidebar />
+          <Sidebar profile={profile} />
           <main className="w-full">
             <div className="mx-auto max-w-6xl px-4 py-6 lg:max-w-none">
               <MobileNav />

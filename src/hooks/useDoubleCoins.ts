@@ -60,6 +60,18 @@ export function useDoubleCoins() {
     [refreshStatus]
   )
 
+  const promptFromResponse = useCallback(
+    async (json: unknown, reason: string) => {
+      const j = json as any
+      if (!j || typeof j !== 'object') return
+      if (!j.promptDouble) return
+      const amount = Number(j.coinsAwarded ?? j.coinsEarned ?? 0)
+      if (!Number.isFinite(amount) || amount <= 0) return
+      await promptDouble({ coinsEarned: amount, reason })
+    },
+    [promptDouble]
+  )
+
   const watchAd = useCallback(() => {
     if (!canWatch) return
     // Replace with real ad SDK (e.g. Google AdMob) before production
@@ -142,5 +154,5 @@ export function useDoubleCoins() {
     onClose: close
   })
 
-  return { promptDouble, modal, close }
+  return { promptDouble, promptFromResponse, modal, close }
 }

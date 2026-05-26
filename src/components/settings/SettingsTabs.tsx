@@ -12,6 +12,7 @@ type ProfileLike = {
   username: string | null
   avatar_colour?: string
   language?: string
+  pet_name?: string | null
   notify_daily?: boolean
   notify_streak_risk?: boolean
   notify_exam?: boolean
@@ -69,6 +70,7 @@ export function SettingsTabs({
 
   const [username, setUsername] = useState(initialProfile?.username ?? '')
   const [avatar, setAvatar] = useState<string>(() => initialProfile?.avatar_colour ?? 'pink')
+  const [petName, setPetName] = useState<string>(() => initialProfile?.pet_name ?? '')
 
   const [daily, setDaily] = useState(Boolean(initialProfile?.notify_daily ?? true))
   const [streakRisk, setStreakRisk] = useState(Boolean(initialProfile?.notify_streak_risk ?? true))
@@ -192,6 +194,41 @@ export function SettingsTabs({
                 ))}
               </div>
             </div>
+
+            {plan === 'premium' ? (
+              <div>
+                <div className="text-sm text-subtext">Name your axolotl</div>
+                <div className="mt-2 flex max-w-sm gap-2">
+                  <Input
+                    value={petName}
+                    onChange={(e) => setPetName(e.target.value)}
+                    placeholder="e.g. Mochi"
+                    maxLength={24}
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={async () => {
+                      setMsg(null)
+                      const name = petName.trim()
+                      const res = await withLoading(
+                        fetch('/api/settings/profile', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ petName: name ? name : null })
+                        })
+                      )
+                      if (!res.ok) {
+                        setMsg('Could not update pet name.')
+                        return
+                      }
+                      setMsg('Saved successfully.')
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            ) : null}
 
             <div className="flex justify-end">
               <Button

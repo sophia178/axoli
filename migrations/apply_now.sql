@@ -7,6 +7,12 @@ alter table public.profiles
 alter table public.profiles
   add column if not exists last_fed_at timestamptz default now();
 
+alter table public.profiles
+  add column if not exists pet_name text default null;
+
+alter table public.profiles
+  add column if not exists streak integer default 0;
+
 update public.profiles
 set hunger_level = 100
 where hunger_level is null;

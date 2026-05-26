@@ -65,7 +65,7 @@ export function QuizFlow({
 }) {
   const { withLoading } = useLoading()
   const { showCoins } = useCoinToasts()
-  const { promptDouble, modal } = useDoubleCoins()
+  const { promptFromResponse, modal } = useDoubleCoins()
 
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [deckId, setDeckId] = useState<string>(initialDeckId ?? '')
@@ -197,7 +197,7 @@ export function QuizFlow({
       const coinsAwarded = Number(json?.coinsAwarded ?? 0)
       if (coinsAwarded > 0) {
         showCoins(coinsAwarded)
-        await promptDouble({ coinsEarned: coinsAwarded, reason: 'quiz_finish' })
+        await promptFromResponse(json, 'quiz_finish')
       }
       setAwarded(true)
     } else {
