@@ -7,7 +7,13 @@ function clamp(num: number, min: number, max: number) {
   return Math.max(min, Math.min(max, num))
 }
 
-export function TopBar({ profile }: { profile: Profile | null }) {
+export function TopBar({
+  profile,
+  logoSrc = '/logo.png'
+}: {
+  profile: Profile | null
+  logoSrc?: string
+}) {
   const coins = profile?.coins ?? 0
   const streak = profile?.streak ?? 0
   const happiness = clamp(profile?.pet_happiness ?? 70, 0, 100)
@@ -21,11 +27,13 @@ export function TopBar({ profile }: { profile: Profile | null }) {
             href="/dashboard/pet"
             className="group flex items-center gap-3 rounded-3xl border border-border bg-card/70 px-4 py-3"
           >
-            <div className="relative h-10 w-10 overflow-hidden rounded-2xl bg-pink/20 ring-1 ring-pink/30">
-              <div className="absolute inset-0 flex items-center justify-center text-lg">
-                🫧
-              </div>
-            </div>
+            <img
+              src={logoSrc}
+              alt="Axoli"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-base text-text">Axolotl</span>

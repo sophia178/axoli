@@ -9,7 +9,13 @@ export function MarketingHeader() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-2xl bg-pink/20 ring-1 ring-pink/30" />
+          <img
+            src="/logo.png"
+            alt="Axoli"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-cover"
+          />
           <span className="font-heading text-lg text-text">Axoli</span>
         </Link>
         <nav className="flex items-center gap-2">
