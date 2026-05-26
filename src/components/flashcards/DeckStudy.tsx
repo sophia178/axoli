@@ -18,6 +18,8 @@ function shuffle<T>(arr: T[]) {
   return a
 }
 
+type Rating = 'again' | 'hard' | 'good' | 'easy'
+
 export function DeckStudy({
   deckId,
   title,
@@ -36,12 +38,13 @@ export function DeckStudy({
   const allIds = useMemo(() => cards.map((c) => c.id), [cards])
   const [queue, setQueue] = useState<string[]>(() => shuffle(allIds))
   const [flipped, setFlipped] = useState(false)
-  const [reviewed, setReviewed] = useState<Record<string, boolean | null>>(() => {
-    const o: Record<string, boolean | null> = {}
+  const [reviewed, setReviewed] = useState<Record<string, Rating | null>>(() => {
+    const o: Record<string, Rating | null> = {}
     for (const id of allIds) o[id] = null
     return o
   })
   const [completionSent, setCompletionSent] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
 
   const currentId = queue[0] ?? null
   const current = currentId ? cards.find((c) => c.id === currentId) ?? null : null
@@ -106,6 +109,12 @@ export function DeckStudy({
         </div>
       </div>
 
+      {message ? (
+        <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-text">
+          {message}
+        </div>
+      ) : null}
+
       {current ? (
         <div className="rounded-3xl border border-border bg-bg/20 p-6">
           <div className="flex items-center justify-between gap-3">
@@ -113,7 +122,15 @@ export function DeckStudy({
               Card {cards.findIndex((c) => c.id === current.id) + 1} / {cards.length}
             </div>
             <div className="rounded-full bg-card/60 px-3 py-1 text-xs font-semibold text-subtext ring-1 ring-border">
-              {reviewed[current.id] === null ? 'New' : reviewed[current.id] ? 'Known' : 'Unknown'}
+              {reviewed[current.id] === null
+                ? 'New'
+                : reviewed[current.id] === 'again'
+                  ? 'Again'
+                  : reviewed[current.id] === 'hard'
+                    ? 'Hard'
+                    : reviewed[current.id] === 'good'
+                      ? 'Good'
+                      : 'Easy'}
             </div>
           </div>
 
@@ -127,11 +144,11 @@ export function DeckStudy({
                 animate={{ rotateY: flipped ? 180 : 0 }}
                 transition={{ duration: 0.45, ease: 'easeInOut' }}
                 className="relative"
-                style={{ transformStyle: 'preserve-3d' }}
+                style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
               >
                 <div
                   className="rounded-3xl border border-border bg-card/70 p-6"
-                  style={{ backfaceVisibility: 'hidden' }}
+                  style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                 >
                   <div className="text-xs text-subtext">Front</div>
                   <div className="mt-2 text-xl font-semibold text-text">{current.front}</div>
@@ -139,7 +156,11 @@ export function DeckStudy({
                 </div>
                 <div
                   className="absolute inset-0 rounded-3xl border border-border bg-card/70 p-6"
-                  style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)'
+                  }}
                 >
                   <div className="text-xs text-subtext">Back</div>
                   <div className="mt-2 text-xl font-semibold text-text">{current.back}</div>
@@ -149,47 +170,104 @@ export function DeckStudy({
             </motion.div>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button
-              variant="secondary"
-              onClick={async () => {
-                if (!currentId) return
-                setReviewed((prev) => ({ ...prev, [currentId]: true }))
-                setFlipped(false)
-                setQueue((prev) => prev.slice(1))
-                await withLoading(
-                  fetch('/api/flashcards/review', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ deckId, cardId: currentId, known: true })
+          {flipped ? (
+            <div className="mt-6 grid gap-3 sm:grid-cols-4">
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  if (!currentId) return
+                  setMessage(null)
+                  setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'again' }))
+                  setFlipped(false)
+                  setQueue((prev) => {
+                    const rest = prev.slice(1)
+                    return [...rest, currentId, currentId]
                   })
-                )
-              }}
-            >
-              Known
-            </Button>
-            <Button
-              variant="outline"
-              onClick={async () => {
-                if (!currentId) return
-                setReviewed((prev) => ({ ...prev, [currentId]: false }))
-                setFlipped(false)
-                setQueue((prev) => {
-                  const rest = prev.slice(1)
-                  return [...rest, currentId, currentId]
-                })
-                await withLoading(
-                  fetch('/api/flashcards/review', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ deckId, cardId: currentId, known: false })
+                  const res = await withLoading(
+                    fetch('/api/flashcards/review', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ deckId, cardId: currentId, known: false })
+                    })
+                  )
+                  if (!res.ok) setMessage('Could not save progress. Try again.')
+                  else setReviewed((prev) => ({ ...prev, [currentId]: 'again' }))
+                }}
+              >
+                Again
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  if (!currentId) return
+                  setMessage(null)
+                  setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'hard' }))
+                  setFlipped(false)
+                  setQueue((prev) => {
+                    const rest = prev.slice(1)
+                    return [...rest, currentId]
                   })
-                )
-              }}
-            >
-              Unknown
-            </Button>
-          </div>
+                  const res = await withLoading(
+                    fetch('/api/flashcards/review', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ deckId, cardId: currentId, known: false })
+                    })
+                  )
+                  if (!res.ok) setMessage('Could not save progress. Try again.')
+                  else setReviewed((prev) => ({ ...prev, [currentId]: 'hard' }))
+                }}
+              >
+                Hard
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={async () => {
+                  if (!currentId) return
+                  setMessage(null)
+                  setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'good' }))
+                  setFlipped(false)
+                  setQueue((prev) => prev.slice(1))
+                  const res = await withLoading(
+                    fetch('/api/flashcards/review', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ deckId, cardId: currentId, known: true })
+                    })
+                  )
+                  if (!res.ok) setMessage('Could not save progress. Try again.')
+                  else setReviewed((prev) => ({ ...prev, [currentId]: 'good' }))
+                }}
+              >
+                Good
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={async () => {
+                  if (!currentId) return
+                  setMessage(null)
+                  setReviewed((prev) => ({ ...prev, [currentId]: prev[currentId] ?? 'easy' }))
+                  setFlipped(false)
+                  setQueue((prev) => prev.slice(1))
+                  const res = await withLoading(
+                    fetch('/api/flashcards/review', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ deckId, cardId: currentId, known: true })
+                    })
+                  )
+                  if (!res.ok) setMessage('Could not save progress. Try again.')
+                  else setReviewed((prev) => ({ ...prev, [currentId]: 'easy' }))
+                }}
+              >
+                Easy
+              </Button>
+            </div>
+          ) : (
+            <div className="mt-6 rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext">
+              Flip the card to rate it (Again/Hard/Good/Easy).
+            </div>
+          )}
         </div>
       ) : (
         <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">

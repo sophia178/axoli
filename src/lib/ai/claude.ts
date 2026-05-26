@@ -6,6 +6,28 @@ export type GenerateOutput = {
   keyFacts: string[]
 }
 
+function isValidOutput(obj: any): obj is GenerateOutput {
+  if (!obj || typeof obj !== 'object') return false
+  if (typeof obj.subject !== 'string' || obj.subject.trim().length === 0) return false
+  if (typeof obj.summary !== 'string' || obj.summary.trim().length === 0) return false
+  if (!Array.isArray(obj.flashcards) || obj.flashcards.length === 0) return false
+  if (!Array.isArray(obj.quiz) || obj.quiz.length === 0) return false
+  if (!Array.isArray(obj.keyFacts) || obj.keyFacts.length === 0) return false
+
+  for (const c of obj.flashcards) {
+    if (!c || typeof c.front !== 'string' || typeof c.back !== 'string') return false
+  }
+  for (const q of obj.quiz) {
+    if (!q || typeof q.question !== 'string') return false
+    if (!Array.isArray(q.options) || q.options.length !== 4) return false
+    if (typeof q.correctIndex !== 'number' || q.correctIndex < 0 || q.correctIndex > 3) return false
+  }
+  for (const k of obj.keyFacts) {
+    if (typeof k !== 'string') return false
+  }
+  return true
+}
+
 function extractJsonObject(text: string) {
   const start = text.indexOf('{')
   const end = text.lastIndexOf('}')
@@ -59,12 +81,18 @@ ${input.content}`
   })
 
   const data = (await res.json().catch(() => null)) as any
-  if (!res.ok) throw new Error('Anthropic request failed')
+  if (!res.ok) {
+    const msg =
+      (data as any)?.error?.message ||
+      (data as any)?.message ||
+      `Anthropic request failed (${res.status})`
+    throw new Error(msg)
+  }
 
   const text = Array.isArray(data?.content)
     ? data.content.map((c: any) => c?.text).filter(Boolean).join('\n')
     : ''
 
   const parsed = extractJsonObject(text)
-  return { raw: text, parsed: parsed as GenerateOutput | null }
+  return { raw: text, parsed: isValidOutput(parsed) ? (parsed as GenerateOutput) : null }
 }

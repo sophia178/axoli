@@ -348,6 +348,10 @@ export function AIGenerator() {
                         setMessage(
                           json?.error === 'ai_limit'
                             ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : json?.error === 'server_misconfigured'
+                              ? 'AI generation is temporarily unavailable. Please try again later.'
+                              : json?.error === 'ai_failed' && typeof json?.message === 'string'
+                                ? json.message
                             : 'Generation failed. Try again.'
                         )
                         return
@@ -427,6 +431,10 @@ export function AIGenerator() {
                         setMessage(
                           json?.error === 'ai_limit'
                             ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : json?.error === 'server_misconfigured'
+                              ? 'AI generation is temporarily unavailable. Please try again later.'
+                              : json?.error === 'ai_failed' && typeof json?.message === 'string'
+                                ? json.message
                             : json?.error === 'no_transcript'
                               ? 'No transcript found for this video.'
                               : 'Generation failed. Try again.'
@@ -507,6 +515,10 @@ export function AIGenerator() {
                         setMessage(
                           json?.error === 'ai_limit'
                             ? 'Free limit reached (5/month). Upgrade to keep generating.'
+                            : json?.error === 'server_misconfigured'
+                              ? 'AI generation is temporarily unavailable. Please try again later.'
+                              : json?.error === 'ai_failed' && typeof json?.message === 'string'
+                                ? json.message
                             : json?.error === 'no_text'
                               ? 'Could not extract text from this PDF.'
                               : 'Generation failed. Try again.'

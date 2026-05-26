@@ -86,6 +86,7 @@ export function QuizFlow({
   )
   const [written, setWritten] = useState('')
   const [awarded, setAwarded] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
 
   const current = questions[idx] ?? null
   const total = questions.length
@@ -118,6 +119,7 @@ export function QuizFlow({
     setFeedback(null)
     setWritten('')
     setAwarded(false)
+    setMessage(null)
     setStep(4)
   }
 
@@ -174,6 +176,7 @@ export function QuizFlow({
   }
 
   async function finishQuiz(finalAnswers: typeof answers, finalTimes: number[]) {
+    setMessage(null)
     const correctCount = finalAnswers.filter((a) => a.correct).length
     const durationSeconds = finalTimes.reduce((acc, n) => acc + n, 0)
     const res = await withLoading(
@@ -197,6 +200,8 @@ export function QuizFlow({
         await promptDouble({ coinsEarned: coinsAwarded, reason: 'quiz_finish' })
       }
       setAwarded(true)
+    } else {
+      setMessage('Quiz completed, but results could not be saved. Please try again.')
     }
     setStep(5)
   }
@@ -237,6 +242,11 @@ export function QuizFlow({
   return (
     <div className="space-y-5">
       {modal}
+      {message ? (
+        <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-text">
+          {message}
+        </div>
+      ) : null}
       <Card>
         <CardHeader>
           <CardTitle>Quiz Mode</CardTitle>
