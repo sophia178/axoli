@@ -773,13 +773,8 @@ export function PetRoom({
               ownedDecorations.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
                   {d.image_url ? (
-                    <div style={{ borderRadius: 6, overflow: 'hidden', background: '#1a1a2e', width: 40, height: 40, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {(() => {
-                        const markup = svgMarkup(d.image_url)
-                        return markup
-                          ? <div dangerouslySetInnerHTML={{ __html: markup }} style={{ width: 40, height: 40 }} className="select-none" />
-                          : <img src={d.image_url} alt="" style={{ width: 40, height: 40 }} className="select-none" draggable={false} />
-                      })()}
+                    <div style={{ width: 56, height: 56, borderRadius: 8, background: '#1e1e3a', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                      <img src={d.image_url} width={48} height={48} alt="" draggable={false} className="select-none" style={{ objectFit: 'contain' }} />
                     </div>
                   ) : null}
                   <span>{d.name}</span>

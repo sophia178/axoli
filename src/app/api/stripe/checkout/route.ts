@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import Stripe from 'stripe'
-import { getCurrentUser } from '@/lib/auth/user'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 
 export const runtime = 'nodejs'
 
@@ -24,7 +24,15 @@ function stripeClient() {
 }
 
 export async function POST(req: Request) {
-  const user = await getCurrentUser()
+  const cookieStore = cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+  console.log('[StripeCheckout] user:', user?.id ?? 'NONE')
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const json = await req.json().catch(() => null)
@@ -32,22 +40,17 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
 
   const priceMap: Record<(typeof parsed.data.plan), { env: string; value?: string }> = {
-    premium_monthly: {
-      env: 'STRIPE_PREMIUM_MONTHLY_PRICE_ID',
-      value: process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID
-    },
-    premium_yearly: {
-      env: 'STRIPE_PREMIUM_YEARLY_PRICE_ID',
-      value: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID
-    },
-    coins_50: { env: 'STRIPE_COINS_50_PRICE_ID', value: process.env.STRIPE_COINS_50_PRICE_ID },
-    coins_150: { env: 'STRIPE_COINS_150_PRICE_ID', value: process.env.STRIPE_COINS_150_PRICE_ID },
-    coins_400: { env: 'STRIPE_COINS_400_PRICE_ID', value: process.env.STRIPE_COINS_400_PRICE_ID },
-    coins_1000: { env: 'STRIPE_COINS_1000_PRICE_ID', value: process.env.STRIPE_COINS_1000_PRICE_ID }
+    premium_monthly: { env: 'STRIPE_PREMIUM_MONTHLY_PRICE_ID', value: process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID },
+    premium_yearly:  { env: 'STRIPE_PREMIUM_YEARLY_PRICE_ID',  value: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID },
+    coins_50:        { env: 'STRIPE_COINS_50_PRICE_ID',        value: process.env.STRIPE_COINS_50_PRICE_ID },
+    coins_150:       { env: 'STRIPE_COINS_150_PRICE_ID',       value: process.env.STRIPE_COINS_150_PRICE_ID },
+    coins_400:       { env: 'STRIPE_COINS_400_PRICE_ID',       value: process.env.STRIPE_COINS_400_PRICE_ID },
+    coins_1000:      { env: 'STRIPE_COINS_1000_PRICE_ID',      value: process.env.STRIPE_COINS_1000_PRICE_ID }
   }
 
   const price = priceMap[parsed.data.plan]
   if (!price.value) {
+    console.error('[StripeCheckout] missing price env:', price.env)
     return NextResponse.json({ error: 'missing_price_id', missing: price.env }, { status: 500 })
   }
 
@@ -55,18 +58,14 @@ export async function POST(req: Request) {
     process.env.NEXT_PUBLIC_APP_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
 
-  const stripe = stripeClient()
-
-  const supabase = getSupabaseAdmin()
-  if (!supabase) return NextResponse.json({ error: 'missing_supabase_admin' }, { status: 500 })
   const { data: profile } = await supabase
     .from('profiles')
     .select('stripe_customer_id')
     .eq('user_id', user.id)
     .maybeSingle()
-
   const customerId = (profile as any)?.stripe_customer_id as string | null | undefined
 
+  const stripe = stripeClient()
   const isSubscription = parsed.data.plan === 'premium_monthly' || parsed.data.plan === 'premium_yearly'
 
   const session = await stripe.checkout.sessions.create(
@@ -92,5 +91,6 @@ export async function POST(req: Request) {
         }
   )
 
+  console.log('[StripeCheckout] session created:', session.id)
   return NextResponse.json({ url: session.url })
 }

@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { createBrowserClient } from '@supabase/ssr'
 import { MarketingHeader } from '@/components/MarketingHeader'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -23,16 +22,6 @@ export default function PricingPage() {
     setMsg(null)
     setLoading(plan)
     try {
-      const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        window.location.href = '/login?redirect=/pricing'
-        return
-      }
-
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,9 +141,9 @@ export default function PricingPage() {
           <div className="font-heading text-2xl text-text">Coin bundles</div>
           <div className="mt-4 grid gap-5 md:grid-cols-4">
             {[
-              { key: 'coins_50' as const, label: 'Coins 50', price: '£0.99' },
-              { key: 'coins_150' as const, label: 'Coins 150', price: '£1.99' },
-              { key: 'coins_400' as const, label: 'Coins 400', price: '£4.99' },
+              { key: 'coins_50' as const,   label: 'Coins 50',   price: '£0.99' },
+              { key: 'coins_150' as const,  label: 'Coins 150',  price: '£1.99' },
+              { key: 'coins_400' as const,  label: 'Coins 400',  price: '£4.99' },
               { key: 'coins_1000' as const, label: 'Coins 1000', price: '£9.99' }
             ].map((b) => (
               <Card key={b.key}>
@@ -180,7 +169,7 @@ export default function PricingPage() {
             ))}
           </div>
           <div className="mt-4 text-sm text-subtext">
-            You’ll be asked to log in before checkout if you’re not signed in.
+            You'll be asked to log in before checkout if you're not signed in.
           </div>
         </div>
       </main>
