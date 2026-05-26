@@ -116,6 +116,17 @@ export function ShopTabs({
                 ) : null}
               </div>
 
+              {item.image_url ? (
+                <div className="mt-4 flex items-center justify-center rounded-2xl border border-border bg-card/60 p-4">
+                  <img
+                    src={item.image_url}
+                    alt=""
+                    className="h-24 w-24 select-none"
+                    draggable={false}
+                  />
+                </div>
+              ) : null}
+
               <div className="mt-4">
                 {tab !== 'food' && isOwned ? (
                   <div className="rounded-2xl border border-border bg-card/60 px-4 py-3 text-sm text-subtext">
@@ -166,4 +177,3 @@ export function ShopTabs({
     </div>
   )
 }
-

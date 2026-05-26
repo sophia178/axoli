@@ -253,6 +253,26 @@ function HeartBar({ value }: { value: number }) {
   )
 }
 
+function Decoration({
+  item,
+  className
+}: {
+  item: ShopItemRow
+  className: string
+}) {
+  if (!item.image_url) return null
+  return (
+    <div className={className}>
+      <img
+        src={item.image_url}
+        alt=""
+        className="h-full w-full select-none"
+        draggable={false}
+      />
+    </div>
+  )
+}
+
 export function PetRoom({
   profile,
   items,
@@ -305,6 +325,27 @@ export function PetRoom({
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
         <div className="relative h-[520px]">
           <UnderwaterScene sad={sad} />
+          {ownedDecorations.map((d) => {
+            if (d.name === 'Extra plant') {
+              return <Decoration key={d.id} item={d} className="absolute left-10 bottom-12 h-28 w-28" />
+            }
+            if (d.name === 'Fairy lights') {
+              return <Decoration key={d.id} item={d} className="absolute left-1/2 top-4 h-24 w-24 -translate-x-1/2" />
+            }
+            if (d.name === 'Little desk') {
+              return <Decoration key={d.id} item={d} className="absolute right-12 bottom-14 h-28 w-28" />
+            }
+            if (d.name === 'Bookshelf') {
+              return <Decoration key={d.id} item={d} className="absolute left-1/2 bottom-10 h-32 w-32 -translate-x-1/2" />
+            }
+            if (d.name === 'Disco ball') {
+              return <Decoration key={d.id} item={d} className="absolute right-24 top-6 h-24 w-24" />
+            }
+            if (d.name === 'Treasure chest') {
+              return <Decoration key={d.id} item={d} className="absolute left-28 bottom-10 h-28 w-28" />
+            }
+            return null
+          })}
 
           <motion.div
             className="absolute left-1/2 top-10 w-[360px] -translate-x-1/2 px-4"
@@ -324,20 +365,11 @@ export function PetRoom({
             </div>
           </div>
 
-          <div className="absolute left-8 bottom-10 space-y-2">
-            <div className="rounded-3xl border border-border bg-card/60 px-4 py-3 text-sm text-text">
-              Default plant
-            </div>
-            <div className="rounded-3xl border border-border bg-card/60 px-4 py-3 text-sm text-text">
-              Default rock
-            </div>
-          </div>
-
-          <div className="absolute right-8 bottom-10 grid gap-2">
+          <div className="absolute left-8 bottom-10 grid gap-2">
             {ownedDecorations.slice(0, 4).map((d, idx) => (
               <motion.div
                 key={d.id}
-                className="rounded-3xl border border-border bg-card/60 px-4 py-3 text-sm text-text"
+                className="flex items-center gap-3 rounded-3xl border border-border bg-card/60 px-4 py-3 text-sm text-text"
                 animate={
                   d.is_premium
                     ? { y: [0, -8, 0] }
@@ -351,7 +383,15 @@ export function PetRoom({
                     : { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
                 }
               >
-                {d.name}
+                {d.image_url ? (
+                  <img
+                    src={d.image_url}
+                    alt=""
+                    className="h-10 w-10 select-none"
+                    draggable={false}
+                  />
+                ) : null}
+                <span>{d.name}</span>
               </motion.div>
             ))}
           </div>
@@ -436,8 +476,11 @@ export function PetRoom({
               </div>
             ) : (
               ownedDecorations.map((d) => (
-                <div key={d.id} className="rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
-                  {d.name}
+                <div key={d.id} className="flex items-center gap-3 rounded-3xl border border-border bg-bg/20 p-4 text-sm text-text">
+                  {d.image_url ? (
+                    <img src={d.image_url} alt="" className="h-10 w-10 select-none" draggable={false} />
+                  ) : null}
+                  <span>{d.name}</span>
                 </div>
               ))
             )}
@@ -447,4 +490,3 @@ export function PetRoom({
     </div>
   )
 }
-
