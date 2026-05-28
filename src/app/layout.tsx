@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Nunito } from 'next/font/google'
 import type { ReactNode } from 'react'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const inter = Inter({
