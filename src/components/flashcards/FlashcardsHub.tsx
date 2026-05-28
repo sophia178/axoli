@@ -80,9 +80,9 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-4 sm:flex-row sm:items-center sm:p-6">
         <div>
-          <div className="font-heading text-3xl text-text">Flashcards</div>
+          <div className="font-heading text-xl text-text sm:text-3xl">Flashcards</div>
           <div className="mt-2 text-sm text-subtext">
             Review decks, discover public sets, and study what your groups share.
           </div>
@@ -137,7 +137,7 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {myDecks.length === 0 ? (
             <Card className="md:col-span-2 xl:col-span-3">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="text-sm text-subtext">
                   No decks yet — generate some with AI or create manually
                 </div>
@@ -258,7 +258,7 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
 
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {discoverFiltered.length === 0 ? (
-              <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext md:col-span-2 xl:col-span-3">
+              <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext md:col-span-2 xl:col-span-3 sm:p-6">
                 No public decks found.
               </div>
             ) : null}
@@ -308,7 +308,7 @@ export function FlashcardsHub({ initialMyDecks }: { initialMyDecks: DeckSummary[
       {tab === 'shared' ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {sharedFiltered.length === 0 ? (
-            <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext md:col-span-2 xl:col-span-3">
+            <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext md:col-span-2 xl:col-span-3 sm:p-6">
               No shared decks yet.
             </div>
           ) : null}

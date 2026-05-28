@@ -120,7 +120,7 @@ export function GroupChat({
 
       <div
         ref={scroller}
-        className="h-[360px] overflow-y-auto rounded-3xl border border-border bg-bg/20 p-4"
+        className="h-52 overflow-y-auto rounded-3xl border border-border bg-bg/20 p-4 sm:h-[360px]"
       >
         <div className="space-y-3">
           {messages.length === 0 ? (

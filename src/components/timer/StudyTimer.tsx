@@ -200,11 +200,11 @@ export function StudyTimer() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-border bg-card/70 p-6">
-        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
+        <div className="flex flex-col items-center justify-between gap-4 sm:gap-6 md:flex-row">
           <div className="w-full max-w-sm">
             <div className="text-sm text-subtext">Time left</div>
-            <div className="mt-1 font-heading text-5xl text-text">{format(remaining)}</div>
+            <div className="mt-1 font-heading text-3xl text-text sm:text-5xl">{format(remaining)}</div>
             <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
               <motion.div
                 className="h-full rounded-full bg-pink"

@@ -13,7 +13,7 @@ export default async function DeckStudyPage({
 
   if (!deck) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Deck not found.
       </div>
     )

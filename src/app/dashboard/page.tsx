@@ -39,21 +39,21 @@ function PetPreview({
   return (
     <Link
       href="/dashboard/pet"
-      className="group flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 transition hover:bg-card/80"
+      className="group flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-4 transition hover:bg-card/80 sm:p-6"
     >
-      <div className="flex items-center gap-4">
-        <div className="relative h-20 w-20 overflow-hidden rounded-3xl ring-1 ring-border">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-3xl ring-1 ring-border sm:h-20 sm:w-20">
           <img src="/axolotl-happy.png" alt="" width="80" height="80" style={{ objectFit: 'contain' }} />
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <div className="font-heading text-2xl text-text">Your axolotl</div>
+            <div className="font-heading text-lg text-text sm:text-2xl">Your axolotl</div>
             <span className="rounded-full bg-gold/15 px-2 py-0.5 text-xs font-semibold text-gold">
               Lv {level}
             </span>
           </div>
           <div className="mt-3 flex items-center gap-3">
-            <div className="h-2 w-40 overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
+            <div className="h-2 w-28 overflow-hidden rounded-full bg-bg/40 ring-1 ring-border sm:w-40">
               <div className="h-full rounded-full bg-pink" style={{ width: `${h}%` }} />
             </div>
             <div className="text-xs text-subtext">{h}%</div>
@@ -80,7 +80,7 @@ export default async function DashboardHomePage() {
     ])
   } catch {
     return (
-      <div className="rounded-3xl border border-border bg-card/70 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/70 p-4 text-sm text-subtext sm:p-6">
         Loading your dashboard…
       </div>
     )
@@ -94,10 +94,10 @@ export default async function DashboardHomePage() {
   return (
     <div className="space-y-6">
       <PetPreview happiness={happiness} level={level} />
-      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 md:flex-row md:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-4 md:flex-row md:items-center sm:p-6">
         <div>
           <div className="text-sm text-subtext">Today&apos;s study streak</div>
-          <div className="mt-1 font-heading text-3xl text-text">{streak}🔥</div>
+          <div className="mt-1 font-heading text-2xl text-text sm:text-3xl">{streak}🔥</div>
           <div className="mt-2 text-sm text-subtext">
             Coins balance: <span className="text-text">{coins}</span>
           </div>
@@ -143,7 +143,7 @@ export default async function DashboardHomePage() {
                         {exam.subject}
                       </div>
                       <div className="mt-3 flex items-baseline gap-2">
-                        <div className="font-heading text-3xl text-gold">
+                        <div className="font-heading text-2xl text-gold sm:text-3xl">
                           {d}
                         </div>
                         <div className="text-sm text-subtext">days</div>

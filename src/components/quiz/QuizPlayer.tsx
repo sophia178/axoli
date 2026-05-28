@@ -48,7 +48,7 @@ export function QuizPlayer({ title, cards }: { title: string; cards: Card[] }) {
 
   if (cards.length === 0) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         No cards found. Create a deck first.
       </div>
     )
@@ -58,7 +58,7 @@ export function QuizPlayer({ title, cards }: { title: string; cards: Card[] }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="font-heading text-2xl text-text">{title}</div>
+          <div className="font-heading text-lg text-text sm:text-2xl">{title}</div>
           <div className="mt-1 text-sm text-subtext">
             Card {idx + 1} of {cards.length} • {progress}%
           </div>
@@ -88,7 +88,7 @@ export function QuizPlayer({ title, cards }: { title: string; cards: Card[] }) {
       <motion.button
         type="button"
         onClick={() => setReveal((v) => !v)}
-        className="w-full rounded-3xl border border-border bg-card/70 p-6 text-left"
+        className="w-full rounded-3xl border border-border bg-card/70 p-4 text-left sm:p-6"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}

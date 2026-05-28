@@ -587,9 +587,9 @@ export function PetRoom({
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6">
+      <div className="flex items-center justify-between gap-3 rounded-3xl border border-border bg-card/70 p-4 sm:gap-4 sm:p-6">
         <div>
-          <div className="font-heading text-3xl text-text">
+          <div className="font-heading text-xl text-text sm:text-3xl">
             Level {profile.pet_level ?? 1} Axolotl
           </div>
           <div className="mt-2 text-sm text-subtext">Coins: {profile.coins ?? 0}</div>
@@ -611,7 +611,7 @@ export function PetRoom({
       </div>
 
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
-        <div ref={tankRef} className="relative h-[520px]">
+        <div ref={tankRef} className="relative h-[320px] sm:h-[520px]">
           <UnderwaterScene sad={sad} />
           {visibleDecorations.map((d) => (
             <DraggableItem
@@ -656,7 +656,7 @@ export function PetRoom({
           ))}
 
           <motion.div
-            className="absolute left-1/2 top-10 w-[360px] -translate-x-1/2 px-4"
+            className="absolute left-1/2 top-4 w-[min(360px,calc(100%-2rem))] -translate-x-1/2 px-2 sm:top-10 sm:px-4"
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
@@ -673,7 +673,7 @@ export function PetRoom({
               width={220}
               height={220}
               draggable={false}
-              style={{ width: 220, height: 220, objectFit: 'contain', mixBlendMode: 'multiply' }}
+              style={{ width: 'clamp(130px, 30vw, 220px)', height: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }}
             />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">
@@ -687,7 +687,7 @@ export function PetRoom({
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <div className="rounded-3xl border border-border bg-card/70 p-5">
+        <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-5">
           <div className="font-semibold text-text">Accessories</div>
           <div className="mt-1 text-sm text-subtext">
             Tap to wear or remove.
@@ -742,7 +742,7 @@ export function PetRoom({
           </div>
         </div>
 
-        <div className="rounded-3xl border border-border bg-card/70 p-5">
+        <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-5">
           <div className="font-semibold text-text">Room items</div>
           <div className="mt-1 text-sm text-subtext">
             Decorations you own appear in the room.

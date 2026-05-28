@@ -364,9 +364,9 @@ export function QuizFlow({
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-border bg-card/70 p-6">
+              <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
                 <div className="text-xs text-subtext">Question</div>
-                <div className="mt-2 text-xl font-semibold text-text">
+                <div className="mt-2 text-base font-semibold text-text sm:text-xl">
                   {current.mode === 'true_false'
                     ? `${current.prompt}`
                     : current.prompt}
@@ -501,8 +501,8 @@ export function QuizFlow({
 
           {step === 5 ? (
             <div className="space-y-4">
-              <div className="rounded-3xl border border-border bg-bg/20 p-5">
-                <div className="font-heading text-3xl text-text">{percent}%</div>
+              <div className="rounded-3xl border border-border bg-bg/20 p-4 sm:p-5">
+                <div className="font-heading text-2xl text-text sm:text-3xl">{percent}%</div>
                 <div className="mt-2 text-sm text-subtext">
                   Score: {score} / {total} • Time: {totalTime}s
                 </div>

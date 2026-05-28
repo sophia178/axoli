@@ -128,8 +128,8 @@ export function SettingsTabs({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-3xl border border-border bg-card/70 p-6">
-        <div className="font-heading text-3xl text-text">Settings</div>
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
+        <div className="font-heading text-xl text-text sm:text-3xl">Settings</div>
         <div className="mt-2 text-sm text-subtext">Control your profile, plan, and notifications.</div>
       </div>
 
@@ -198,7 +198,7 @@ export function SettingsTabs({
             {plan === 'premium' ? (
               <div>
                 <div className="text-sm text-subtext">Name your axolotl</div>
-                <div className="mt-2 flex max-w-sm gap-2">
+                <div className="mt-2 flex w-full gap-2 sm:max-w-sm">
                   <Input
                     value={petName}
                     onChange={(e) => setPetName(e.target.value)}

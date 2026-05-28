@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Nunito } from 'next/font/google'
 import type { ReactNode } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
 const inter = Inter({
@@ -76,6 +77,7 @@ export default function RootLayout({
           </div>
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   )

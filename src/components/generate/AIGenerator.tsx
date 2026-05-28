@@ -118,7 +118,7 @@ function FlashcardCarousel({
         <motion.button
           type="button"
           onClick={() => setFlipped((v) => !v)}
-          className="w-full rounded-3xl border border-border bg-bg/30 p-6 text-left"
+          className="w-full rounded-3xl border border-border bg-bg/30 p-4 text-left sm:p-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
@@ -600,7 +600,7 @@ export function AIGenerator() {
                 }
                 setPdfFile(file)
               }}
-              className="rounded-3xl border border-border bg-bg/20 p-6 text-center"
+              className="rounded-3xl border border-border bg-bg/20 p-4 text-center sm:p-6"
             >
               <div className="font-semibold text-text">Drag and drop a PDF</div>
               <div className="mt-1 text-sm text-subtext">PDF only</div>

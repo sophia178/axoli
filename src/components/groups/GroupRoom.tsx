@@ -104,10 +104,10 @@ export function GroupRoom({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-3xl border border-border bg-card/70 p-6">
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div>
-            <div className="font-heading text-3xl text-text">{group.name}</div>
+            <div className="font-heading text-xl text-text sm:text-3xl">{group.name}</div>
             <div className="mt-2 text-sm text-subtext">
               {group.subject} • {memberCount} members • {group.is_private ? 'Private' : 'Public'}
             </div>

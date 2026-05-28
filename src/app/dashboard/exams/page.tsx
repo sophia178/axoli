@@ -55,7 +55,7 @@ export default async function ExamsPage() {
                       <div className="mt-1 text-sm text-subtext">{exam.subject}</div>
                     </div>
                     <div className="rounded-2xl bg-gold/15 px-3 py-2 text-right">
-                      <div className="font-heading text-2xl text-gold">
+                      <div className="font-heading text-xl text-gold sm:text-2xl">
                         {daysUntil(exam.exam_date)}
                       </div>
                       <div className="text-xs text-subtext">days</div>

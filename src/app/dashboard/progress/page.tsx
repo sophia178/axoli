@@ -207,13 +207,13 @@ export default async function ProgressPage() {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-5 md:grid-cols-5">
+      <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
         <Card>
           <CardHeader>
             <CardTitle>Study hours</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{studyTimeDisplay}</div>
+            <div className="font-heading text-2xl text-text sm:text-3xl">{studyTimeDisplay}</div>
             <div className="mt-2 text-sm text-subtext">This week</div>
           </CardContent>
         </Card>
@@ -222,7 +222,7 @@ export default async function ProgressPage() {
             <CardTitle>Current streak</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{profile?.streak ?? 0}🔥</div>
+            <div className="font-heading text-2xl text-text sm:text-3xl">{profile?.streak ?? 0}🔥</div>
             <div className="mt-2 text-sm text-subtext">Days</div>
           </CardContent>
         </Card>
@@ -231,7 +231,7 @@ export default async function ProgressPage() {
             <CardTitle>Total coins</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{profile?.coins ?? 0}</div>
+            <div className="font-heading text-2xl text-text sm:text-3xl">{profile?.coins ?? 0}</div>
             <div className="mt-2 text-sm text-subtext">Current balance</div>
           </CardContent>
         </Card>
@@ -240,7 +240,7 @@ export default async function ProgressPage() {
             <CardTitle>Mastered</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{flashcardsMastered}</div>
+            <div className="font-heading text-2xl text-text sm:text-3xl">{flashcardsMastered}</div>
             <div className="mt-2 text-sm text-subtext">Flashcards</div>
           </CardContent>
         </Card>
@@ -249,7 +249,7 @@ export default async function ProgressPage() {
             <CardTitle>Quizzes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-heading text-3xl text-text">{quizzesCompleted}</div>
+            <div className="font-heading text-2xl text-text sm:text-3xl">{quizzesCompleted}</div>
             <div className="mt-2 text-sm text-subtext">Completed</div>
           </CardContent>
         </Card>
@@ -303,7 +303,7 @@ export default async function ProgressPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <svg viewBox="0 0 140 140" className="h-40 w-40">
+                <svg viewBox="0 0 140 140" className="h-32 w-32 shrink-0 sm:h-40 sm:w-40">
                   <circle cx="70" cy="70" r="52" fill="transparent" stroke="#2A2A4A" strokeWidth="18" />
                   {(() => {
                     let offset = 0
@@ -359,7 +359,7 @@ export default async function ProgressPage() {
             <CardTitle>Streak calendar (last 30 days)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-10 gap-2">
+            <div className="grid grid-cols-10 gap-1 sm:gap-2">
               {Array.from(hoursByDay30.entries()).map(([date, hours]) => {
                 const intensity = clamp(hours / 2.5, 0, 1)
                 const color =
@@ -370,7 +370,7 @@ export default async function ProgressPage() {
                   <div
                     key={date}
                     title={`${date}: ${Math.round(hours * 10) / 10}h`}
-                    className="h-6 w-6 rounded-lg ring-1 ring-border"
+                    className="h-5 w-5 rounded-md ring-1 ring-border sm:h-6 sm:w-6 sm:rounded-lg"
                     style={{ background: color }}
                   />
                 )

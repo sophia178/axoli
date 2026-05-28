@@ -16,7 +16,7 @@ export default async function QuizPage({
     decks = await getDecks(user.id)
   } catch {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Could not load your decks. Please try again.
       </div>
     )
@@ -24,8 +24,8 @@ export default async function QuizPage({
 
   if (decks.length === 0) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6">
-        <div className="font-heading text-2xl text-text">No decks yet</div>
+      <div className="rounded-3xl border border-border bg-card/60 p-4 sm:p-6">
+        <div className="font-heading text-xl text-text sm:text-2xl">No decks yet</div>
         <div className="mt-2 text-sm text-subtext">
           Create a flashcard deck first, then come back to quiz yourself.
         </div>

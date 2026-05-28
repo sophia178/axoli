@@ -21,7 +21,7 @@ export default async function PetRoomPage() {
     ])
   } catch {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Loading your pet…
       </div>
     )

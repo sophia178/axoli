@@ -122,7 +122,7 @@ export function DeckStudy({
 
   if (cards.length === 0) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         No cards in this deck yet.
       </div>
     )
@@ -131,10 +131,10 @@ export function DeckStudy({
   return (
     <div className="space-y-5">
       {modal}
-      <div className="rounded-3xl border border-border bg-card/70 p-6">
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="font-heading text-3xl text-text">{title}</div>
+            <div className="font-heading text-xl text-text sm:text-3xl">{title}</div>
             <div className="mt-1 text-sm text-subtext">{subject}</div>
           </div>
           <div className="text-sm text-subtext">
@@ -154,7 +154,7 @@ export function DeckStudy({
       ) : null}
 
       {current ? (
-        <div className="rounded-3xl border border-border bg-bg/20 p-6">
+        <div className="rounded-3xl border border-border bg-bg/20 p-4 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <div className="text-sm text-subtext">
               Card {cards.findIndex((c) => c.id === current.id) + 1} / {cards.length}
@@ -185,7 +185,7 @@ export function DeckStudy({
                 style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
               >
                 <div
-                  className="rounded-3xl border border-border bg-card/70 p-6"
+                  className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6"
                   style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                 >
                   <div className="text-xs text-subtext">Front</div>
@@ -209,7 +209,7 @@ export function DeckStudy({
           </div>
 
           {flipped ? (
-            <div className="mt-6 grid gap-3 sm:grid-cols-4">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <Button
                 variant="outline"
                 onClick={async () => {
@@ -300,12 +300,12 @@ export function DeckStudy({
           )}
         </div>
       ) : (
-        <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+        <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
           Session complete.
         </div>
       )}
 
-      <div className="rounded-3xl border border-border bg-card/70 p-6">
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
         <div className="font-heading text-2xl text-text">Past results</div>
         <div className="mt-1 text-sm text-subtext">
           Your previous study attempts for this deck.

@@ -35,7 +35,7 @@ export function TopBar({
                 </span>
               </div>
               <div className="mt-1 flex items-center gap-2">
-                <div className="h-2 w-32 overflow-hidden rounded-full bg-bg/50 ring-1 ring-border">
+                <div className="h-2 w-24 overflow-hidden rounded-full bg-bg/50 ring-1 ring-border sm:w-32">
                   <div
                     className="h-full rounded-full bg-pink"
                     style={{ width: `${happiness}%` }}

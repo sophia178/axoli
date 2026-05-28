@@ -39,9 +39,9 @@ export function GroupsHub({ initialGroups }: { initialGroups: MyGroupCard[] }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-border bg-card/70 p-4 sm:flex-row sm:items-center sm:p-6">
         <div>
-          <div className="font-heading text-3xl text-text">Study Groups</div>
+          <div className="font-heading text-xl text-text sm:text-3xl">Study Groups</div>
           <div className="mt-2 text-sm text-subtext">
             Study together, share decks, and compete on the leaderboard.
           </div>

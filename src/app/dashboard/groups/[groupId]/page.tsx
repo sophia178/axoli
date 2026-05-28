@@ -42,7 +42,7 @@ export default async function GroupPage({ params }: { params: { groupId: string 
 
   if (!supabase) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Server is missing Supabase configuration.
       </div>
     )
@@ -57,7 +57,7 @@ export default async function GroupPage({ params }: { params: { groupId: string 
 
   if (!membership) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Group not found.
       </div>
     )
@@ -71,7 +71,7 @@ export default async function GroupPage({ params }: { params: { groupId: string 
 
   if (!group) {
     return (
-      <div className="rounded-3xl border border-border bg-card/60 p-6 text-sm text-subtext">
+      <div className="rounded-3xl border border-border bg-card/60 p-4 text-sm text-subtext sm:p-6">
         Group not found.
       </div>
     )

@@ -59,13 +59,13 @@ export default async function HomePage() {
       />
       <MarketingHeader />
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-12">
-        <section className="grid items-center gap-10 lg:grid-cols-2">
+        <section className="grid items-center gap-6 sm:gap-10 lg:grid-cols-2">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-2 text-xs text-subtext">
               <span className="h-2 w-2 rounded-full bg-success" />
               New: AI flashcards + study pet in one place
             </div>
-            <h1 className="mt-5 font-heading text-4xl leading-tight text-text md:text-5xl">
+            <h1 className="mt-5 font-heading text-2xl leading-tight text-text sm:text-4xl md:text-5xl">
               Study smarter with your axolotl companion
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-subtext md:text-lg">
@@ -130,7 +130,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <section className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center gap-3">
               <FeatureIcon label="AI" />
@@ -171,14 +171,14 @@ export default async function HomePage() {
 
         <section id="how" className="mt-16">
           <div className="mb-6">
-            <h2 className="font-heading text-3xl text-text">
+            <h2 className="font-heading text-xl text-text sm:text-3xl">
               How it works
             </h2>
             <p className="mt-2 text-sm text-subtext">
               From notes to flashcards in minutes — then your pet keeps you consistent.
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>Step 1 Paste your notes or YouTube URL</CardTitle>
@@ -209,7 +209,7 @@ export default async function HomePage() {
         <section className="mt-16">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-heading text-3xl text-text">
+              <h2 className="font-heading text-xl text-text sm:text-3xl">
                 Pricing
               </h2>
               <p className="mt-2 text-sm text-subtext">
@@ -231,7 +231,7 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-baseline gap-2">
-                  <div className="font-heading text-4xl text-text">
+                  <div className="font-heading text-3xl text-text sm:text-4xl">
                     £0
                   </div>
                   <div className="text-sm text-subtext">
@@ -262,7 +262,7 @@ export default async function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-baseline gap-2">
-                  <div className="font-heading text-4xl text-text">
+                  <div className="font-heading text-3xl text-text sm:text-4xl">
                     £3.99
                   </div>
                   <div className="text-sm text-subtext">
@@ -286,9 +286,9 @@ export default async function HomePage() {
         </section>
 
         <section className="mt-16">
-          <div className="relative overflow-hidden rounded-3xl border border-border bg-card/60 px-6 py-10 sm:px-10">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-card/60 px-4 py-8 sm:px-10 sm:py-10">
             <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-pink/15 blur-2xl" />
-            <h2 className="max-w-2xl font-heading text-3xl text-text md:text-4xl">
+            <h2 className="max-w-2xl font-heading text-2xl text-text sm:text-3xl md:text-4xl">
               Ready to ace your exams?
             </h2>
             <p className="mt-3 max-w-2xl text-base text-subtext">
@@ -303,8 +303,19 @@ export default async function HomePage() {
         </section>
       </main>
       <footer className="border-t border-border/60 py-10">
-        <div className="mx-auto max-w-6xl px-4 text-sm text-subtext">
-          Axoli © {new Date().getFullYear()}
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-subtext sm:flex-row">
+          <span>© 2026 Axoli</span>
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-end">
+            <a href="mailto:hello@suitance.co.uk" className="hover:text-text">
+              hello@suitance.co.uk
+            </a>
+            <Link href="/privacy" className="hover:text-text">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-text">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

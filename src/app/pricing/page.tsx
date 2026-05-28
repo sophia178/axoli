@@ -48,7 +48,7 @@ export default function PricingPage() {
       <MarketingHeader />
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-12">
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="font-heading text-4xl text-text">Pricing</h1>
+          <h1 className="font-heading text-2xl text-text sm:text-4xl">Pricing</h1>
           <p className="mt-3 text-subtext">
             Axoli is free to start. Upgrade for bigger AI limits and premium pet items.
           </p>
@@ -67,7 +67,7 @@ export default function PricingPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-2">
-                <div className="font-heading text-4xl text-text">£0</div>
+                <div className="font-heading text-3xl text-text sm:text-4xl">£0</div>
                 <div className="text-sm text-subtext">forever</div>
               </div>
               <ul className="mt-5 space-y-2 text-sm text-subtext">
@@ -89,7 +89,7 @@ export default function PricingPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-2">
-                <div className="font-heading text-4xl text-text">£3.99</div>
+                <div className="font-heading text-3xl text-text sm:text-4xl">£3.99</div>
                 <div className="text-sm text-subtext">/ month</div>
               </div>
               <ul className="mt-5 space-y-2 text-sm text-subtext">
@@ -115,7 +115,7 @@ export default function PricingPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-baseline gap-2">
-                <div className="font-heading text-4xl text-text">£29.99</div>
+                <div className="font-heading text-3xl text-text sm:text-4xl">£29.99</div>
                 <div className="text-sm text-subtext">/ year</div>
               </div>
               <ul className="mt-5 space-y-2 text-sm text-subtext">
@@ -139,7 +139,7 @@ export default function PricingPage() {
 
         <div className="mt-10">
           <div className="font-heading text-2xl text-text">Coin bundles</div>
-          <div className="mt-4 grid gap-5 md:grid-cols-4">
+          <div className="mt-4 grid gap-5 grid-cols-2 md:grid-cols-4">
             {[
               { key: 'coins_50' as const,   label: 'Coins 50',   price: '£0.99' },
               { key: 'coins_150' as const,  label: 'Coins 150',  price: '£1.99' },
@@ -152,7 +152,7 @@ export default function PricingPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
-                    <div className="font-heading text-3xl text-text">{b.price}</div>
+                    <div className="font-heading text-2xl text-text sm:text-3xl">{b.price}</div>
                   </div>
                   <div className="mt-6">
                     <Button
@@ -173,6 +173,22 @@ export default function PricingPage() {
           </div>
         </div>
       </main>
+      <footer className="border-t border-border/60 py-10">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-subtext sm:flex-row">
+          <span>© 2026 Axoli</span>
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-end">
+            <a href="mailto:hello@suitance.co.uk" className="hover:text-text">
+              hello@suitance.co.uk
+            </a>
+            <Link href="/privacy" className="hover:text-text">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-text">
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

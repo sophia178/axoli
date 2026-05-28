@@ -110,8 +110,8 @@ export function ShopTabs({
 
       {tab === 'coins' ? (
         <div className="space-y-4">
-          <div className="rounded-3xl border border-border bg-card/70 p-6">
-            <div className="font-heading text-2xl text-text">Buy coins</div>
+          <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-6">
+            <div className="font-heading text-xl text-text sm:text-2xl">Buy coins</div>
             <div className="mt-1 text-sm text-subtext">
               Purchase coins to spend in the shop on food, decorations, and accessories.
             </div>
@@ -119,7 +119,7 @@ export function ShopTabs({
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {COIN_BUNDLES.map((bundle) => (
               <div key={bundle.id} className="rounded-3xl border border-border bg-bg/20 p-5 flex flex-col gap-3">
-                <div className="font-heading text-4xl text-gold">{bundle.coins}</div>
+                <div className="font-heading text-2xl text-gold sm:text-4xl">{bundle.coins}</div>
                 <div className="text-sm text-subtext">coins</div>
                 <div className="inline-flex rounded-full bg-gold/15 px-3 py-1 text-xs font-semibold text-gold w-fit">
                   {bundle.label}

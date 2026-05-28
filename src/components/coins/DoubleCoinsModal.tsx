@@ -134,7 +134,7 @@ export function DoubleCoinsModal({
       />
       <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-border bg-card/90 shadow-[0_18px_70px_rgba(0,0,0,0.65)]">
         <CoinRain visible={phase === 'success'} />
-        <div className="relative p-6">
+        <div className="relative p-4 sm:p-6">
           {phase !== 'playing' ? (
             <button
               type="button"
@@ -148,7 +148,7 @@ export function DoubleCoinsModal({
 
           <div className="mx-auto max-w-sm">
             <div className="text-center">
-              <div className="font-heading text-3xl text-text">
+              <div className="font-heading text-2xl text-text sm:text-3xl">
                 {phase === 'offer'
                   ? `You earned ${coins} coins!`
                   : phase === 'playing'
