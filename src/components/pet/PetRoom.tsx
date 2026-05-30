@@ -214,8 +214,13 @@ function HeartBar({ value }: { value: number }) {
       <span className="text-xl leading-none select-none">❤️</span>
       <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ display: 'block', width: `${pct}%`, background: 'linear-gradient(90deg, #f472b6, #ec4899)' }}
+          style={{
+            width: `${pct}%`,
+            height: '100%',
+            background: 'linear-gradient(90deg, #f472b6, #ec4899)',
+            borderRadius: '9999px',
+            transition: 'width 700ms ease-in-out'
+          }}
         />
       </div>
       <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
@@ -230,8 +235,13 @@ function HungerBar({ value }: { value: number }) {
       <span className="text-xl leading-none select-none">🍤</span>
       <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ display: 'block', width: `${pct}%`, background: 'linear-gradient(90deg, #fb923c, #f97316)' }}
+          style={{
+            width: `${pct}%`,
+            height: '100%',
+            background: 'linear-gradient(90deg, #fb923c, #f97316)',
+            borderRadius: '9999px',
+            transition: 'width 700ms ease-in-out'
+          }}
         />
       </div>
       <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
@@ -258,8 +268,13 @@ function XpBar({ xp }: { xp: number }) {
       <span className="text-xl leading-none select-none">⭐</span>
       <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ display: 'block', width: `${pct}%`, background: 'linear-gradient(90deg, #fbbf24, #f59e0b)' }}
+          style={{
+            width: `${pct}%`,
+            height: '100%',
+            background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
+            borderRadius: '9999px',
+            transition: 'width 700ms ease-in-out'
+          }}
         />
       </div>
       <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
@@ -743,11 +758,21 @@ export function PetRoom({
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <div className="grid w-[220px] gap-2.5">
-          <XpBar xp={xp} />
-          <HeartBar value={happiness} />
-          <HungerBar value={hunger} />
+      <div className="rounded-3xl border border-border bg-card/70 p-4 sm:p-5 mx-auto max-w-sm">
+        <div className="font-semibold text-text mb-4">Pet Stats</div>
+        <div className="space-y-4">
+          <div>
+            <div className="text-xs text-subtext mb-2">XP Progress</div>
+            <XpBar xp={xp} />
+          </div>
+          <div>
+            <div className="text-xs text-subtext mb-2">Happiness</div>
+            <HeartBar value={happiness} />
+          </div>
+          <div>
+            <div className="text-xs text-subtext mb-2">Hunger</div>
+            <HungerBar value={hunger} />
+          </div>
         </div>
       </div>
 
