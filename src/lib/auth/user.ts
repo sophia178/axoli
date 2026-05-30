@@ -20,7 +20,12 @@ function getSupabaseAuthServerClient() {
         return cookieStore.getAll()
       },
       setAll(toSet: CookieToSet[]) {
-        for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+        try {
+          for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+        } catch (error) {
+          // Cookie modification not allowed in current context (page rendering)
+          // Token refresh will be attempted again on next request
+        }
       }
     }
   })
