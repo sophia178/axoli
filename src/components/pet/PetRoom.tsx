@@ -286,6 +286,25 @@ type ItemState = { x: number; y: number; size: number }
 const MIN_ITEM_SIZE = 30
 const MAX_ITEM_SIZE = 150
 
+function readItemStates(): Record<string, ItemState> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const stored = window.localStorage.getItem('axoli_pet_item_state_v1')
+    if (!stored) return {}
+    const data = JSON.parse(stored)
+    return typeof data === 'object' ? data : {}
+  } catch {
+    return {}
+  }
+}
+
+function writeItemStates(states: Record<string, ItemState>): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem('axoli_pet_item_state_v1', JSON.stringify(states))
+  } catch {}
+}
+
 
 type ResizeCorner = 'nw' | 'ne' | 'sw' | 'se'
 
@@ -532,21 +551,13 @@ export function PetRoom({
   const [itemStates, setItemStates] = useState<Record<string, ItemState>>({})
 
   useEffect(() => {
-    fetch('/api/pet/item-states')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data && typeof data === 'object') setItemStates(data.states as Record<string, ItemState>)
-      })
-      .catch(() => {})
+    const states = readItemStates()
+    setItemStates(states)
   }, [])
   useEffect(() => {
     if (typeof window === 'undefined') return
     const id = window.setTimeout(() => {
-      fetch('/api/pet/item-states', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ states: itemStates })
-      }).catch(() => {})
+      writeItemStates(itemStates)
     }, 150)
     return () => window.clearTimeout(id)
   }, [itemStates])
@@ -609,11 +620,7 @@ export function PetRoom({
         changed = true
       }
       if (changed) {
-        fetch('/api/pet/item-states', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ states: next })
-        }).catch(() => {})
+        writeItemStates(next)
       }
       return changed ? next : prev
     })
