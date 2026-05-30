@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getCurrentUser } from '@/lib/auth/user'
-import { awardCoins } from '@/lib/coins'
+import { awardCoins, awardXp } from '@/lib/coins'
 import { changePetHappiness } from '@/lib/pet/pet'
 
 export const runtime = 'nodejs'
@@ -87,11 +87,18 @@ export async function POST(req: Request) {
   console.log('[Sessions] insert ok — user:', user.id, 'duration:', durationMinutes, 'min')
 
   let petHappiness: number | null = null
+  let xpResult: Awaited<ReturnType<typeof awardXp>> | null = null
   if (applyRewards) {
     try {
       petHappiness = await changePetHappiness(user.id, 5)
     } catch {
       petHappiness = null
+    }
+
+    try {
+      xpResult = await awardXp(user.id, durationMinutes)
+    } catch {
+      xpResult = null
     }
 
     const updated = await supabase
@@ -111,6 +118,9 @@ export async function POST(req: Request) {
     coinsEarned,
     coins: newCoins,
     streak: newStreak,
-    petHappiness
+    petHappiness,
+    xp: xpResult?.xp ?? null,
+    level: xpResult?.level ?? null,
+    leveledUp: xpResult?.leveledUp ?? false
   })
 }

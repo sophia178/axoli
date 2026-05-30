@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { useLoading } from '@/components/loading/LoadingProvider'
 import type { Profile } from '@/lib/data/profile'
 import type { ShopItemRow } from '@/lib/shop/data'
 import { cn } from '@/lib/cn'
+import { AxolotlAvatar } from '@/components/pet/AxolotlAvatar'
+import { getStageProgress } from '@/lib/pet/stages'
 
 const messages = [
   "Keep studying! You're doing great!",
@@ -231,6 +233,32 @@ function HungerBar({ value }: { value: number }) {
         </span>
       ))}
       <span className="ml-2 text-xs text-subtext">{clamp(value, 0, 100)}%</span>
+    </div>
+  )
+}
+
+const LEVEL_SEEN_KEY = 'axoli_pet_level_seen'
+
+function XpBar({ xp }: { xp: number }) {
+  const progress = getStageProgress(xp)
+  if (progress.isMax) {
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold text-gold">Elder ✦ Max stage</span>
+      </div>
+    )
+  }
+  const pct = Math.round(progress.ratio * 100)
+  return (
+    <div className="flex items-center gap-2">
+      <span className="min-w-[46px] text-right text-xs text-subtext">{progress.stage.label}</span>
+      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
+        <div className="h-full rounded-full bg-gold transition-all duration-700" style={{ width: `${pct}%` }} />
+      </div>
+      <span className="text-xs text-subtext">{progress.next?.label}</span>
+      <span className="text-xs text-subtext opacity-60">
+        {progress.xpIntoStage}/{progress.xpForStage} XP
+      </span>
     </div>
   )
 }
@@ -479,10 +507,12 @@ export function PetRoom({
   const owned = useMemo(() => new Set(ownedIds), [ownedIds])
   const happiness = clamp(profile.pet_happiness ?? 100, 0, 100)
   const hunger = clamp((profile as any).hunger_level ?? 100, 0, 100)
+  const xp = Number(profile.xp ?? 0)
   const starving = hunger < 10
   const hungry = hunger < 30
   const sad = happiness <= 30 || starving
   const [equippedAccessories, setEquippedAccessories] = useState<string[]>(() => profile.pet_accessories ?? [])
+  const [showLevelUp, setShowLevelUp] = useState(false)
   useEffect(() => {
     setEquippedAccessories(profile.pet_accessories ?? [])
   }, [profile.pet_accessories])
@@ -509,6 +539,21 @@ export function PetRoom({
     () => items.filter((i) => i.type === 'accessory' && owned.has(i.id)),
     [items, owned]
   )
+  useEffect(() => {
+    const currentLevel = profile.pet_level ?? 1
+    try {
+      const stored = window.localStorage.getItem(LEVEL_SEEN_KEY)
+      const seenLevel = stored ? Number(stored) : null
+      if (seenLevel !== null && currentLevel > seenLevel) {
+        setShowLevelUp(true)
+        const id = window.setTimeout(() => setShowLevelUp(false), 4000)
+        window.localStorage.setItem(LEVEL_SEEN_KEY, String(currentLevel))
+        return () => window.clearTimeout(id)
+      }
+      window.localStorage.setItem(LEVEL_SEEN_KEY, String(currentLevel))
+    } catch {}
+  }, [profile.pet_level])
+
   const showHappyAxolotl = happiness > 50 && hunger > 30
   const tankRef = useRef<HTMLDivElement | null>(null)
   const [tankSize, setTankSize] = useState<{ w: number; h: number }>({ w: 900, h: 520 })
@@ -667,21 +712,65 @@ export function PetRoom({
           </motion.div>
 
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <img
-              src={showHappyAxolotl ? '/axolotl-happy.png' : '/axolotl-sad.png'}
-              alt="Axolotl"
-              width={220}
-              height={220}
-              draggable={false}
-              style={{ width: 'clamp(130px, 30vw, 220px)', height: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }}
+            <AxolotlAvatar
+              stage={getStageProgress(xp).stage.stage}
+              mood={showHappyAxolotl ? 'happy' : 'sad'}
+              colour={profile.pet_colour}
+              className="select-none"
+              style={{ width: 'clamp(130px, 30vw, 220px)', height: 'auto' }}
             />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">
                 <HeartBar value={happiness} />
                 <HungerBar value={hunger} />
+                <XpBar xp={xp} />
               </div>
             </div>
           </div>
+
+          <AnimatePresence>
+            {showLevelUp && (
+              <motion.div
+                key="levelup"
+                className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {[...Array(8)].map((_, i) => {
+                  const angle = (i / 8) * 360
+                  return (
+                    <motion.div
+                      key={i}
+                      className="absolute h-2 w-2 rounded-full bg-gold"
+                      style={{ top: '50%', left: '50%' }}
+                      initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                      animate={{
+                        x: Math.cos((angle * Math.PI) / 180) * 72,
+                        y: Math.sin((angle * Math.PI) / 180) * 72,
+                        opacity: 0,
+                        scale: 0.4
+                      }}
+                      transition={{ duration: 1.2, ease: 'easeOut', delay: i * 0.04 }}
+                    />
+                  )
+                })}
+                <motion.div
+                  className="rounded-3xl border border-gold/40 bg-card/90 px-5 py-3 text-center shadow-glowGold"
+                  initial={{ scale: 0.7, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
+                >
+                  <div className="font-heading text-lg text-gold">Your axolotl evolved! ✨</div>
+                  <div className="mt-1 text-sm text-subtext">
+                    Now a {getStageProgress(xp).stage.label}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         </div>
       </div>

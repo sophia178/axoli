@@ -1,3 +1,5 @@
+import { getColourStops } from '@/lib/pet/colours'
+
 export type ShopItemType = 'food' | 'decoration' | 'accessory' | 'colour'
 
 export type ShopCatalogItem = {
@@ -430,22 +432,7 @@ function accessoryIcon(kind: string) {
 }
 
 function colourIcon(colourKey: string) {
-  const stops: Record<string, [string, string]> = {
-    pink: [PINK, '#FFB6C8'],
-    blue: ['#6EC7FF', '#3A86FF'],
-    purple: ['#C77DFF', '#7C5CFF'],
-    green: ['#7AE7B9', '#2EE59D'],
-    golden: [GOLD, '#FFE59A'],
-    rainbow: ['#FF6B6B', '#7AE7B9'],
-    midnight: ['#2A2A4A', NAVY],
-    albino: ['#FFFFFF', '#DDE6FF'],
-    spotted: ['#FFB6C8', PINK],
-    striped: ['#6EC7FF', '#B9A8FF'],
-    galaxy: ['#7C5CFF', '#1B1B6B'],
-    sakura: [PINK, '#FFD1DC'],
-    cherry: [PINK, '#FFD1DC']
-  }
-  const [c1, c2] = stops[colourKey] ?? stops.pink
+  const [c1, c2] = getColourStops(colourKey)
   return iconSvg(
     `<g>
       <path d="M40 72c0-16 12-28 26-28s26 12 26 28c0 18-12 32-26 32S40 90 40 72Z" fill="url(#ax)" stroke="${NAVY}" stroke-width="4"/>

@@ -35,6 +35,7 @@ export default async function PetRoomPage() {
       username: null,
       coins: 0,
       streak: 0,
+      xp: 0,
       last_study_date: null,
       last_login_date: null,
       pet_happiness: 100,
