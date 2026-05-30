@@ -2,6 +2,7 @@
 
 import type React from 'react'
 import { useId } from 'react'
+import { motion } from 'framer-motion'
 import type { PetStage } from '@/lib/pet/stages'
 import { getColourStops, NAVY, PINK } from '@/lib/pet/colours'
 
@@ -102,24 +103,66 @@ function Sparkle({ x, y, s = 1, fill = GOLD_STAR }: { x: number; y: number; s?: 
   )
 }
 
-function Egg({ gid, mood }: { gid: string; mood: Mood }) {
+function EggFace({ mood }: { mood: Mood }) {
+  const cx = 60, lx = 51, rx = 69, eyeY = 72, mouthY = 84
   return (
     <g>
-      <ellipse cx={60} cy={104} rx={26} ry={6} fill="#000000" opacity={0.18} />
+      <ellipse cx={lx - 1} cy={eyeY + 7} rx={4.5} ry={2.8} fill={PINK} opacity={0.38} />
+      <ellipse cx={rx + 1} cy={eyeY + 7} rx={4.5} ry={2.8} fill={PINK} opacity={0.38} />
+      {mood === 'happy' ? (
+        <>
+          <circle cx={lx} cy={eyeY} r={3.8} fill={NAVY} />
+          <circle cx={rx} cy={eyeY} r={3.8} fill={NAVY} />
+          <circle cx={lx - 1.3} cy={eyeY - 1.3} r={1.3} fill="#FFFFFF" />
+          <circle cx={rx - 1.3} cy={eyeY - 1.3} r={1.3} fill="#FFFFFF" />
+          <path d={`M${cx - 6} ${mouthY} q6 6 12 0`} fill="none" stroke={NAVY} strokeWidth={2.4} strokeLinecap="round" />
+        </>
+      ) : (
+        <>
+          <path d={`M${lx - 4} ${eyeY - 1} q4 4.5 8 0`} fill="none" stroke={NAVY} strokeWidth={3} strokeLinecap="round" />
+          <path d={`M${rx - 4} ${eyeY - 1} q4 4.5 8 0`} fill="none" stroke={NAVY} strokeWidth={3} strokeLinecap="round" />
+          <path d={`M${cx - 6} ${mouthY + 2} q6 -5.5 12 0`} fill="none" stroke={NAVY} strokeWidth={2.4} strokeLinecap="round" />
+          <path d={`M${rx + 2} ${eyeY + 3} q3 5 0 8 q-3 -3 0 -8 Z`} fill="#6EC7FF" stroke={NAVY} strokeWidth={0.8} opacity={0.92} />
+        </>
+      )}
+    </g>
+  )
+}
+
+function Egg({ gid, mood }: { gid: string; mood: Mood }) {
+  const filterId = `${gid}-eglow`
+  return (
+    <motion.g
+      animate={{ rotate: [-2.5, 2.5, -2.5] }}
+      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      style={{ transformOrigin: '60px 106px' }}
+    >
+      <defs>
+        <filter id={filterId} x="-35%" y="-35%" width="170%" height="170%">
+          <feDropShadow dx="0" dy="4" stdDeviation="7" floodColor="#C0B4FF" floodOpacity="0.5" />
+        </filter>
+      </defs>
+      <ellipse cx={60} cy={108} rx={22} ry={4.5} fill="#000000" opacity={0.14} />
       <path
-        d="M60 26 C 40 26 30 52 30 72 C 30 92 44 104 60 104 C 76 104 90 92 90 72 C 90 52 80 26 60 26 Z"
+        d="M60 24 C 42 24 30 44 30 66 C 30 88 44 106 60 106 C 76 106 90 88 90 66 C 90 44 78 24 60 24 Z"
         fill={`url(#${gid})`}
         stroke={NAVY}
         strokeWidth={4}
         strokeLinejoin="round"
+        filter={`url(#${filterId})`}
       />
-      <circle cx={46} cy={62} r={4} fill="#FFFFFF" opacity={0.5} />
-      <circle cx={74} cy={56} r={3.4} fill="#FFFFFF" opacity={0.45} />
-      <circle cx={68} cy={86} r={4.4} fill="#FFFFFF" opacity={0.4} />
-      <circle cx={48} cy={88} r={3} fill="#FFFFFF" opacity={0.4} />
-      <ellipse cx={50} cy={56} rx={7} ry={10} fill="#FFFFFF" opacity={0.18} />
-      <Face mood={mood} cx={60} eyeY={74} gap={8} mouthY={84} r={3} />
-    </g>
+      <ellipse cx={46} cy={58} rx={2.5} ry={1.8} fill={NAVY} opacity={0.13} transform="rotate(-25 46 58)" />
+      <ellipse cx={73} cy={50} rx={2} ry={1.5} fill={NAVY} opacity={0.12} transform="rotate(20 73 50)" />
+      <ellipse cx={78} cy={74} rx={2.5} ry={1.8} fill={NAVY} opacity={0.13} transform="rotate(-15 78 74)" />
+      <ellipse cx={42} cy={82} rx={2} ry={1.5} fill={NAVY} opacity={0.11} transform="rotate(30 42 82)" />
+      <ellipse cx={65} cy={92} rx={2} ry={1.4} fill={NAVY} opacity={0.12} transform="rotate(-10 65 92)" />
+      <ellipse cx={56} cy={38} rx={1.8} ry={1.3} fill={NAVY} opacity={0.10} transform="rotate(15 56 38)" />
+      <ellipse cx={68} cy={64} rx={1.5} ry={1.2} fill={NAVY} opacity={0.10} transform="rotate(-20 68 64)" />
+      <ellipse cx={47} cy={52} rx={7} ry={11} fill="#FFFFFF" opacity={0.18} />
+      <circle cx={43} cy={58} r={3.5} fill="#FFFFFF" opacity={0.5} />
+      <circle cx={72} cy={52} r={3} fill="#FFFFFF" opacity={0.45} />
+      <EggFace mood={mood} />
+    </motion.g>
   )
 }
 

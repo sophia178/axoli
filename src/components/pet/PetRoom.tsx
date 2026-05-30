@@ -554,6 +554,7 @@ export function PetRoom({
     } catch {}
   }, [profile.pet_level])
 
+  const petStage = getStageProgress(xp).stage.stage
   const showHappyAxolotl = happiness > 50 && hunger > 30
   const tankRef = useRef<HTMLDivElement | null>(null)
   const [tankSize, setTankSize] = useState<{ w: number; h: number }>({ w: 900, h: 520 })
@@ -713,17 +714,17 @@ export function PetRoom({
 
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <AxolotlAvatar
-              stage={getStageProgress(xp).stage.stage}
+              stage={petStage}
               mood={showHappyAxolotl ? 'happy' : 'sad'}
               colour={profile.pet_colour}
               className="select-none"
-              style={{ width: 'clamp(130px, 30vw, 220px)', height: 'auto' }}
+              style={{ width: petStage === 'egg' ? 'clamp(90px, 18vw, 140px)' : 'clamp(130px, 30vw, 220px)', height: 'auto' }}
             />
             <div className="mt-3 flex justify-center">
               <div className="grid gap-2 text-center">
+                <XpBar xp={xp} />
                 <HeartBar value={happiness} />
                 <HungerBar value={hunger} />
-                <XpBar xp={xp} />
               </div>
             </div>
           </div>
