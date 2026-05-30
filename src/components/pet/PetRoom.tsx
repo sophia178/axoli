@@ -208,31 +208,33 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
 }
 
 function HeartBar({ value }: { value: number }) {
-  const hearts = 10
-  const filled = Math.round((clamp(value, 0, 100) / 100) * hearts)
+  const pct = clamp(value, 0, 100)
   return (
-    <div className="flex items-center gap-1">
-      {Array.from({ length: hearts }).map((_, i) => (
-        <span key={i} className={cn('text-base', i < filled ? 'text-pink' : 'text-border')}>
-          ♥
-        </span>
-      ))}
-      <span className="ml-2 text-xs text-subtext">{clamp(value, 0, 100)}%</span>
+    <div className="flex items-center gap-2.5">
+      <span className="text-xl leading-none select-none">❤️</span>
+      <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #f472b6, #ec4899)' }}
+        />
+      </div>
+      <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
     </div>
   )
 }
 
 function HungerBar({ value }: { value: number }) {
-  const chunks = 10
-  const filled = Math.round((clamp(value, 0, 100) / 100) * chunks)
+  const pct = clamp(value, 0, 100)
   return (
-    <div className="flex items-center gap-1">
-      {Array.from({ length: chunks }).map((_, i) => (
-        <span key={i} className={cn('text-base', i < filled ? 'text-gold' : 'text-border')}>
-          🍤
-        </span>
-      ))}
-      <span className="ml-2 text-xs text-subtext">{clamp(value, 0, 100)}%</span>
+    <div className="flex items-center gap-2.5">
+      <span className="text-xl leading-none select-none">🍤</span>
+      <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #fb923c, #f97316)' }}
+        />
+      </div>
+      <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
     </div>
   )
 }
@@ -243,22 +245,24 @@ function XpBar({ xp }: { xp: number }) {
   const progress = getStageProgress(xp)
   if (progress.isMax) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold text-gold">Elder ✦ Max stage</span>
+      <div className="flex items-center gap-2.5">
+        <span className="text-xl leading-none select-none">⭐</span>
+        <div className="flex-1 h-3.5 rounded-full overflow-hidden" style={{ background: 'linear-gradient(90deg, #fbbf24, #f59e0b)' }} />
+        <span className="text-sm font-semibold text-gold w-10 text-right">MAX</span>
       </div>
     )
   }
   const pct = Math.round(progress.ratio * 100)
   return (
-    <div className="flex items-center gap-2">
-      <span className="min-w-[46px] text-right text-xs text-subtext">{progress.stage.label}</span>
-      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-bg/40 ring-1 ring-border">
-        <div className="h-full rounded-full bg-gold transition-all duration-700" style={{ width: `${pct}%` }} />
+    <div className="flex items-center gap-2.5">
+      <span className="text-xl leading-none select-none">⭐</span>
+      <div className="flex-1 h-3.5 rounded-full overflow-hidden bg-black/30">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #fbbf24, #f59e0b)' }}
+        />
       </div>
-      <span className="text-xs text-subtext">{progress.next?.label}</span>
-      <span className="text-xs text-subtext opacity-60">
-        {progress.xpIntoStage}/{progress.xpForStage} XP
-      </span>
+      <span className="text-sm font-semibold text-subtext w-10 text-right">{pct}%</span>
     </div>
   )
 }
@@ -691,7 +695,7 @@ export function PetRoom({
               style={{ width: petStage === 'egg' ? 'clamp(90px, 18vw, 140px)' : 'clamp(130px, 30vw, 220px)', height: 'auto' }}
             />
             <div className="mt-3 flex justify-center">
-              <div className="grid gap-2 text-center">
+              <div className="grid w-[220px] gap-2.5">
                 <XpBar xp={xp} />
                 <HeartBar value={happiness} />
                 <HungerBar value={hunger} />
