@@ -133,16 +133,7 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
         opacity={sad ? 0.08 : 0.14}
       />
 
-      <path
-        d="M120 444c0-46 42-84 88-84 58 0 94 42 98 84-24 20-58 30-98 30-38 0-68-10-88-30z"
-        fill="url(#rock)"
-        opacity="0.88"
-      />
-      <path
-        d="M640 458c0-58 54-106 116-106 76 0 124 54 128 106-30 26-76 38-128 38-48 0-86-12-116-38z"
-        fill="url(#rock)"
-        opacity="0.88"
-      />
+      <rect x="0" y="430" width="900" height="90" fill="url(#sand)" opacity="0.95" />
 
       <g className="axoli-weed-1">
         <path
