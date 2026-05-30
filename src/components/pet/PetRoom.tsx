@@ -25,51 +25,185 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n))
 }
 
-function TankBackground({ sad }: { sad: boolean }) {
+function UnderwaterScene({ sad }: { sad: boolean }) {
   return (
-    <div className="absolute inset-0 h-full w-full overflow-hidden">
-      {/* Deep dark blue/purple gradient background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(135deg, ${sad ? '#080514' : '#0D0C3A'} 0%, ${sad ? '#110820' : '#2A1A6E'} 50%, ${sad ? '#080810' : '#0F0525'} 100%)`
-        }}
+    <svg viewBox="0 0 900 520" className="absolute inset-0 h-full w-full">
+      <style>
+        {`
+          .axoli-bubble-1 { animation: axoli-bubble 6.5s linear infinite; }
+          .axoli-bubble-2 { animation: axoli-bubble 7.8s linear infinite 0.8s; }
+          .axoli-bubble-3 { animation: axoli-bubble 8.6s linear infinite 1.6s; }
+          .axoli-bubble-4 { animation: axoli-bubble 7.2s linear infinite 2.1s; }
+          @keyframes axoli-bubble {
+            0% { transform: translateY(0px); opacity: 0; }
+            10% { opacity: 0.35; }
+            80% { opacity: 0.28; }
+            100% { transform: translateY(-420px); opacity: 0; }
+          }
+          .axoli-weed-1 { animation: axoli-weed 4.8s ease-in-out infinite; transform-origin: 210px 420px; }
+          .axoli-weed-2 { animation: axoli-weed 5.6s ease-in-out infinite; transform-origin: 180px 420px; }
+          .axoli-weed-3 { animation: axoli-weed 5.1s ease-in-out infinite; transform-origin: 720px 420px; }
+          @keyframes axoli-weed {
+            0% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
+          }
+          .axoli-caustics { animation: axoli-caustics 11s ease-in-out infinite; }
+          @keyframes axoli-caustics {
+            0% { transform: translateX(0px); opacity: 0.06; }
+            50% { transform: translateX(80px); opacity: 0.085; }
+            100% { transform: translateX(0px); opacity: 0.06; }
+          }
+        `}
+      </style>
+      <defs>
+        <linearGradient id="water" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor={sad ? '#101024' : '#07224C'} />
+          <stop offset="0.55" stopColor={sad ? '#0A0A1A' : '#0A2A63'} />
+          <stop offset="1" stopColor={sad ? '#0A0A1A' : '#071734'} />
+        </linearGradient>
+        <linearGradient id="sand" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#D9C29A" />
+          <stop offset="1" stopColor="#9B7B52" />
+        </linearGradient>
+        <linearGradient id="rock" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#2A2A4A" />
+          <stop offset="1" stopColor="#0F1030" />
+        </linearGradient>
+        <radialGradient id="light" cx="50%" cy="0%" r="80%">
+          <stop offset="0" stopColor="#6EC7FF" stopOpacity={sad ? 0.06 : 0.14} />
+          <stop offset="1" stopColor="#6EC7FF" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="glassEdge" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#DDE6FF" stopOpacity={sad ? 0.05 : 0.12} />
+          <stop offset="0.6" stopColor="#DDE6FF" stopOpacity="0" />
+          <stop offset="1" stopColor="#DDE6FF" stopOpacity={sad ? 0.03 : 0.08} />
+        </linearGradient>
+        <linearGradient id="glassSheen" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0.22" stopColor="#FFFFFF" stopOpacity={sad ? 0.03 : 0.08} />
+          <stop offset="0.45" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="0.78" stopColor="#FFFFFF" stopOpacity={sad ? 0.02 : 0.06} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
+      <rect x="0" y="0" width="900" height="520" fill="url(#water)" />
+      <rect x="0" y="0" width="900" height="520" fill="url(#light)" />
+
+      <path
+        className="axoli-caustics"
+        d="M-80 110c120-60 240-60 360 0s240 60 360 0 240-60 360 0v60c-120 60-240 60-360 0s-240-60-360 0-240 60-360 0-240-60-360 0z"
+        fill="#FFFFFF"
+        opacity={sad ? 0.04 : 0.08}
+      />
+      <path
+        className="axoli-caustics"
+        d="M-140 180c140-70 280-70 420 0s280 70 420 0 280-70 420 0v70c-140 70-280 70-420 0s-280-70-420 0-280 70-420 0-280-70-420 0z"
+        fill="#FFFFFF"
+        opacity={sad ? 0.03 : 0.06}
       />
 
-      {/* Animated floating bubble elements */}
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={`bubble-${i}`}
-          className="absolute rounded-full"
-          style={{
-            width: 14 + i * 12,
-            height: 14 + i * 12,
-            background: 'rgba(255, 255, 255, 0.1)',
-            boxShadow: `inset -1px -1px 3px rgba(0, 0, 0, 0.4), 0 0 14px rgba(180, 200, 255, 0.2)`,
-            left: `${15 + i * 35}%`,
-            bottom: '-50px'
-          }}
-          animate={{
-            y: [-50, -600],
-            x: [0, Math.sin(i * Math.PI / 3) * 20]
-          }}
-          transition={{
-            duration: 15 + i * 1.5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: i * 0.5
-          }}
+      <path
+        d="M0 410C140 370 220 450 340 420c150-38 210-14 300 12 118 34 170-12 260-24v112H0z"
+        fill="url(#sand)"
+        opacity="0.95"
+      />
+      {Array.from({ length: 42 }).map((_, i) => {
+        const x = 40 + (i * 19) % 820
+        const y = 418 + ((i * 13) % 86)
+        const r = 2 + (i % 4)
+        const o = sad ? 0.14 : 0.22
+        return <circle key={i} cx={x} cy={y} r={r} fill="#FFE59A" opacity={o} />
+      })}
+      <path
+        d="M0 402C160 360 240 430 360 406c150-30 210-10 300 16 120 34 180-16 240-22"
+        fill="none"
+        stroke="#FFE59A"
+        strokeWidth="8"
+        strokeLinecap="round"
+        opacity={sad ? 0.08 : 0.14}
+      />
+
+      <path
+        d="M120 444c0-46 42-84 88-84 58 0 94 42 98 84-24 20-58 30-98 30-38 0-68-10-88-30z"
+        fill="url(#rock)"
+        opacity="0.88"
+      />
+      <path
+        d="M640 458c0-58 54-106 116-106 76 0 124 54 128 106-30 26-76 38-128 38-48 0-86-12-116-38z"
+        fill="url(#rock)"
+        opacity="0.88"
+      />
+
+      <g className="axoli-weed-1">
+        <path
+          d="M220 420c-10-70 6-110 30-140 26-32 30-56 12-84 54 24 64 70 30 126 40-14 70-6 92 24-68-10-104 34-108 132h-56z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
+          opacity="0.9"
         />
-      ))}
+        <path
+          d="M170 420c-10-78 12-126 46-164 26-30 26-54 0-80 54 30 74 78 54 130 30 0 52 18 62 56-34-10-58 8-70 46-4 10-8 28-8 28h-84z"
+          fill={sad ? '#2A2A4A' : '#7AE7B9'}
+          opacity="0.9"
+        />
+      </g>
 
-      {/* Warm and rich sandy floor */}
-      <div
-        className="absolute bottom-0 w-full h-1/3"
-        style={{
-          background: `linear-gradient(180deg, rgba(230, 185, 155, 0.7) 0%, #8B7555 100%)`
-        }}
+      <g className="axoli-weed-2">
+        <path
+          d="M740 420c14-70-2-112-26-146-24-34-28-58-12-84-56 26-70 74-36 132-42-12-74-2-98 30 72-12 112 34 116 128h56z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
+          opacity="0.88"
+        />
+        <path
+          d="M700 420c12-78-12-132-52-170-24-24-26-50-2-76-54 32-76 84-58 138-28 2-50 20-60 54 34-8 58 10 70 46 4 10 10 28 10 28h92z"
+          fill={sad ? '#2A2A4A' : '#7AE7B9'}
+          opacity="0.88"
+        />
+      </g>
+
+      <g className="axoli-weed-3">
+        <path
+          d="M468 420c-8-74 12-122 40-164 18-26 18-50-2-74 52 34 70 84 44 136 34-2 58 18 72 56-38-8-62 10-74 46-4 10-10 28-10 28h-70z"
+          fill={sad ? '#2A2A4A' : '#2EE59D'}
+          opacity="0.86"
+        />
+      </g>
+
+      <g opacity={sad ? 0.18 : 0.28}>
+        <g className="axoli-bubble-1" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="150" cy="500" r="6" fill="#DDE6FF" />
+          <circle cx="176" cy="520" r="3.5" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-2" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="520" cy="510" r="7" fill="#DDE6FF" />
+          <circle cx="548" cy="525" r="4" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-3" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="740" cy="500" r="5.5" fill="#DDE6FF" />
+          <circle cx="760" cy="524" r="3" fill="#DDE6FF" opacity="0.8" />
+        </g>
+        <g className="axoli-bubble-4" style={{ transform: 'translateY(0px)' }}>
+          <circle cx="340" cy="512" r="6.5" fill="#DDE6FF" />
+          <circle cx="362" cy="530" r="3.5" fill="#DDE6FF" opacity="0.8" />
+        </g>
+      </g>
+
+      <rect x="18" y="14" width="38" height="492" fill="url(#glassEdge)" />
+      <rect x="844" y="14" width="38" height="492" fill="url(#glassEdge)" />
+      <rect x="0" y="0" width="900" height="520" fill="url(#glassSheen)" opacity={sad ? 0.5 : 0.9} />
+      <rect
+        x="12"
+        y="12"
+        width="876"
+        height="496"
+        fill="none"
+        stroke="#DDE6FF"
+        strokeOpacity={sad ? 0.08 : 0.16}
+        strokeWidth="4"
+        rx="26"
       />
-    </div>
+    </svg>
   )
 }
 
@@ -513,7 +647,7 @@ export function PetRoom({
 
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
         <div ref={tankRef} className="relative h-[320px] sm:h-[520px]">
-          <TankBackground sad={sad} />
+          <UnderwaterScene sad={sad} />
           {visibleDecorations.map((d) => (
             <DraggableItem
               key={d.id}
