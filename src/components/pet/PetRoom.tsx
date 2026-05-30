@@ -479,7 +479,7 @@ export function PetRoom({
   const owned = useMemo(() => new Set(ownedIds), [ownedIds])
   const happiness = clamp(profile.pet_happiness ?? 100, 0, 100)
   const hunger = clamp((profile as any).hunger_level ?? 100, 0, 100)
-  const xp = Number(profile.xp ?? 0)
+  const xp = Number(profile.pet_xp ?? 0)
   const starving = hunger < 10
   const hungry = hunger < 30
   const sad = happiness <= 30 || starving

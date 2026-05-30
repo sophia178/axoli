@@ -4,6 +4,8 @@ import { getUserPlan } from '@/lib/data/user'
 import { ensureShopCatalog, getOwnedItemIds, getShopItems } from '@/lib/shop/data'
 import { PetRoom } from '@/components/pet/PetRoom'
 
+export const revalidate = 30
+
 export default async function PetRoomPage() {
   const user = await requireUser()
   let profile: Awaited<ReturnType<typeof getProfile>> = null
