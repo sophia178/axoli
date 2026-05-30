@@ -545,7 +545,7 @@ export function PetRoom({
       fetch('/api/pet/item-states', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(itemStates)
+        body: JSON.stringify({ states: itemStates })
       }).catch(() => {})
     }, 150)
     return () => window.clearTimeout(id)
@@ -612,7 +612,7 @@ export function PetRoom({
         fetch('/api/pet/item-states', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(next)
+          body: JSON.stringify({ states: next })
         }).catch(() => {})
       }
       return changed ? next : prev
