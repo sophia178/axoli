@@ -20,6 +20,7 @@ export type Profile = {
   pet_level: number
   pet_colour: string
   pet_accessories: string[]
+  pet_item_states?: unknown
   avatar_colour?: string
   notify_daily?: boolean
   notify_streak_risk?: boolean
@@ -38,7 +39,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select(
-      'id,user_id,username,plan,language,coins,streak,xp,last_study_date,last_login_date,pet_name,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
+      'id,user_id,username,plan,language,coins,streak,xp,last_study_date,last_login_date,pet_name,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,pet_item_states,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
     )
     .eq('user_id', userId)
     .maybeSingle()
@@ -65,7 +66,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     const retry = await supabase
       .from('profiles')
       .select(
-        'id,user_id,username,plan,language,coins,streak,xp,last_study_date,last_login_date,pet_name,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
+        'id,user_id,username,plan,language,coins,streak,xp,last_study_date,last_login_date,pet_name,pet_happiness,pet_last_updated,hunger_level,last_fed_at,pet_level,pet_colour,pet_accessories,pet_item_states,avatar_colour,notify_daily,notify_streak_risk,notify_exam,notify_group,stripe_customer_id,stripe_subscription_id,stripe_renewal_at'
       )
       .eq('user_id', userId)
       .maybeSingle()

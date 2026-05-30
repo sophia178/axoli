@@ -265,55 +265,8 @@ function XpBar({ xp }: { xp: number }) {
 
 type ItemState = { x: number; y: number; size: number }
 
-const ITEM_STATE_KEY = 'axoli_pet_item_state_v1'
-const LEGACY_ACCESSORY_POS_KEY = 'axoli_pet_accessory_pos_v1'
 const MIN_ITEM_SIZE = 30
 const MAX_ITEM_SIZE = 150
-
-function readItemStates(): Record<string, ItemState> {
-  try {
-    const raw = window.localStorage.getItem(ITEM_STATE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as any
-      if (parsed && typeof parsed === 'object') {
-        const out: Record<string, ItemState> = {}
-        for (const [k, v] of Object.entries(parsed)) {
-          if (!v || typeof v !== 'object') continue
-          const x = Number((v as any).x)
-          const y = Number((v as any).y)
-          const size = Number((v as any).size)
-          if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(size)) continue
-          out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1), size: clamp(size, MIN_ITEM_SIZE, MAX_ITEM_SIZE) }
-        }
-        return out
-      }
-    }
-  } catch {}
-
-  try {
-    const raw = window.localStorage.getItem(LEGACY_ACCESSORY_POS_KEY)
-    if (!raw) return {}
-    const parsed = JSON.parse(raw) as any
-    if (!parsed || typeof parsed !== 'object') return {}
-    const out: Record<string, ItemState> = {}
-    for (const [k, v] of Object.entries(parsed)) {
-      if (!v || typeof v !== 'object') continue
-      const x = Number((v as any).x)
-      const y = Number((v as any).y)
-      if (!Number.isFinite(x) || !Number.isFinite(y)) continue
-      out[String(k)] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1), size: 60 }
-    }
-    return out
-  } catch {
-    return {}
-  }
-}
-
-function writeItemStates(states: Record<string, ItemState>) {
-  try {
-    window.localStorage.setItem(ITEM_STATE_KEY, JSON.stringify(states))
-  } catch {}
-}
 
 
 type ResizeCorner = 'nw' | 'ne' | 'sw' | 'se'
@@ -561,11 +514,22 @@ export function PetRoom({
   const [itemStates, setItemStates] = useState<Record<string, ItemState>>({})
 
   useEffect(() => {
-    setItemStates(readItemStates())
+    fetch('/api/pet/item-states')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && typeof data === 'object') setItemStates(data as Record<string, ItemState>)
+      })
+      .catch(() => {})
   }, [])
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const id = window.setTimeout(() => writeItemStates(itemStates), 150)
+    const id = window.setTimeout(() => {
+      fetch('/api/pet/item-states', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(itemStates)
+      }).catch(() => {})
+    }, 150)
     return () => window.clearTimeout(id)
   }, [itemStates])
   useEffect(() => {
@@ -626,7 +590,13 @@ export function PetRoom({
         next[it.id] = { x: clamp(baseX, 0, 1), y: clamp(baseY, 0, 1), size: 60 }
         changed = true
       }
-      if (changed) writeItemStates(next)
+      if (changed) {
+        fetch('/api/pet/item-states', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(next)
+        }).catch(() => {})
+      }
       return changed ? next : prev
     })
   }, [equippedAccessoryItems, visibleDecorations, decorationDefaultsByName])
