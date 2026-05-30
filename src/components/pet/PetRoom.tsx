@@ -648,6 +648,24 @@ export function PetRoom({
       <div className="relative overflow-hidden rounded-3xl border border-border bg-bg/30">
         <div ref={tankRef} className="relative h-[320px] sm:h-[520px]">
           <UnderwaterScene sad={sad} />
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={`bubble-${i}`}
+              className="absolute rounded-full bg-white/20"
+              style={{
+                width: 8 + i * 3,
+                height: 8 + i * 3,
+                left: `${15 + i * 35}%`,
+                bottom: '-10px'
+              }}
+              animate={{ y: -550 }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+            />
+          ))}
           {visibleDecorations.map((d) => (
             <DraggableItem
               key={d.id}
