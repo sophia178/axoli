@@ -42,7 +42,7 @@ export function MobileNav() {
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="flex h-full flex-col items-center justify-center gap-4 p-6"
+            className="flex h-full overflow-y-auto flex-col items-center justify-center gap-4 p-6"
             onClick={(e) => e.stopPropagation()}
           >
             {dashboardNav.map((item) => {
