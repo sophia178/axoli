@@ -535,7 +535,7 @@ export function PetRoom({
     fetch('/api/pet/item-states')
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (data && typeof data === 'object') setItemStates(data as Record<string, ItemState>)
+        if (data && typeof data === 'object') setItemStates(data.states as Record<string, ItemState>)
       })
       .catch(() => {})
   }, [])
