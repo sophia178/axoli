@@ -696,7 +696,7 @@ export function PetRoom({
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
             <div className="relative rounded-3xl border border-border bg-card/60 px-5 py-4 text-center shadow-[0_18px_55px_rgba(0,0,0,0.55)]">
-              <div className="text-sm font-semibold text-gold">{speech}</div>
+              <div className="text-sm font-semibold text-gold whitespace-normal break-words">{speech}</div>
               <div className="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-border bg-card/60" />
             </div>
           </motion.div>
