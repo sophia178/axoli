@@ -57,10 +57,13 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
         `}
       </style>
       <defs>
+        <filter id="glowBlur">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
         <linearGradient id="water" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor={sad ? '#101024' : '#07224C'} />
-          <stop offset="0.55" stopColor={sad ? '#0A0A1A' : '#0A2A63'} />
-          <stop offset="1" stopColor={sad ? '#0A0A1A' : '#071734'} />
+          <stop offset="0" stopColor={sad ? '#0f0a1a' : '#1a0f3d'} />
+          <stop offset="0.55" stopColor={sad ? '#0a0510' : '#2d1b4e'} />
+          <stop offset="1" stopColor={sad ? '#05030a' : '#3d1f5c'} />
         </linearGradient>
         <linearGradient id="sand" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stopColor="#D9C29A" />
@@ -89,6 +92,11 @@ function UnderwaterScene({ sad }: { sad: boolean }) {
       </defs>
 
       <rect x="0" y="0" width="900" height="520" fill="url(#water)" />
+      <ellipse cx="150" cy="80" rx="120" ry="100" fill="#6d3fb5" opacity={sad ? 0.08 : 0.15} filter="url(#glowBlur)" />
+      <ellipse cx="750" cy="120" rx="140" ry="110" fill="#4a1a8f" opacity={sad ? 0.06 : 0.12} filter="url(#glowBlur)" />
+      <ellipse cx="450" cy="280" rx="100" ry="130" fill="#5d2fa5" opacity={sad ? 0.05 : 0.1} filter="url(#glowBlur)" />
+      <ellipse cx="80" cy="320" rx="90" ry="80" fill="#7a3fc5" opacity={sad ? 0.07 : 0.13} filter="url(#glowBlur)" />
+      <ellipse cx="850" cy="380" rx="110" ry="95" fill="#4a1a8f" opacity={sad ? 0.06 : 0.11} filter="url(#glowBlur)" />
       <rect x="0" y="0" width="900" height="520" fill="url(#light)" />
 
       <path
